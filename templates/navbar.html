@@ -1,0 +1,33 @@
+<header class="header">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/nav.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <div class="container"><a href="/" class="header-brand"><img src="{{ url_for('static', filename='/images/openbroadcast.png') }}"
+                alt="OpenBroadcast Logo"></a>
+        <nav class="header-navigation">
+            <ul>
+                <li><a href="/videos/"><i class="material-icons">book</i>Browse</a></li>
+                <li><a href="/videos/upload"><i class="material-icons">video_library</i>Upload</a></li>
+                <li><a href="/charts/"><i class="material-icons">multiline_chart</i>Charts</a></li>
+                <li><a href="/about/"><i class="material-icons">person</i>About</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<div class="sitePreviewContainers">
+    <a href="/videos/" class="card">
+        <h2>BROWSE</h2>
+        <h3>Browse our collection of user-uploaded content</h3>
+    </a>
+    <a href="/videos/upload" class="card">
+        <h2>UPLOAD</h2>
+        <h3>Upload content to the OpenBroadcast Roku channel</h3>
+    </a>
+    <a href="/charts/" class="card">
+        <h2>CHARTS</h2>
+        <h3>Find out what the most viewed videos on our channel are</h3>
+    </a>
+    <a href="/about/" class="card">
+        <h2>ABOUT</h2>
+        <h3>Curious about the OpenBroadcast team? Find out more here!</h3>
+    </a>
+</div>

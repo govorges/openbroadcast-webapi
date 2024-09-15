@@ -1,0 +1,52 @@
+<html>
+
+<head>
+  <title>Open Broadcast | Upload</title>
+  <script type="text/javascript" src="{{ url_for('static', filename='/js/upload.js') }}"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/openbroadcast.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='/css/upload.css') }}">
+  <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+</head>
+<nav>
+  {% include 'navbar.html' %}
+  {% block navbarContent %}
+  {% endblock %}
+</nav>
+
+<body>
+  <div class="centerBox">
+    <div class="splitPanel">
+      <h3>Upload your Video</h3>
+      <p>Choose (or drag and drop) a video file from your system</p>
+      <div class="uploadContainer">
+        <input id="videoDetails_File" type="file" name="file" accept=".mp4" onchange="handleFileSelect(this)">
+      </div>
+      <div id="videoDetails" class="videoDetailsContainer" style="display:none;">
+        <img id="videoDetails_Thumbnail">
+        <label for="title">Title</label>
+        <input type="text" id="videoDetails_Title" placeholder="Click to edit Title" name="title">
+        
+        <label for="desc">Description</label>
+        <input type="text" id="videoDetails_Description" placeholder="Click to edit Description" name="desc">
+        <input type="submit" value="Upload" onclick="handleFileUpload()">
+      </div>
+    </div>
+    <div class="splitPanel">
+      <h3>How it Works</h3>
+      <p>Simply select a video (.mp4) file from your machine and then edit the title and description to your liking.<br><br> We have a few rules:<br>
+        <li>Keep it PG-13! Roku has strict guidelines on NSFW (Not-Safe-For-Work) content.</li>
+        <li>No affiliate advertisements! We're trying to keep things wholesome around here, and if everyone's going around advertising an affiliate program it'll get really annoying really quickly.</li>
+        <li>(You can, however, advertise your social media handles. Go crazy!)</li>
+        <li>Nothing that breaks the Roku Terms of Service is allowed on our channel.</li>
+        <li>Only post content you own the rights to, and by posting your content to OpenBroadcast you give us your express permission to use it unless otherwise revoked (see <a style="color:var(--accent-1)" href="/reports/">/reports/</a>).</li>
+      </p><hr>
+    </div>
+  </div>
+</body>
+<footer>
+  {% include 'footer.html' %}
+  {% block footerContent %}
+  {% endblock %}
+</footer>
+</html>

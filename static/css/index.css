@@ -1,0 +1,35 @@
+.centerBox {
+    display: flex;
+    flex-direction: column;
+
+    min-height: 100vh;
+}
+.centerBox > .container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-evenly;
+}
+.centerDisplay {
+    text-align: center;
+    font-family: var(--nav-font);
+
+    color: var(--main-text);
+    width: 100%;
+
+    display: flex;
+    flex-direction: column;
+}
+.centerDisplay > h2 { 
+    font-family: var(--subheader-font);
+    color: var(--main-text);
+}
+.centerDisplay > h3 {
+    font-family: var(--nav-font);
+    color: var(--secondary-text);
+
+    word-wrap: normal;
+    width: 25%;
+
+    align-self: center;
+}
