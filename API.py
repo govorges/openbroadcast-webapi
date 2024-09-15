@@ -63,8 +63,6 @@ def videos_upload():
             "description": video_metadata.get("description", "A video uploaded to OpenBroadcast"),
         }
 
-        print(f"VIDEO INGEST : {video_id} | FILE SIZE: {request.content_length / 1000 / 1000}MB")
-
         api_Video.videos__IngestVideo(
             id = f"{video_id}", 
             video_metadata = video_metadata
