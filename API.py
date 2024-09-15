@@ -16,7 +16,7 @@ api = Flask(__name__)
 api.config['MAX_CONTENT_LENGTH'] = 512 * 1000 * 1000 # Maximum file size is 512MB
 api.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 
-ALLOWED_EXTENSIONS = {"mp4"}
+ALLOWED_EXTENSIONS = ["mp4"]
 
 def _allowedFile(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
