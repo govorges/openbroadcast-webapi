@@ -5,7 +5,6 @@ from services.Video import VideoAPI
 
 from os import path
 import json
-import requests
 
 HOME_DIR = path.dirname(path.realpath(__file__))
 UPLOAD_DIR = path.join(HOME_DIR, "uploads")
