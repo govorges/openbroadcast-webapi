@@ -6,13 +6,13 @@
 :root {
     --main-background: #cedeeb;
     --main-text: black;
-    --secondary-background: #0f0f13;
+    --secondary-background: #000215;
     --secondary-text: white;
     --accent-1: #0871ff;
-    --nav-font: "Ubuntu", sans-serif;
-    --header-font: "New Amsterdam", sans-serif;
-    --subheader-font: "Concert One", sans-serif;
+    --nav-font: "Fredoka", "Ubuntu", sans-serif;
     --secondary-text-font: 'Righteous', sans-serif;
+
+    --header-font: "Mallory Book", sans-serif;
 }
 body {
     background-color: var(--main-background);
@@ -22,4 +22,5 @@ body {
     padding: 0;
 
     overflow-x: hidden;
+    overflow-y: scroll;
 }

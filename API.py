@@ -33,6 +33,10 @@ def uploads_create():
     metadata = request.form.get("metadata")
     if metadata is None:
         return make_response("No metadata retrieved.", 400)
+    try:
+        metadata = json.loads(metadata)
+    except json.JSONDecodeError:
+        return make_response("Invalid JSON provided", 400)
     
     title = metadata.get("title")
     if title is None or title == "":
@@ -52,7 +56,15 @@ def uploads_create():
     
     videoID = api_Video.videos__GenerateID()
 
-    uploadData = api_Video.uploads_Create(videoID, metadata)
+    thumbnail = request.files["thumbnail"]
+    if thumbnail.mimetype != "image/png":
+        return make_response("Thumbnail is not a PNG file.", 400)
+    thumbnail_filename = secure_filename(f"{videoID}.png")
+    thumbnail.save(path.join(api.config["UPLOAD_FOLDER"], thumbnail_filename))
+
+    api_Video.videos__UploadThumbnail(thumbnail_filename)
+
+    uploadData = api_Video.uploads__Create(videoID, metadata)
     if uploadData.get("signature") is None:
         return make_response("Error creating TUS signature", 400)
 

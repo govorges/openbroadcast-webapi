@@ -95,7 +95,6 @@ header.header .header-navigation {
     width: 25%;
     padding-inline: 1vw;
 
-    font-family: var(--header-font);
     border-block: 0.2vh solid var(--accent-1);
     color: var(--accent-1);
 
@@ -123,7 +122,6 @@ header.header .header-navigation {
 }
 
 .card>h3 {
-    font-family: sans-serif;
     font-weight: 100;
     color: var(--secondary-text);
 }

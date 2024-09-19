@@ -3,6 +3,8 @@
 <head>
   <title>Open Broadcast | Upload</title>
   <script type="text/javascript" src="{{ url_for('static', filename='/js/upload.js') }}"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/openbroadcast.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='/css/upload.css') }}">
   <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap"
@@ -14,39 +16,82 @@
   {% endblock %}
 </nav>
 
-<body>
+<body onload="OnReady()">
   <div class="centerBox">
-    <div class="splitPanel">
-      <h3>Upload your Video</h3>
-      <p>Choose (or drag and drop) a video file from your system</p>
-      <div class="uploadContainer">
-        <input id="videoDetails_File" type="file" name="file" accept=".mp4" onchange="handleFileSelect(this)">
+    <div class="splitBox">
+      <h3>Upload a Video</h3>
+      <p>Choose a file to upload to OpenBroadcast</p>
+      <button onclick="Event__UploadClicked()">Upload</button>
+    </div>
+    <div class="bottomBar">
+      <div id="uploadStatusMessage">NO FILE SELECTED</div>
+    </div>
+    <div class="videoDisplay" id="videoDetails_Display">
+      <div class="thumbnailDisplay" id="thumbnailDisplay">
+        <span>Selected Thumbnail</span>
+        <img src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}" id="display_Thumbnail0">
+        <div class="thumbnailCarousel_Display">
+          <button onclick="Event__ThumbnailUploadClicked()">Upload Custom Thumbnail</button>
+          Your video thumbnail should have a 4:3 or 16:9 aspect ratio. This preview is not perfectly representative of what the final image will look like.
+        </div>
       </div>
-      <div id="videoDetails" class="videoDetailsContainer" style="display:none;">
-        <img id="videoDetails_Thumbnail">
-        <label for="title">Title</label>
-        <input type="text" id="videoDetails_Title" placeholder="Click to edit Title" name="title">
-        
-        <label for="desc">Description</label>
-        <input type="text" id="videoDetails_Description" placeholder="Click to edit Description" name="desc">
-        <input type="submit" value="Upload" onclick="handleFileUpload()">
+      <div class="videoOptionsDisplay">
+        <label class="videoTitle" for="videoTitle_Input">
+          Video Title
+          <span class="labelTinyText">Maximum length of 120 characters. *Required Field</span>
+        </label>
+        <input type="text" id="videoTitle_Input" placeholder="Video Title">
+        <br>
+        <label class="videoDesc" for="videoDesc_Input">
+          Video Description
+          <span class="labelTinyText">Maximum length of 800 characters. *Required Field</span>
+        </label>
+        <input type="text" id="videoDesc_Input" placeholder="Video Description">
+        <br>
+        <label class="videoCategory" for="videoCategory_Input">
+          Category
+          <span class="labelTinyText">Select a category for your video. This will determine where it's shown in the
+            OpenBroadcast Roku channel.</span>
+        </label>
+        <div class="categorySelector">
+          <input type="radio" name="videoCategory" id="videoCategory_Funny" onchange="Event__CategorySelectionChanged()">
+          <label for="videoCategory_Funny">Funny</label>
+          <input type="radio" name="videoCategory" id="videoCategory_Informative" onchange="Event__CategorySelectionChanged()">
+          <label for="videoCategory_Informative">Informative</label>
+          <input type="radio" checked name="videoCategory" id="videoCategory_Misc" onchange="Event__CategorySelectionChanged()">
+          <label for="videoCategory_Misc">Miscellaneous</label>
+        </div>
+        <span id="selectedCategoryDisplay">Selected: Miscellaneous</span>
+        <br>
+        <div class="uploadedVideoDetails">
+          <div class="header">Video Details</div>
+          <table id="videoDetailsTable">
+            <tr>
+              <th>Length</th>
+              <th>Resolution</th>
+              <th>File Size</th>
+            </tr>
+            <tr>
+              <th id="display_VideoLength"></th>
+              <th id="display_VideoResolution"></th>
+              <th id="display_VideoFileSize"></th>
+            </tr>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="splitPanel">
-      <h3>How it Works</h3>
-      <p>Simply select a video (.mp4) file from your machine and then edit the title and description to your liking.<br><br> We have a few rules:<br>
-        <li>Keep it PG-13! Roku has strict guidelines on NSFW (Not-Safe-For-Work) content.</li>
-        <li>No affiliate advertisements! We're trying to keep things wholesome around here, and if everyone's going around advertising an affiliate program it'll get really annoying really quickly.</li>
-        <li>(You can, however, advertise your social media handles. Go crazy!)</li>
-        <li>Nothing that breaks the Roku Terms of Service is allowed on our channel.</li>
-        <li>Only post content you own the rights to, and by posting your content to OpenBroadcast you give us your express permission to use it unless otherwise revoked (see <a style="color:var(--accent-1)" href="/reports/">/reports/</a>).</li>
-      </p><hr>
-    </div>
+    <button>SEND VIDEO TO OPENBROADCAST</button>
   </div>
 </body>
+<elementStore style="display:none;">
+  <input type="file" id="videoDetails_File" accept=".mp4">
+  <input type="file" id="videoDetails_ThumbnailUpload" accept=".png, .jpg, .jpeg">
+</elementStore>
+
 <footer>
   {% include 'footer.html' %}
   {% block footerContent %}
   {% endblock %}
 </footer>
+
 </html>

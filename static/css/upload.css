@@ -1,69 +1,323 @@
 body {
     font-family: var(--nav-font);
 }
-
 .centerBox {
-    display: flex;
-    flex-direction: row;
-
-    text-align: center;
-
-    margin-top: 0;
-    padding-top: 0;
-
-    width: 100%;
-    height: 100%;
-}
-
-.splitPanel {
-    display: inline;
-    flex-direction: column;
-
-    width: 50%;
-
-    margin: 0;
-    top: 0;
-}
-.splitPanel > h3 {
     font-family: var(--nav-font);
-}
-.splitPanel > li {
-    text-align: left;
-}
-.splitPanel:last-child {
-    background-color: var(--secondary-background);
-    color: var(--secondary-text);
-
-    margin: 0;
-
-    padding-inline: 2vw;
-}
-p {
-    font-family: sans-serif;
-}
-.uploadContainer {
-    width: 100%;
-    
-    border-top: 0.4vh solid var(--accent-1);
-    padding-block: 1vh;
-}
-.videoDetailsContainer {
-    width: 100%;
+    font-weight: 400;
 
     display: flex;
     flex-direction: column;
 
     align-items: center;
+    padding: 2%;
+
+    height: 100vh;
 }
-.videoDetailsContainer > input {
+.splitBox {
+    width: 100%;
+    border-bottom: 1px solid var(--secondary-background);
+    
+    padding-inline: 1vw;
+    padding-block: 1vh;
+
     text-align: center;
 }
-.videoDetailsContainer > input[id="videoDetails_Description"] {
-    width: 80%;
+.splitBox > h3 {
+    margin: 0;
+    padding: 0;
 
-    margin-bottom: 2vh;
+    font-family: var(--header-font);
 }
-.videoDetailsContainer > img {
-    max-width: 100%;
+.splitBox > p {
+    font-size: 1.2vw;
+    margin-top: 0;
+}
+.splitBox > button {
+    width: 33%;
+    
+    cursor: pointer;
+
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+
+    border: none;
+    padding: 0.7%;
+
+    font-family: var(--header-font);
+    font-size: larger;
+    text-transform: uppercase;
+    letter-spacing: 0.1vw;
+
+    transition: 0.2s ease-in-out all;
+}
+.splitBox > button:hover {
+    background-color: var(--secondary-background);
+}
+.bottomBar {
+    border-bottom: 1px solid var(--secondary-background);
+}
+
+.videoDisplay {
+    width: 100%;
+    height: fit-content;
+
+    padding-block: 1%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+}
+.thumbnailDisplay {
+    display: flex;
+    flex-direction: column;
+
+    text-align: center;
+    
+    width: 50%;
+    height: fit-content;
+
+    background-color: var(--secondary-background);
+    box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 40%);
+}
+.thumbnailDisplay > img {
+    max-height: 50vh;
     height: auto;
+
+    max-width: 100%;
+    width: auto;
+}
+.thumbnailCarousel_Display {
+    padding-top: 1vh;
+    padding-inline: 1vw;
+    background-color: var(--secondary-background);
+    color: var(--secondary-text);
+}
+.thumbnailCarousel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+.thumbnailCarousel > img {
+    width: 17.5%;
+    height: auto;
+}
+.thumbnailCarousel_Display > button {
+    width: 100%;
+    
+    cursor: pointer;
+
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+
+    border: none;
+
+    padding: 0.7%;
+    margin-top: 1%;
+
+    font-family: var(--header-font);
+    font-size: medium;
+    text-transform: uppercase;
+    letter-spacing: 0.1vw;
+
+    transition: 0.2s ease-in-out all;
+}
+.thumbnailDisplay > span {
+    font-family: var(--nav-font);
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+
+    width: 100%;
+
+}
+.thumbnailCarousel_Display > h4 {
+    margin-block: 1%;
+    padding: 0;
+
+    font-family: var(--header-font);
+}
+.videoOptionsDisplay {
+    display: flex;
+    flex-direction: column;
+
+    text-align: center;
+    
+    width: 50%;
+    margin-inline: 1vw;
+}
+.videoOptionsDisplay > h3 {
+    margin-block: 1vh;
+    padding: 0;
+
+    font-family: var(--header-font);
+    text-align: center;
+}
+.videoOptionsDisplay > h4 {
+    margin: 0;
+    padding: 0;
+
+    font-family: var(--header-font);
+    text-align: start;
+}
+.labelTinyText {
+    font-size: smaller;
+    text-indent: 1vw;
+}
+.videoOptionsDisplay > input[type="text"] {
+    background-color: var(--secondary-background);
+    color: var(--secondary-text);
+
+    padding: 1%;
+    width: 100%;
+
+    margin: 0;
+    border: transparent;
+}
+.videoOptionsDisplay > label {
+    padding-block: 1%;
+    padding-inline-start: 1%;
+    width: 99%;
+
+    display: flex;
+    flex-direction: column;
+    text-align: left;
+
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+}
+.categorySelector {
+    width: 100%;
+
+    display: flex;
+    flex-direction: row;
+
+    justify-content: space-between;
+    background-color: var(--secondary-background);
+}
+.categorySelector > label {
+    width: 33%;
+
+    background-color: var(--secondary-background);
+    color: var(--secondary-text);
+
+    padding-block: 1vh;
+    cursor: pointer;
+    
+    transition: 0.2s ease-in-out all;
+}
+.categorySelector > input[type="radio"] {
+    display: none;
+}
+.categorySelector > input[type="radio"]:checked+label {
+    background-color: var(--accent-1);
+}
+#selectedCategoryDisplay {
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+}
+
+.centerBox > button {
+    width: 100%;
+    
+    cursor: pointer;
+
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+
+    border: none;
+
+    padding: 0.7%;
+    margin-top: 1%;
+
+    font-family: var(--header-font);
+    font-size: medium;
+    text-transform: uppercase;
+    letter-spacing: 0.1vw;
+
+    transition: 0.2s ease-in-out all;
+}
+.centerBox > button:hover {
+    background-color: var(--secondary-background);
+}
+.uploadedVideoDetails {
+    width: 100%;
+
+    background-color: var(--secondary-background);
+    color: var(--secondary-text);
+}
+.uploadedVideoDetails > div.header {
+    width: 100%;
+    
+    background-color: var(--accent-1);
+    color: var(--secondary-text);
+}
+#videoDetailsTable {
+    width: 100%;
+}
+th {
+    font-family: var(--nav-font);
+    font-weight: 400;
+    color: var(--secondary-text);
+    width: 33%;
+}
+
+@media screen and (min-height: 100vw) {
+    body {
+        width: 100vw;
+        overflow-y: scroll;
+    }
+    .videoDisplay {
+        flex-direction: column;
+        align-items: center;
+        width: 100%;
+    }
+    .videoDisplay > div {
+        width: 100% !important;
+        margin-block: 2vh;
+    }
+    .thumbnailCarousel_Display {
+        font-size: 1.4vh;
+    }
+    .thumbnailDisplay > span {
+        font-size: 1.4vh;
+    }
+    .thumbnailCarousel_Display > button {
+        font-size: 1.1vh;
+        padding-block: 2vh;
+    }
+    .centerBox > button {
+        font-size: 1.2vh;
+        padding-block: 2vh;
+    }
+    .videoOptionsDisplay > label {
+        font-size: 1.4vh;
+    }
+    .categorySelector > label {
+        font-size: 1.4vh;
+    }
+    .labelTinyText {
+        font-size: 1.1vh;
+    }
+    .videoOptionsDisplay > input[type="text"] {
+        font-size: 1.2vh;
+        padding-block: 1vh;
+    }
+    #videoDetailsTable {
+        font-size: 1.3vh;
+    }
+    .header {
+        font-size: 1.4vh;
+    }
+    #selectedCategoryDisplay {
+        font-size: 1.4vh;
+    }
+    .splitBox {
+        font-size: 1.3vh;
+    }
+    .splitBox > p {
+        font-size: 1.3vh;
+    }
+    #uploadStatusMessage {
+        font-size: 1.4vh;
+    }
 }
