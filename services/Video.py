@@ -14,6 +14,14 @@ class VideoAPI:
         r = requests.post(requestURL, headers=headers, json=video_metadata)
 
         return r
+    
+    def uploads_Create(self, id: str, video_metadata: dict):
+        requestURL = f"{self.API_Endpoint_URL}/uploads/create"
+        headers = { "id": id }
+        
+        r = requests.post(requestURL, headers=headers, json=video_metadata)
+
+        return r.json()
 
     def videos__GenerateID(self):
         requestURL = f"{self.API_Endpoint_URL}/videos/generate_id"
@@ -22,13 +30,3 @@ class VideoAPI:
         id = response_data.get("id")
 
         return id
-
-
-
-
-
-
-
-
-
-

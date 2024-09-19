@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, make_response
+from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
 from werkzeug.utils import secure_filename
 
 from services.Video import VideoAPI
@@ -27,6 +27,41 @@ def index():
 @api.route("/status", methods=["GET"])
 def status():
     return f"Alive"
+
+@api.route("/uploads/create", methods=["POST"])
+def uploads_create():
+    metadata = request.form.get("metadata")
+    if metadata is None:
+        return make_response("No metadata retrieved.", 400)
+    
+    title = metadata.get("title")
+    if title is None or title == "":
+        return make_response("No title provided.", 400)
+    if not isinstance(title, str):
+        return make_response("Invalid data.", 400)
+    if len(title) >= 120:
+        return make_response("Title is too large!", 400)
+        
+    description = metadata.get("description")
+    if description is None or description == "":
+        description = "A video uploaded to OpenBroadcast."
+    if not isinstance(description, str):
+        return make_response("Invalid data.", 400)
+    if len(description) >= 800:
+        return make_response("Description is too large!", 400)
+    
+    videoID = api_Video.videos__GenerateID()
+
+    uploadData = api_Video.uploads_Create(videoID, metadata)
+    if uploadData.get("signature") is None:
+        return make_response("Error creating TUS signature", 400)
+
+    responseData = {
+        "signature": uploadData.get("signature"),
+        "metadata": uploadData.get("metadata")
+    }
+
+    return jsonify(responseData)
 
 @api.route("/videos/upload", methods=["GET", "POST"])
 def videos_upload():
