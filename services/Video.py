@@ -3,7 +3,7 @@ from os import environ
 
 class VideoAPI:
     def __init__(self):
-        API_Endpoint_Address = "unset" # environ["VIDEO_ENDPOINT_ADDRESS"]
+        API_Endpoint_Address = environ["VIDEO_ENDPOINT_ADDRESS"]
         if "http" not in API_Endpoint_Address:
             self.API_Endpoint_URL = f"http://{API_Endpoint_Address}"
 
@@ -33,6 +33,15 @@ class VideoAPI:
         r = requests.post(requestURL, headers=headers)
 
         return r
+    
+    def uploads__Capture(self, id: str, signatureHash: str):
+        requestURL = f"{self.API_Endpoint_URL}/uploads/capture"
+        requestHeaders = {
+            "id": id,
+            "signature": signatureHash
+        }
+        r = requests.post(requestURL, headers=requestHeaders)
+        return r.status_code
 
 
 

@@ -1,3 +1,5 @@
+var upload;
+
 function OnReady() {
   window.displayElement__UploadStatusMessage = document.getElementById("uploadStatusMessage");
   window.utilElement__VideoFileInput = document.getElementById("videoDetails_File");
@@ -117,7 +119,7 @@ function internal__dataURItoBlob(dataURI) {
 
   return new Blob([ia], { type: mimeString });
 }
-function Event__startFileUpload() {
+function Event__createFileUpload() {
   let _title = inputElement__VideoTitle.value;
   let _desc = inputElement__VideoDescription.value;
 
@@ -128,18 +130,59 @@ function Event__startFileUpload() {
   let videoThumbnail = document.getElementById("videoDetails_ThumbnailUpload").files[0];
 
   let formData = new FormData();
-  formData.append("thumbnail", internal__dataURItoBlob((URL.createObjectURL(videoThumbnail))));
+  formData.append("thumbnail", videoThumbnail);
   formData.append("metadata", JSON.stringify(video_metadata));
 
-  fetch("/uploads/create", { method: "POST", body: formData }).then(function (response) {
-    console.log(response.json);
-  });
+  upload_target_file = utilElement__VideoFileInput.files[0];
 
+  fetch("/uploads/create", { method: "POST", body: formData }).then((response) => {
+    return response.json();
+  }).then((jsonData) => {
+    upload = new tus.Upload(upload_target_file, {
+      endpoint: "https://video.bunnycdn.com/tusupload",
+      retryDelays: [0, 3000, 5000, 10000, 20000, 60000, 60000],
+      headers: {
+        AuthorizationSignature: jsonData['signature']['signature'],
+        AuthorizationExpire: jsonData['signature']['signature_expiration_time'],
+        VideoId: jsonData['metadata']['guid'],
+        LibraryId: jsonData['metadata']['library_id']
+      },
+      metadata: {
+        filetype: upload_target_file.type,
+        title: _title,
+      },
+      onError: function (error) {
+        console.log(error);
+      },
+      onProgress: function (bytesUploaded, bytesTotal) {
+        console.log(bytesUploaded, bytesTotal);
+      },
+      onSuccess: function () {
+        let headerData = { 
+          "id": jsonData['metadata']['id'],
+          "signature": jsonData['signature']['signature']
+        }
+        fetch("/uploads/capture", { method: "POST", headers: headerData}); // do something with response but not right now because its 1AM
+        // uploads/capture route confirms an upload is complete on client because it
+        //       reduces the amount of requests my service has to send to check upload progress of every active upload in postgres
+      }
+    });
+  }).then(function () {
+    internal__StartFileUpload();
+  });
   return 1;
 }
 
-function internal__FileUpload() {
-
+function internal__StartFileUpload() {
+  if (upload == undefined) {
+    return;
+  }
+  upload.findPreviousUploads().then(function (previousUploads) {
+    if (previousUploads.length) {
+        upload.resumeFromPreviousUpload(previousUploads[0]);
+    }
+    upload.start();
+  });
 }
 
 

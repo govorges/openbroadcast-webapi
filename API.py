@@ -57,8 +57,6 @@ def uploads_create():
     videoID = api_Video.videos__GenerateID()
 
     thumbnail = request.files["thumbnail"]
-    if thumbnail.mimetype != "image/png":
-        return make_response("Thumbnail is not a PNG file.", 400)
     thumbnail_filename = secure_filename(f"{videoID}.png")
     thumbnail.save(path.join(api.config["UPLOAD_FOLDER"], thumbnail_filename))
 
@@ -81,11 +79,11 @@ def uploads_capture():
     if id is None or id == "":
         return make_response("The header \"id\" is not set or was set incorrectly", 400)
 
-    signatureHash = request.headers.get("signatureHash")
+    signatureHash = request.headers.get("signature")
     if signatureHash is None or signatureHash == "":
         return make_response("The header \"signatureHash\" is not set or was set incorrectly", 400)
     
-    resCode = api_Video.uploads_Capture(id, signatureHash)
+    resCode = api_Video.uploads__Capture(id, signatureHash)
     if resCode != 200:
         return make_response("Upload capture failed. Video not registered.", resCode)
     return make_response("Success", 200)
