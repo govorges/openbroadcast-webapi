@@ -3,18 +3,20 @@ var upload;
 function OnReady() {
   window.displayElement__UploadStatusMessage = document.getElementById("uploadStatusMessage");
   window.utilElement__VideoFileInput = document.getElementById("videoDetails_File");
+  window.utilElement__ThumbnailFile = null;
   utilElement__VideoFileInput.addEventListener("change", () => {
     if (utilElement__VideoFileInput.files.length >= 1) {
       displayElement__UploadStatusMessage.innerText = utilElement__VideoFileInput.files[0].name;
       
       internal__generateVideoThumbnail(utilElement__VideoFileInput.files[0]).then(function (thumbnailDataURL) {
-        displayElement__ThumbnailDisplay0.src = thumbnailDataURL
+        displayElement__ThumbnailDisplay0.src = thumbnailDataURL;
       });
-  
       return;
     }
     displayElement__UploadStatusMessage.innerText = "NO FILE SELECTED";
   });
+
+  window.displayElement__SendVideoButton = document.getElementById("videoSendButton");
 
 
   window.displayElement__ThumbnailDisplay0 = document.getElementById("display_Thumbnail0");
@@ -28,6 +30,7 @@ function OnReady() {
   window.utilElement__ThumbnailFileInput = document.getElementById("videoDetails_ThumbnailUpload");
   utilElement__ThumbnailFileInput.addEventListener("change", () => {
     if (utilElement__ThumbnailFileInput.files.length >= 1) {
+      window.utilElement__ThumbnailFile = utilElement__ThumbnailFileInput.files[0]
       window.displayElement__ThumbnailDisplay0.src = URL.createObjectURL(utilElement__ThumbnailFileInput.files[0]);
     }
   });
@@ -96,6 +99,11 @@ const internal__generateVideoThumbnail = (file) => {
 
       ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
 
+      thumbnailBlob = canvas.toBlob((file) => {
+        return file;
+      });
+      utilElement__ThumbnailFileInput.files[0] = thumbnailBlob;
+
       return resolve(canvas.toDataURL("image/png"));
     };
   });
@@ -119,15 +127,36 @@ function internal__dataURItoBlob(dataURI) {
 
   return new Blob([ia], { type: mimeString });
 }
-function Event__createFileUpload() {
+async function Event__createFileUpload() {
+  if (displayElement__SendVideoButton.disabled) {
+    return;
+  }
   let _title = inputElement__VideoTitle.value;
   let _desc = inputElement__VideoDescription.value;
 
+  let category = null;
+  if (displayElement__CategoryRadio_Funny.checked) {
+    category = "funny";
+  }
+  else if (displayElement__CategoryRadio_Informative.checked) {
+    category = "info";
+  }
+  else {
+    category = "misc";
+  }
+
   let video_metadata = {
     "title": _title,
-    "description": _desc 
+    "description": _desc,
+    "category": category
   };
-  let videoThumbnail = document.getElementById("videoDetails_ThumbnailUpload").files[0];
+  let videoThumbnail;
+  if (displayElement__ThumbnailDisplay0.src.includes("blob:")) {
+    videoThumbnail = await fetch(displayElement__ThumbnailDisplay0.src).then(r => r.blob());
+  }
+  else {
+    videoThumbnail = internal__dataURItoBlob(displayElement__ThumbnailDisplay0.src);
+  }
 
   let formData = new FormData();
   formData.append("thumbnail", videoThumbnail);
@@ -138,6 +167,10 @@ function Event__createFileUpload() {
   fetch("/uploads/create", { method: "POST", body: formData }).then((response) => {
     return response.json();
   }).then((jsonData) => {
+    var lastBytesUploaded = 0;
+
+    displayElement__SendVideoButton.disabled = true;
+
     upload = new tus.Upload(upload_target_file, {
       endpoint: "https://video.bunnycdn.com/tusupload",
       retryDelays: [0, 3000, 5000, 10000, 20000, 60000, 60000],
@@ -155,14 +188,21 @@ function Event__createFileUpload() {
         console.log(error);
       },
       onProgress: function (bytesUploaded, bytesTotal) {
-        console.log(bytesUploaded, bytesTotal);
+        var percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+        progressDifference = bytesUploaded - lastBytesUploaded;
+        lastBytesUploaded = bytesUploaded;
+
+        displayElement__SendVideoButton.innerText = "Video Uploading - " + percentage + "%";
       },
       onSuccess: function () {
         let headerData = { 
           "id": jsonData['metadata']['id'],
           "signature": jsonData['signature']['signature']
         }
-        fetch("/uploads/capture", { method: "POST", headers: headerData}); // do something with response but not right now because its 1AM
+        fetch("/uploads/capture", { method: "POST", headers: headerData}); 
+
+        displayElement__SendVideoButton.innerText = "Upload Complete!";
+        // do something with response but not right now because its 1AM
         // uploads/capture route confirms an upload is complete on client because it
         //       reduces the amount of requests my service has to send to check upload progress of every active upload in postgres
       }

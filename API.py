@@ -48,11 +48,16 @@ def uploads_create():
         
     description = metadata.get("description")
     if description is None or description == "":
-        description = "A video uploaded to OpenBroadcast."
+        metadata['description'] = "A video uploaded to OpenBroadcast."
+        description = metadata["description"]
     if not isinstance(description, str):
         return make_response("Invalid data.", 400)
     if len(description) >= 800:
         return make_response("Description is too large!", 400)
+    
+    category = metadata.get("category", "misc")
+    if category not in ["funny", "info", "misc"]:
+        return make_response("Category does not exist. Video wouldn't appear in a feed so it has been rejected.", 400)
     
     videoID = api_Video.videos__GenerateID()
 
