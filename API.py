@@ -55,6 +55,10 @@ def uploads_create():
     if len(description) >= 800:
         return make_response("Description is too large!", 400)
     
+    category = metadata.get("category", "misc")
+    if category not in ["funny", "info", "misc"]:
+        return make_response("Category does not exist. Video wouldn't appear in a feed so it has been rejected.", 400)
+    
     videoID = api_Video.videos__GenerateID()
 
     thumbnail = request.files["thumbnail"]
