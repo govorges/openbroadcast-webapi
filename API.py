@@ -48,7 +48,8 @@ def uploads_create():
         
     description = metadata.get("description")
     if description is None or description == "":
-        description = "A video uploaded to OpenBroadcast."
+        metadata['description'] = "A video uploaded to OpenBroadcast."
+        description = metadata["description"]
     if not isinstance(description, str):
         return make_response("Invalid data.", 400)
     if len(description) >= 800:
