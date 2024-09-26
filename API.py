@@ -48,7 +48,8 @@ def uploads_create():
         
     description = metadata.get("description")
     if description is None or description == "":
-        description = "A video uploaded to OpenBroadcast."
+        metadata['description'] = "A video uploaded to OpenBroadcast."
+        description = metadata["description"]
     if not isinstance(description, str):
         return make_response("Invalid data.", 400)
     if len(description) >= 800:
@@ -72,21 +73,6 @@ def uploads_create():
     }
 
     return jsonify(responseData)
-
-@api.route("/uploads/capture", methods=["POST"])
-def uploads_capture():
-    id = request.headers.get("id")
-    if id is None or id == "":
-        return make_response("The header \"id\" is not set or was set incorrectly", 400)
-
-    signatureHash = request.headers.get("signature")
-    if signatureHash is None or signatureHash == "":
-        return make_response("The header \"signatureHash\" is not set or was set incorrectly", 400)
-    
-    resCode = api_Video.uploads__Capture(id, signatureHash)
-    if resCode != 200:
-        return make_response("Upload capture failed. Video not registered.", resCode)
-    return make_response("Success", 200)
 
 @api.route("/videos/upload", methods=["GET", "POST"])
 def videos_upload():
