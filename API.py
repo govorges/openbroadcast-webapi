@@ -1,9 +1,11 @@
 from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
+import sass
+
 from werkzeug.utils import secure_filename
 
 from services.Video import VideoAPI
 
-from os import path
+from os import path, environ
 import json
 
 HOME_DIR = path.dirname(path.realpath(__file__))
@@ -14,6 +16,9 @@ api_Video = VideoAPI()
 api = Flask(__name__)
 api.config['MAX_CONTENT_LENGTH'] = 512 * 1000 * 1000 # Maximum file size is 512MB
 api.config["UPLOAD_FOLDER"] = UPLOAD_DIR
+
+# SCSS Compilation to CSS at runtime.
+sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
 
 ALLOWED_EXTENSIONS = ["mp4"]
 
@@ -81,7 +86,7 @@ def uploads_create():
 @api.route("/videos/upload", methods=["GET", "POST"])
 def videos_upload():
     if request.method == "GET":
-        return render_template("upload.html")
+        return render_template("upload_new.html")
     if "video" not in request.files:
         return make_response("No file uploaded.", 400)
     if "thumbnail" not in request.files:

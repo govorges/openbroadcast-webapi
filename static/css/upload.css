@@ -1,323 +1,120 @@
 body {
-    font-family: var(--nav-font);
-}
-.centerBox {
-    font-family: var(--nav-font);
-    font-weight: 400;
+  font-family: "Righteous", sans-serif; }
 
+.PanelDisplayBox {
+  height: 100vh;
+  width: 100%;
+  padding-bottom: 10vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #cedeeb;
+  font-family: "Ubuntu", sans-serif; }
+  .PanelDisplayBox .panel {
     display: flex;
     flex-direction: column;
-
-    align-items: center;
-    padding: 2%;
-
-    height: 100vh;
-}
-.splitBox {
-    width: 100%;
-    border-bottom: 1px solid var(--secondary-background);
-    
-    padding-inline: 1vw;
-    padding-block: 1vh;
-
     text-align: center;
-}
-.splitBox > h3 {
-    margin: 0;
-    padding: 0;
-
-    font-family: var(--header-font);
-}
-.splitBox > p {
-    font-size: 1.2vw;
-    margin-top: 0;
-}
-.splitBox > button {
-    width: 33%;
-    
-    cursor: pointer;
-
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-
-    border: none;
-    padding: 0.7%;
-
-    font-family: var(--header-font);
-    font-size: larger;
-    text-transform: uppercase;
-    letter-spacing: 0.1vw;
-
-    transition: 0.2s ease-in-out all;
-}
-.splitBox > button:hover {
-    background-color: var(--secondary-background);
-}
-.bottomBar {
-    border-bottom: 1px solid var(--secondary-background);
-}
-
-.videoDisplay {
-    width: 100%;
-    height: fit-content;
-
-    padding-block: 1%;
-
-    display: flex;
-    flex-direction: row;
-
-    justify-content: space-between;
-}
-.thumbnailDisplay {
-    display: flex;
-    flex-direction: column;
-
-    text-align: center;
-    
-    width: 50%;
-    height: fit-content;
-
-    background-color: var(--secondary-background);
-    box-shadow: 2px 2px 2px 1px rgb(0 0 0 / 40%);
-}
-.thumbnailDisplay > img {
-    max-height: 50vh;
-    height: auto;
-
-    max-width: 100%;
-    width: auto;
-}
-.thumbnailCarousel_Display {
-    padding-top: 1vh;
-    padding-inline: 1vw;
-    background-color: var(--secondary-background);
-    color: var(--secondary-text);
-}
-.thumbnailCarousel {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
-}
-.thumbnailCarousel > img {
-    width: 17.5%;
-    height: auto;
-}
-.thumbnailCarousel_Display > button {
-    width: 100%;
-    
-    cursor: pointer;
-
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-
-    border: none;
-
-    padding: 0.7%;
-    margin-top: 1%;
-
-    font-family: var(--header-font);
-    font-size: medium;
-    text-transform: uppercase;
-    letter-spacing: 0.1vw;
-
-    transition: 0.2s ease-in-out all;
-}
-.thumbnailDisplay > span {
-    font-family: var(--nav-font);
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-
-    width: 100%;
-
-}
-.thumbnailCarousel_Display > h4 {
-    margin-block: 1%;
-    padding: 0;
-
-    font-family: var(--header-font);
-}
-.videoOptionsDisplay {
-    display: flex;
-    flex-direction: column;
-
-    text-align: center;
-    
-    width: 50%;
-    margin-inline: 1vw;
-}
-.videoOptionsDisplay > h3 {
-    margin-block: 1vh;
-    padding: 0;
-
-    font-family: var(--header-font);
-    text-align: center;
-}
-.videoOptionsDisplay > h4 {
-    margin: 0;
-    padding: 0;
-
-    font-family: var(--header-font);
-    text-align: start;
-}
-.labelTinyText {
-    font-size: smaller;
-    text-indent: 1vw;
-}
-.videoOptionsDisplay > input[type="text"] {
-    background-color: var(--secondary-background);
-    color: var(--secondary-text);
-
-    padding: 1%;
-    width: 100%;
-
-    margin: 0;
-    border: transparent;
-}
-.videoOptionsDisplay > label {
-    padding-block: 1%;
-    padding-inline-start: 1%;
-    width: 99%;
-
-    display: flex;
-    flex-direction: column;
-    text-align: left;
-
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-}
-.categorySelector {
-    width: 100%;
-
-    display: flex;
-    flex-direction: row;
-
-    justify-content: space-between;
-    background-color: var(--secondary-background);
-}
-.categorySelector > label {
-    width: 33%;
-
-    background-color: var(--secondary-background);
-    color: var(--secondary-text);
-
-    padding-block: 1vh;
-    cursor: pointer;
-    
-    transition: 0.2s ease-in-out all;
-}
-.categorySelector > input[type="radio"] {
-    display: none;
-}
-.categorySelector > input[type="radio"]:checked+label {
-    background-color: var(--accent-1);
-}
-#selectedCategoryDisplay {
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-}
-
-.centerBox > button {
-    width: 100%;
-    
-    cursor: pointer;
-
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-
-    border: none;
-
-    padding: 0.7%;
-    margin-top: 1%;
-
-    font-family: var(--header-font);
-    font-size: medium;
-    text-transform: uppercase;
-    letter-spacing: 0.1vw;
-
-    transition: 0.2s ease-in-out all;
-}
-.centerBox > button:hover {
-    background-color: var(--secondary-background);
-}
-.uploadedVideoDetails {
-    width: 100%;
-
-    background-color: var(--secondary-background);
-    color: var(--secondary-text);
-}
-.uploadedVideoDetails > div.header {
-    width: 100%;
-    
-    background-color: var(--accent-1);
-    color: var(--secondary-text);
-}
-#videoDetailsTable {
-    width: 100%;
-}
-th {
-    font-family: var(--nav-font);
-    font-weight: 400;
-    color: var(--secondary-text);
-    width: 33%;
-}
-
-@media screen and (min-height: 100vw) {
-    body {
-        width: 100vw;
-        overflow-y: scroll;
-    }
-    .videoDisplay {
-        flex-direction: column;
+    height: 50%;
+    padding-block: 5vh;
+    position: relative; }
+    .PanelDisplayBox .panel > .subtext {
+      color: #0871ff;
+      width: 40%;
+      text-align: right;
+      align-self: center;
+      margin-top: 1vh; }
+    .PanelDisplayBox .panel > .header {
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      align-self: center;
+      width: 50%;
+      padding-inline: 1vw;
+      padding-block: 1vh;
+      margin-top: 0;
+      border: 0.1vw solid #000215; }
+      .PanelDisplayBox .panel > .header > h4 {
+        font-size: 1vw;
+        text-align: left;
+        font-weight: lighter;
+        margin-block: 0; }
+      .PanelDisplayBox .panel > .header > h2 {
+        font-size: 1.4vw;
+        border-bottom: 0.1vw solid #000215; }
+      .PanelDisplayBox .panel > .header > p {
+        font-size: 1vw; }
+      .PanelDisplayBox .panel > .header > button {
+        display: flex;
+        flex-direction: row;
         align-items: center;
+        text-align: center;
         width: 100%;
-    }
-    .videoDisplay > div {
-        width: 100% !important;
-        margin-block: 2vh;
-    }
-    .thumbnailCarousel_Display {
-        font-size: 1.4vh;
-    }
-    .thumbnailDisplay > span {
-        font-size: 1.4vh;
-    }
-    .thumbnailCarousel_Display > button {
-        font-size: 1.1vh;
-        padding-block: 2vh;
-    }
-    .centerBox > button {
-        font-size: 1.2vh;
-        padding-block: 2vh;
-    }
-    .videoOptionsDisplay > label {
-        font-size: 1.4vh;
-    }
-    .categorySelector > label {
-        font-size: 1.4vh;
-    }
-    .labelTinyText {
-        font-size: 1.1vh;
-    }
-    .videoOptionsDisplay > input[type="text"] {
-        font-size: 1.2vh;
-        padding-block: 1vh;
-    }
-    #videoDetailsTable {
-        font-size: 1.3vh;
-    }
-    .header {
-        font-size: 1.4vh;
-    }
-    #selectedCategoryDisplay {
-        font-size: 1.4vh;
-    }
-    .splitBox {
-        font-size: 1.3vh;
-    }
-    .splitBox > p {
-        font-size: 1.3vh;
-    }
-    #uploadStatusMessage {
-        font-size: 1.4vh;
-    }
-}
+        padding-block: 0.5vh;
+        padding-inline: 1vw;
+        font-size: larger;
+        cursor: pointer;
+        background-color: #0871ff;
+        color: white; }
+        .PanelDisplayBox .panel > .header > button > i {
+          margin-left: auto;
+          margin-right: 1px; }
+      .PanelDisplayBox .panel > .header > a {
+        margin-bottom: 1vh;
+        color: #0871ff; }
+      .PanelDisplayBox .panel > .header > div > ol > li {
+        margin-bottom: 1vh; }
+      .PanelDisplayBox .panel > .header > .subtext {
+        margin-block: 0.2vh;
+        text-align: center; }
+      .PanelDisplayBox .panel > .header > .inputRow {
+        display: flex;
+        flex-direction: column;
+        margin-bottom: 2vh;
+        padding-bottom: 1vh;
+        border-bottom: 0.1vw solid #000215; }
+        .PanelDisplayBox .panel > .header > .inputRow > label {
+          display: flex;
+          flex-direction: column;
+          text-align: left;
+          padding-bottom: 1vh;
+          cursor: pointer; }
+          .PanelDisplayBox .panel > .header > .inputRow > label > .subtext {
+            text-indent: 2vw; }
+          .PanelDisplayBox .panel > .header > .inputRow > label > span > .markdown_Error {
+            margin-left: 1vw; }
+          .PanelDisplayBox .panel > .header > .inputRow > label > span > .markdown_Success {
+            margin-left: 1vw; }
+        .PanelDisplayBox .panel > .header > .inputRow > input {
+          padding-block: 0.4vh;
+          font-size: 1vw; }
+        .PanelDisplayBox .panel > .header > .inputRow > select {
+          width: 25%;
+          text-align: center;
+          align-self: center;
+          font-size: 1vw;
+          cursor: pointer; }
+        .PanelDisplayBox .panel > .header > .inputRow > span {
+          margin-bottom: 1vh; }
+
+.markdown_Code {
+  background-color: rgba(0, 0, 0, 0.25);
+  padding-inline: 0.2vw;
+  padding-block: 0.1vh;
+  font-family: monospace;
+  font-weight: bolder;
+  font-size: inherit; }
+
+.markdown_Error {
+  color: red;
+  padding-inline: 0.2vw;
+  padding-block: 0.1vh;
+  font-family: monospace;
+  font-weight: bolder;
+  font-size: inherit; }
+
+.markdown_Success {
+  color: green;
+  padding-inline: 0.2vw;
+  padding-block: 0.1vh;
+  font-family: monospace;
+  font-weight: bolder;
+  font-size: inherit; }
