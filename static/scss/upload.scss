@@ -10,12 +10,15 @@ $header-font: "Mallory Book", sans-serif;
 
 body {
     font-family: $secondary-text-font;
+    overflow-y: scroll;
 }
 // rewrtiting upload page. forgot  about that 
 
 .PanelDisplayBox {
     height: 100vh;
     width: 100%;
+
+    overflow-y: hidden;
 
     padding-bottom: 10vh;
 
@@ -34,19 +37,29 @@ body {
         height: 50%;
 
         padding-block: 5vh;
+        margin-bottom: 5vh;
         
         position: relative;
 
+        transition: 0.4s ease-out all;
 
-        > .subtext {
-            color: $accent-1;
-
-            width: 40%;
-
-            text-align: right;
+        > .subtextContainer {
+            width: 100%;
             align-self: center;
-
-            margin-top: 1vh;
+            display: flex;
+            justify-content: space-evenly;
+            > .subtext {
+                color: $accent-1;
+    
+                text-align: right;
+                align-self: center;
+    
+                display: flex;
+                flex-direction: row;
+                justify-content: space-evenly;
+    
+                margin-top: 1vh;
+            }
         }
 
         > .header {
@@ -111,6 +124,15 @@ body {
             > .subtext {
                 margin-block: 0.2vh;
                 text-align: center;
+
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: center;
+
+                > span {
+                    margin-inline-start: 0.25vw;
+                }
             }
             > .inputRow {
                 display: flex;
@@ -155,6 +177,20 @@ body {
                 > span {
                     margin-bottom: 1vh;
                 }
+            }
+        }
+    }
+
+    #dialog__Thumbnail {
+        .header {
+            > img {
+                aspect-ratio: 4/3;
+
+                height: 25vh;
+                width: auto;
+
+                margin: auto;
+                margin-bottom: 1vh;
             }
         }
     }

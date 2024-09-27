@@ -19,63 +19,83 @@
 <body onload="init()">
     <div class="PanelDisplayBox">
         <!-- Container element for our different dialog panels. -->
-         <div id="dialog__Upload" class="panel">
+         <div id="dialog__Upload" class="panel" style="opacity:1;">
             <div class="header">
                 <h4>Step 1.</h4>
                 <h2>Upload a File</h2>
                 <p>Welcome to OpenBroadcast! To start, choose a video to upload.</p>
-                <a href="#" onclick="dialog__Upload_ViewRules(this)">View Rules</a>
-                <div id="dialog__Upload_ViewRules" style="display: none;">
-                    <ol>
-                        <li>Content must follow Roku's rules & regulations</li>
-                        <li>Content must follow US laws & regulations</li>
-                        <li>Maximum 512MB File Size</li>
-                        <li>Limit of 10 Uploads per day per user</li>
-                    </ol>
-                    <p>Thank you for reading the rules! 🙂</p>
-                </div>
-                <button id="dialog__Upload_SelectVideoFile" onclick="dialog__Upload_SelectVideoFile()"><span>Select File</span><i class="material-icons">upload_file</i></button>
-                <button style="display: none;" id="dialog__Upload_Continue" onclick="dialog__Upload_Continue()"><span>Continue</span><i class="material-icons">arrow_forward</i></button>
-                <span id="dialog__Upload_SelectedVideoSubtext" class="subtext"></span>
+                <a class="subtext" href="#" onclick="dialog__Upload_SelectVideoFile()">Choose a Video File</a>
+                <span id="dialog__Upload_SelectedVideoSubtext" class="subtext"></span><br>
+                <button style="display: none;" id="dialog__Upload_Continue" class="subtext" href="#" onclick="dialog__Upload_Continue()">Next Step</button>
             </div>
-            <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            </div>
          </div>
-         <div id="dialog__Metadata" class="panel">
+         <div id="dialog__Metadata" class="panel" style="opacity:0;">
             <div class="header">
                 <h4>Step 2.</h4>
-                <h2>Video Details</h2>
+                <h2>Set Video Details</h2>
                 <p>You've chosen a video, now lets get some details about your upload.</p>
                 <div class="inputRow">
                     <label for="dialog__Metadata_Input_Title" id="titleLabel">
                         <span>Video Title</span>
                         <span class="subtext">Maximum length of 120 characters. Minimum length of 12 characters. <span class="markdown_Code">Required</span></span>
                     </label>
-                    <input type="text" onchange="utility_VideoTitleInput__Event_OnChange()" id="dialog__Metadata_Input_Title" placeholder="Your video title">
+                    <input type="text" onchange="dialog__Metadata_CheckMetadataValidity()" id="dialog__Metadata_Input_Title" placeholder="Your video title">
                 </div>
                 <div class="inputRow">
                     <label for="dialog__Metadata_Input_Description" id="descLabel">
                         <span>Video Description</span>
                         <span class="subtext">Maximum length of 800 characters. <span class="markdown_Code">Optional</span></span>
                     </label>
-                    <input type="text" onchange="utility_VideoDescriptionInput__Event_OnChange()" id="dialog__Metadata_Input_Description" placeholder="Your video description">
+                    <input type="text" onchange="dialog__Metadata_CheckMetadataValidity()" id="dialog__Metadata_Input_Description" placeholder="Your video description">
                 </div>
                 <div class="inputRow">
                     <span>Video Category</span>
                     <span class="subtext">This determines what part of the channel your video will be placed in.</span>
-                    <select>
+                    <select id="dialog__Metadata_Input_Category" onchange="dialog__Metadata_CheckMetadataValidity()">
                         <option value="misc">Miscellaneous</option>
                         <option value="funny">Funny</option>
                         <option value="informative">Informative</option>
                     </select>
                 </div>
-                <button id="dialog__Metadata_Continue" onclick="dialog__Metadata_Continue()"><span>Continue</span><i class="material-icons">arrow_forward</i></button>
+                <button id="dialog__Metadata_Continue" class="subtext" href="#" onclick="dialog__Metadata_Continue()">Next Step</button>
             </div>
-            <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            </div>
+         </div>
+         <div id="dialog__Thumbnail" class="panel" style="opacity:0;">
+            <div class="header">
+                <h4>Step 3.</h4>
+                <h2>Set a Thumbnail</h2>
+                <p>Almost there! Now, lets set a thumbnail for your video.</p>
+                <img id="thumbnailDisplay" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
+                You can use this default option<br>
+                or... <a class="subtext" href="#" onclick="dialog__Thumbnail_SelectThumbnailFile()">Upload your own thumbnail<span class='markdown_Code'>.PNG</span></a>
+                <br>
+                <button id="dialog__Thumbnail_Continue" onclick="dialog__Thumbnail_Continue()">
+                    <span>Continue</span><i class="material-icons">arrow_forward</i>
+                </button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            </div>
          </div>
     </div>
 </body>
-<elementStore style="display: none;">
-    <input type="file" id="utility_VideoFileInput" accept=".mp4" onchange="utility_VideoFileInput__Event_OnChange()">
-</elementStore>
 
+<elementStore style="display: none;">
+    <input type="file" id="utility_VideoFileInput" accept=".mp4" onchange="dialog__Upload_VideoFileInput__Event_OnChange()">
+    <input type="file" id="utility_ThumbnailFileInput" accept=".png" onchange="dialog__Thumbnail_ThumbnailFileInput_Event_OnChange()">
+</elementStore>
+<footer>
+    {% include 'footer.html' %}
+    {% block footerContent %}
+    {% endblock %}
+</footer>
 </html>

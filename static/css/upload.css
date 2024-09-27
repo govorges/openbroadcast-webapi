@@ -1,9 +1,11 @@
 body {
-  font-family: "Righteous", sans-serif; }
+  font-family: "Righteous", sans-serif;
+  overflow-y: scroll; }
 
 .PanelDisplayBox {
   height: 100vh;
   width: 100%;
+  overflow-y: hidden;
   padding-bottom: 10vh;
   display: flex;
   flex-direction: column;
@@ -15,13 +17,22 @@ body {
     text-align: center;
     height: 50%;
     padding-block: 5vh;
-    position: relative; }
-    .PanelDisplayBox .panel > .subtext {
-      color: #0871ff;
-      width: 40%;
-      text-align: right;
+    margin-bottom: 5vh;
+    position: relative;
+    transition: 0.4s ease-out all; }
+    .PanelDisplayBox .panel > .subtextContainer {
+      width: 100%;
       align-self: center;
-      margin-top: 1vh; }
+      display: flex;
+      justify-content: space-evenly; }
+      .PanelDisplayBox .panel > .subtextContainer > .subtext {
+        color: #0871ff;
+        text-align: right;
+        align-self: center;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-evenly;
+        margin-top: 1vh; }
     .PanelDisplayBox .panel > .header {
       display: flex;
       flex-direction: column;
@@ -64,7 +75,13 @@ body {
         margin-bottom: 1vh; }
       .PanelDisplayBox .panel > .header > .subtext {
         margin-block: 0.2vh;
-        text-align: center; }
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center; }
+        .PanelDisplayBox .panel > .header > .subtext > span {
+          margin-inline-start: 0.25vw; }
       .PanelDisplayBox .panel > .header > .inputRow {
         display: flex;
         flex-direction: column;
@@ -94,6 +111,12 @@ body {
           cursor: pointer; }
         .PanelDisplayBox .panel > .header > .inputRow > span {
           margin-bottom: 1vh; }
+  .PanelDisplayBox #dialog__Thumbnail .header > img {
+    aspect-ratio: 4/3;
+    height: 25vh;
+    width: auto;
+    margin: auto;
+    margin-bottom: 1vh; }
 
 .markdown_Code {
   background-color: rgba(0, 0, 0, 0.25);
