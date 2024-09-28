@@ -178,6 +178,79 @@ body {
                     margin-bottom: 1vh;
                 }
             }
+            .dialog__Details_VideoDetails {
+                display: flex;
+                flex-direction: row;
+                > .details {
+                    display: flex;
+                    flex-direction: column;
+
+                    width: 50%;
+
+                    > .dataRow {
+                        display: flex;
+                        flex-direction: column;
+
+                        width: 100%;
+                        margin-bottom: 1vh;
+
+                        > .tagName {
+                            color: $accent-1;
+                            font-weight: bolder;
+
+                            text-align: left;
+                            text-indent: -5%;
+                        }
+                        > .tagData {
+                            background-color: rgba(0, 0, 0, 0.15);
+                            text-align: left;
+                            width: 100%;
+
+                            padding-block: 0.4vh;
+                            padding-inline: 0.3vw;
+                        }
+                        > table > tbody > tr {
+                            > th {
+                                color: $accent-1;
+                            }
+                            > td {
+                                text-align: center;
+                                border-top: none;
+                            }
+                        }
+                    }
+                }
+                > .details_Image {
+                    width: 50%;
+                    
+                    > img {
+                        aspect-ratio: 4/3;
+        
+                        height: 25vh;
+                        width: auto;
+        
+                        margin: auto;
+                        margin-bottom: 1vh;
+                    }
+                }
+            }
+            > .terms {
+                margin-bottom: 1vh;
+
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                > label {
+                    cursor: pointer;
+                }
+                > input[type="checkbox"] {
+                    margin: 0;
+                    margin-inline-start: 0.2vw;
+
+                    cursor: pointer;
+                }
+            }
         }
     }
 
@@ -194,6 +267,9 @@ body {
             }
         }
     }
+}
+a {
+    color: $accent-1;
 }
 .markdown_Code {
     background-color: rgba(0, 0, 0, 0.25);

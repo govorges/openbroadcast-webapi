@@ -86,6 +86,57 @@
                 <a class="subtext" href="/report-a-problem">Report a Problem</a>
             </div>
          </div>
+         <div id="dialog__Details" class="panel" style="opacity:0;">
+            <div class="header">
+                <h4>Step 4.</h4>
+                <h2>Confirm your Upload</h2>
+                <p>We're all set here! Make sure your video details are correct and send the upload when ready.</p>
+                
+                <div class="dialog__Details_VideoDetails">
+                    <div class="details_Image">
+                        <img id="dialog__Details_VideoThumbnail" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
+                    </div>
+                    <div class="details">
+                        <div class="dataRow">
+                            <span class="tagName">Title</span>
+                            <span class="tagData" id="dialog__Details_Title"></span>
+                        </div>
+                        <div class="dataRow">
+                            <span class="tagName">Description</span>
+                            <span class="tagData description" id="dialog__Details_Description"></span>
+                        </div>
+                        <div class="dataRow">
+                            <span class="tagName">Category</span>
+                            <span class="tagData" id="dialog__Details_Category"></span>
+                        </div>
+                        <div class="dataRow">
+                            <table id="videoDetailsTable">
+                                <tr>
+                                  <th>Length</th>
+                                  <th>Resolution</th>
+                                  <th>File Size</th>
+                                </tr>
+                                <tr>
+                                  <td id="dialog__Details_VideoLength"></td>
+                                  <td id="dialog__Details_VideoResolution"></td>
+                                  <td id="dialog__Details_VideoFileSize"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="terms">
+                    <label for="termsCheckbox">I have read and agree to the OpenBroadcast <a href="#">Terms of Service</a></label>
+                    <input id="termsCheckbox" type="checkbox">
+                </div>
+                
+                <button id="dialog__Details_Continue" class="subtext" href="#" onclick="dialog__Details_Continue()">Upload Video</button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            </div>
+         </div>
     </div>
 </body>
 

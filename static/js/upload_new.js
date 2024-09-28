@@ -16,6 +16,7 @@ function init() {
     window.dialog__Upload = document.getElementById("dialog__Upload");
     window.dialog__Metadata = document.getElementById("dialog__Metadata");
     window.dialog__Thumbnail = document.getElementById("dialog__Thumbnail");
+    window.dialog__Details = document.getElementById("dialog__Details");
 
     window.dialog__Upload_Buttons_SelectVideoFile = document.getElementById("dialog__Upload_SelectVideoFile");
     window.dialog__Upload_Buttons_Continue = document.getElementById("dialog__Upload_Continue");
@@ -27,6 +28,26 @@ function init() {
     window.dialog__Metadata_Buttons_Continue = document.getElementById("dialog__Metadata_Continue");
 
     window.dialog__Thumbnail_ImageDisplay = document.getElementById("thumbnailDisplay");
+
+    window.dialog__Details_Title = document.getElementById("dialog__Details_Title");
+    window.dialog__Details_Description = document.getElementById("dialog__Details_Description");
+    window.dialog__Details_Category = document.getElementById("dialog__Details_Category");
+    window.dialog__Details_VideoLength = document.getElementById("dialog__Details_VideoLength");
+    window.dialog__Details_VideoResolution = document.getElementById("dialog__Details_VideoResolution");
+    window.dialog__Details_VideoFileSize = document.getElementById("dialog__Details_VideoFileSize");
+    window.dialog__Details_VideoThumbnail = document.getElementById("dialog__Details_VideoThumbnail");
+    
+    window.memory__VideoData = {
+        title: "",
+        description: "",
+        category: "",
+        category_str: "",
+        duration_str: "",
+        resolution_str: "",
+        filesize_str: "",
+        thumbnail_DataURL: "",
+    }
+
 }
 
 function dialog__Upload_ViewRules(anchor) {
@@ -107,12 +128,13 @@ function dialog__Upload_VideoFileInput__Event_OnChange() {
             type: "error"
         });
     }
+    dialog__Thumbnail_Load();
 }
 function dialog__Upload_Continue() {
     dialog__Upload.style.display = "none";
 
     dialog__Thumbnail.style.opacity = 1;
-    dialog__Thumbnail_Load();
+    // dialog__Thumbnail_Load(); Moved to run upon file upload.
 }
 function dialog__Thumbnail_Continue() {
     dialog__Thumbnail.style.display = "none";
@@ -122,9 +144,28 @@ function dialog__Thumbnail_Continue() {
 }
 function dialog__Metadata_Continue() {
     if (dialog__Metadata_CheckMetadataValidity()) {
+        memory__VideoData.title = dialog__Metadata_Input_VideoTitle.value;
+        
+        memory__VideoData.description = dialog__Metadata_Input_VideoDescription.value;
+        if (memory__VideoData.description == "") {
+            memory__VideoData.description = "A video uploaded to OpenBroadcast.";
+        }
+
+        memory__VideoData.category = dialog__Metadata_Input_Category.value;
+        if (memory__VideoData.category == "misc") {
+            memory__VideoData.category_str = "Miscellaneous";
+        }
+        else if (memory__VideoData.category == "informative") {
+            memory__VideoData.category_str = "Informative";
+        }
+        else if (memory__VideoData.category == "funny") {
+            memory__VideoData.category_str = "Funny";
+        }
+
         dialog__Metadata.style.display = "none";
-        dialog__Thumbnail.style.opacity = 1;
-        dialog__Thumbnail_Load();
+        dialog__Details.style.opacity = 1;        
+
+        dialog__Details_PopulateData();
     }
 }
 
@@ -241,6 +282,8 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             canvas.width = video.videoWidth;
             canvas.height = video.videoHeight;
 
+            memory__VideoData.resolution_str = video.videoWidth + "x" + video.videoHeight;
+
             minutes = video.duration / 60;
             minutes = Math.floor(minutes);
             if (minutes < 10) {
@@ -252,6 +295,8 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             if (seconds < 10) {
               seconds = "0" + seconds;
             }
+
+            memory__VideoData.duration_str = minutes + ":" + seconds;
       
             var displayFileSize;
       
@@ -265,6 +310,8 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             else {
               displayFileSize = "NaN";
             }
+
+            memory__VideoData.filesize_str = displayFileSize;
 
             ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight);
             let thumbnailBlob = canvas.toBlob((file) => {
@@ -282,6 +329,7 @@ function dialog__Thumbnail_Load() {
     dialog__Thumbnail_DataURIFromFile(utility_VideoFileInput.files[0]).then(function (thumbnailDataURL) {
         utility_ThumbnailFileInput.setAttribute("onchange", null); // Temporarily disable the onchange to guarantee it doesn't trigger from setting the thumbnail file input element programmatically.
         dialog__Thumbnail_ImageDisplay.src = thumbnailDataURL; 
+        memory__VideoData.thumbnail_DataURL = thumbnailDataURL;
         utility_ThumbnailFileInput.setAttribute("onchange", "dialog__Thumbnail_ThumbnailFileInput_Event_OnChange()");
     });
 }
@@ -297,4 +345,18 @@ function dialog__Thumbnail_ThumbnailFileInput_Event_OnChange() {
     } // TODO: probably additional logic here.
     let thumbnailDataURL = URL.createObjectURL(utility_ThumbnailFileInput.files[0]);
     dialog__Thumbnail_ImageDisplay.src = thumbnailDataURL;
+    memory__VideoData.thumbnail_DataURL = thumbnailDataURL;
+}
+
+
+function dialog__Details_PopulateData() {
+    dialog__Details_Title.innerText = memory__VideoData.title;
+    dialog__Details_Description.innerText = memory__VideoData.description;
+    dialog__Details_Category.innerText = memory__VideoData.category_str;
+
+    dialog__Details_VideoLength.innerText = memory__VideoData.duration_str;
+    dialog__Details_VideoResolution.innerText = memory__VideoData.resolution_str;
+    dialog__Details_VideoFileSize.innerText = memory__VideoData.filesize_str;
+
+    dialog__Details_VideoThumbnail.src = memory__VideoData.thumbnail_DataURL;
 }
