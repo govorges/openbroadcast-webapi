@@ -110,8 +110,14 @@ function dialog__Upload_VideoFileInput__Event_OnChange() {
 }
 function dialog__Upload_Continue() {
     dialog__Upload.style.display = "none";
-    dialog__Metadata.style.opacity = 1;
 
+    dialog__Thumbnail.style.opacity = 1;
+    dialog__Thumbnail_Load();
+}
+function dialog__Thumbnail_Continue() {
+    dialog__Thumbnail.style.display = "none";
+
+    dialog__Metadata.style.opacity = 1;
     dialog__Metadata_Buttons_Continue.style.backgroundColor = "red";
 }
 function dialog__Metadata_Continue() {

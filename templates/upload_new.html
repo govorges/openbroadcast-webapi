@@ -33,9 +33,27 @@
                 <a class="subtext" href="/report-a-problem">Report a Problem</a>
             </div>
          </div>
-         <div id="dialog__Metadata" class="panel" style="opacity:0;">
+         <div id="dialog__Thumbnail" class="panel" style="opacity:0;">
             <div class="header">
                 <h4>Step 2.</h4>
+                <h2>Set a Thumbnail</h2>
+                <p>Almost there! Now, lets set a thumbnail for your video.</p>
+                <img id="thumbnailDisplay" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
+                You can use this default option<br>
+                or... <a class="subtext" href="#" onclick="dialog__Thumbnail_SelectThumbnailFile()">Upload your own thumbnail<span class='markdown_Code'>.PNG</span></a>
+                <br>
+                <button id="dialog__Thumbnail_Continue" onclick="dialog__Thumbnail_Continue()">
+                    <span>Continue</span><i class="material-icons">arrow_forward</i>
+                </button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/report-a-problem">Report a Problem</a>
+            </div>
+         </div>
+         <div id="dialog__Metadata" class="panel" style="opacity:0;">
+            <div class="header">
+                <h4>Step 3.</h4>
                 <h2>Set Video Details</h2>
                 <p>You've chosen a video, now lets get some details about your upload.</p>
                 <div class="inputRow">
@@ -62,24 +80,6 @@
                     </select>
                 </div>
                 <button id="dialog__Metadata_Continue" class="subtext" href="#" onclick="dialog__Metadata_Continue()">Next Step</button>
-            </div>
-            <div class="subtextContainer">
-                <a class="subtext" href="/">Restart</a>
-                <a class="subtext" href="/report-a-problem">Report a Problem</a>
-            </div>
-         </div>
-         <div id="dialog__Thumbnail" class="panel" style="opacity:0;">
-            <div class="header">
-                <h4>Step 3.</h4>
-                <h2>Set a Thumbnail</h2>
-                <p>Almost there! Now, lets set a thumbnail for your video.</p>
-                <img id="thumbnailDisplay" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
-                You can use this default option<br>
-                or... <a class="subtext" href="#" onclick="dialog__Thumbnail_SelectThumbnailFile()">Upload your own thumbnail<span class='markdown_Code'>.PNG</span></a>
-                <br>
-                <button id="dialog__Thumbnail_Continue" onclick="dialog__Thumbnail_Continue()">
-                    <span>Continue</span><i class="material-icons">arrow_forward</i>
-                </button>
             </div>
             <div class="subtextContainer">
                 <a class="subtext" href="/">Restart</a>
