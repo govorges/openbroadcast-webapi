@@ -251,6 +251,22 @@ body {
                     cursor: pointer;
                 }
             }
+            > .progress {
+                margin-top: 1vh;
+                
+                width: 100%;
+                text-align: center;
+
+                background-color: $secondary-background;
+
+                > #progressBar {
+                    width: 0%;
+                    height: 2vh;
+
+                    background-color: $accent-1;
+                    color: $accent-1;
+                }
+            }
         }
     }
 

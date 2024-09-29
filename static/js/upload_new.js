@@ -17,6 +17,7 @@ function init() {
     window.dialog__Metadata = document.getElementById("dialog__Metadata");
     window.dialog__Thumbnail = document.getElementById("dialog__Thumbnail");
     window.dialog__Details = document.getElementById("dialog__Details");
+    window.dialog__UploadStatus = document.getElementById("dialog__UploadStatus");
 
     window.dialog__Upload_Buttons_SelectVideoFile = document.getElementById("dialog__Upload_SelectVideoFile");
     window.dialog__Upload_Buttons_Continue = document.getElementById("dialog__Upload_Continue");
@@ -167,6 +168,10 @@ function dialog__Metadata_Continue() {
 
         dialog__Details_PopulateData();
     }
+}
+function dialog__Details_Continue() {
+    dialog__Details.style.display = "none";
+    dialog__UploadStatus.style.opacity = 1;
 }
 
 
