@@ -83,45 +83,8 @@ def uploads_create():
 
     return jsonify(responseData)
 
-@api.route("/videos/upload", methods=["GET", "POST"])
+@api.route("/videos/upload", methods=["GET"])
 def videos_upload():
-    if request.method == "GET":
-        return render_template("upload_new.html")
-    if "video" not in request.files:
-        return make_response("No file uploaded.", 400)
-    if "thumbnail" not in request.files:
-        return make_response("No thumbnail uploaded", 400)
-    
-    video = request.files["video"]
-    thumbnail = request.files["thumbnail"]
-
-    if video.filename == "":
-        return redirect(url_for('index'))
-    
-    if video and _allowedFile(video.filename):
-        video_id = api_Video.videos__GenerateID()
-        video_filename = secure_filename(f"{video_id}.mp4")
-        video.save(path.join(api.config['UPLOAD_FOLDER'], video_filename))
-
-        thumbnail_filename = secure_filename(f"{video_id}.png")
-        thumbnail.save(path.join(api.config["UPLOAD_FOLDER"], thumbnail_filename))
-
-        video_metadata = request.form.get("metadata")
-        if video_metadata is None:
-            return make_response("No video metadata retrieved.", 400)
-        video_metadata = json.loads(video_metadata)
-        
-        
-        video_metadata = {
-            "title": video_metadata.get("title", f"{video_id}.mp4"),
-            "description": video_metadata.get("description", "A video uploaded to OpenBroadcast"),
-        }
-
-        api_Video.videos__IngestVideo(
-            id = f"{video_id}", 
-            video_metadata = video_metadata
-        )
-        return make_response("Video ingested successfully.", 200)
-
+    return render_template("upload_new.html")
 if __name__ == "__main__":
     api.run("127.0.0.1", 5000, True)
