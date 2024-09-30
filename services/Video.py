@@ -3,7 +3,7 @@ from os import environ
 
 class VideoAPI:
     def __init__(self):
-        API_Endpoint_Address = ""
+        API_Endpoint_Address = environ["VIDEO_ENDPOINT_ADDRESS"]
         if "http" not in API_Endpoint_Address:
             self.API_Endpoint_URL = f"http://{API_Endpoint_Address}"
 
