@@ -56,37 +56,38 @@ function init() {
     window.dialog__UploadStatus_ProgressBar = document.getElementById("dialog__UploadStatus_progressBar");
     window.dialog__UploadStatus_StatusText = document.getElementById("dialog__UploadStatus_statusText");
 
-    window.VideoStatusCodes = {
-      0: {
-        messageContent: "Upload is stuck in progress. This error should not exist, contact Gio directly if you see this in normal operation. (Error 0x01)",
+    // TODO: error callbacks to yell at users that things broke
+    window.VideoStatusCodes = [
+      {
+        messageContent: "Upload is stuck in progress. This error should not exist, contact support (Error 0x01)",
         type: "error"
       },
-      1: {
+      {
         messageContent: "Video uploaded successfully.",
         type: "info"
       },
-      2: {
+      {
         messageContent: "OpenBroadcast is processing your video... (This usually takes a minute)",
         type: "info"
       },
-      3: {
+      {
         messageContent: "Your video is transcoding. It will be available soon!",
         type: "info"
       },
-      4: {
+      {
         messageContent: "Your video has been successfully registered on OpenBroadcast!",
         type: "info",
         callback: dialog__UploadStatus_StatusCompletionCallback
       },
-      5: {
+      {
         messageContent: "There was an error processing your video (Error 0x05)",
         type: "error"
       },
-      6: {
+      {
         messageContent: "Your upload has failed! There may be a problem with your video file. This is not typically connection related. (Error 0x06)",
         type: "error"
       }
-    }
+    ]
 
     window.memory__VideoData = {
         title: "",
@@ -517,7 +518,6 @@ function dialog__UploadStatus_StartPoller(guid) {
       return response.json();
     }).then((jsonData) => {
       let uploadStatus = jsonData["status"]
-      console.log(uploadStatus);
       
       let statusInfo = VideoStatusCodes[uploadStatus];
       utility_DisplayAlertBarMessage({
@@ -529,7 +529,6 @@ function dialog__UploadStatus_StartPoller(guid) {
       if (callback != undefined) {
         callback();
       }
-      console.log(statusInfo); // debug
     })
   }, 10000);
 }
