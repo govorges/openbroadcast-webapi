@@ -2,6 +2,7 @@
 function init() {
     window.utility_VideoFileInput = document.getElementById("utility_VideoFileInput");
     window.utility_ThumbnailFileInput = document.getElementById("utility_ThumbnailFileInput");
+    window.uploadObject = undefined;
 
     window.memory__VideoFileInput_PreviousFileName = "";
     window.memory__VideoFileInput_CurrentFileName = "";
@@ -29,7 +30,7 @@ function init() {
     };
     window.DialogNameOrder = ["init", "upload", "thumbnail", "metadata", "details", "uploadstatus"];
 
-    dialog__Next("init");
+    dialog__Next("init"); // Initializing the first item in DialogNameOrder.
 
     window.dialog__Upload_Buttons_SelectVideoFile = document.getElementById("dialog__Upload_SelectVideoFile");
     window.dialog__Upload_Buttons_Continue = document.getElementById("dialog__Upload_Continue");
@@ -49,6 +50,8 @@ function init() {
     window.dialog__Details_VideoResolution = document.getElementById("dialog__Details_VideoResolution");
     window.dialog__Details_VideoFileSize = document.getElementById("dialog__Details_VideoFileSize");
     window.dialog__Details_VideoThumbnail = document.getElementById("dialog__Details_VideoThumbnail");
+
+    window.dialog__UploadStatus_ProgressBar = document.getElementById("dialog__UploadStatus_progressBar");
 
     window.memory__VideoData = {
         title: "",
@@ -379,3 +382,80 @@ function dialog__Details_PopulateData() {
 
     dialog__Details_VideoThumbnail.src = memory__VideoData.thumbnail_DataURL;
 }
+function DataURLToBlob(dataURL) {
+  let byteString;
+  if (dataURL.split(',')[0].indexOf('base64') >= 0) {
+    byteString = atob(dataURL.split(',')[1]);
+  }
+  else {
+    byteString = unescape(dataURL.split(',')[1]);
+  }
+
+  let mimeString = dataURL.split(",")[0].split(':')[1].split(";")[0];
+  let ia = new Uint8Array(byteString.length);
+  for (let i = 0; i < byteString.length; i++) {
+    ia[i] = byteString.charCodeAt(i);
+  }
+  return new Blob([ia], {type: mimeString});
+}
+
+async function dialog__UploadStatus_StartUpload() {
+  if (memory__VideoData.thumbnail_DataURL == null) {
+    return;
+  }
+  let formData = new FormData();
+
+  let thumbnailFile = DataURLToBlob(memory__VideoData.thumbnail_DataURL);
+  formData.append("thumbnail", thumbnailFile);
+
+  let videoMetadata = { "title": memory__VideoData.title, "description": memory__VideoData.description, "category": memory__VideoData.category }
+  formData.append("metadata", JSON.stringify(videoMetadata));
+
+  _uploadTarget = utility_VideoFileInput.files[0];
+
+  fetch("/uploads/create", { method: "POST", body: formData } ).then((response) => {
+    return response.json();
+  }).then((jsonData) => {
+    uploadObject = new tus.Upload(_uploadTarget, {
+      endpoint: "https://video.bunnycdn.com/tusupload",
+      retryDelays: [0, 3000, 5000, 10000, 20000, 60000, 60000],
+      headers: {
+        AuthorizationSignature: jsonData['signature']['signature'],
+        AuthorizationExpire: jsonData['signature']['signature_expiration_time'],
+        LibraryId: jsonData['signature']['library_id'],
+        VideoId: jsonData['metadata']['guid']
+      },
+      metadata: {
+        filetype: _uploadTarget.type,
+        title: memory__VideoData.title
+      },
+      onError: function (error) {
+        utility_DisplayAlertBarMessage({
+          messageContent: "Error during upload, retrying...",
+          length_ms: 2000,
+          type: 'warning'
+        });
+      },
+      onProgress: function (bytesUploaded, bytesTotal) {
+        let percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+      },
+      onSuccess: function () {}
+    }).then(function () {
+      dialog__UploadStatus_TryStartUpload();
+    });
+  });
+}
+
+function dialog__UploadStatus_TryStartUpload() {
+  if (uploadObject == undefined) {
+    return;
+  }
+  uploadObject.findPreviousUploads().then(function (previousUploads)) {
+    if (previousUploads.length) {
+      uploadObject.resumeFromPreviousUpload(previousUploads[0]);
+    }
+    uploadObject.start();
+  });
+}
+
+
