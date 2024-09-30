@@ -42,7 +42,7 @@ def uploads_create():
         metadata = json.loads(metadata)
     except json.JSONDecodeError:
         return make_response("Invalid JSON provided", 400)
-    
+
     title = metadata.get("title")
     if title is None or title == "":
         return make_response("No title provided.", 400)
@@ -50,7 +50,7 @@ def uploads_create():
         return make_response("Invalid data.", 400)
     if len(title) >= 120:
         return make_response("Title is too large!", 400)
-        
+
     description = metadata.get("description")
     if description is None or description == "":
         metadata['description'] = "A video uploaded to OpenBroadcast."
@@ -59,11 +59,11 @@ def uploads_create():
         return make_response("Invalid data.", 400)
     if len(description) >= 800:
         return make_response("Description is too large!", 400)
-    
+
     category = metadata.get("category", "misc")
     if category not in ["funny", "info", "misc"]:
         return make_response("Category does not exist. Video wouldn't appear in a feed so it has been rejected.", 400)
-    
+
     videoID = api_Video.videos__GenerateID()
 
     thumbnail = request.files["thumbnail"]
@@ -85,6 +85,8 @@ def uploads_create():
 
 @api.route("/videos/upload", methods=["GET"])
 def videos_upload():
+    sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
     return render_template("upload_new.html")
+
 if __name__ == "__main__":
     api.run("127.0.0.1", 5000, True)

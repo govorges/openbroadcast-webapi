@@ -19,21 +19,21 @@
 <body onload="init()">
     <div class="PanelDisplayBox">
         <!-- Container element for our different dialog panels. -->
-         <div id="dialog__Upload" class="panel" style="opacity:1;">
+         <div id="dialog__Upload" class="panel">
             <div class="header">
                 <h4>Step 1.</h4>
                 <h2>Upload a File</h2>
                 <p>Welcome to OpenBroadcast! To start, choose a video to upload.</p>
                 <a class="subtext" href="#" onclick="dialog__Upload_SelectVideoFile()">Choose a Video File</a>
                 <span id="dialog__Upload_SelectedVideoSubtext" class="subtext"></span><br>
-                <button style="display: none;" id="dialog__Upload_Continue" class="subtext" href="#" onclick="dialog__Upload_Continue()">Next Step</button>
+                <button style="display: none;" id="dialog__Upload_Continue" class="subtext" href="#" onclick="dialog__Next('upload')">Next Step</button>
             </div>
             <div class="subtextContainer">
                 <a class="subtext" href="/">Restart</a>
                 <a class="subtext" href="/report-a-problem">Report a Problem</a>
             </div>
          </div>
-         <div id="dialog__Thumbnail" class="panel" style="opacity:0;">
+         <div id="dialog__Thumbnail" class="panel">
             <div class="header">
                 <h4>Step 2.</h4>
                 <h2>Set a Thumbnail</h2>
@@ -42,7 +42,7 @@
                 You can use this default option<br>
                 or... <a class="subtext" href="#" onclick="dialog__Thumbnail_SelectThumbnailFile()">Upload your own thumbnail<span class='markdown_Code'>.PNG</span></a>
                 <br>
-                <button id="dialog__Thumbnail_Continue" onclick="dialog__Thumbnail_Continue()">
+                <button id="dialog__Thumbnail_Continue" onclick="dialog__Next('thumbnail')">
                     <span>Continue</span><i class="material-icons">arrow_forward</i>
                 </button>
             </div>
@@ -51,7 +51,7 @@
                 <a class="subtext" href="/report-a-problem">Report a Problem</a>
             </div>
          </div>
-         <div id="dialog__Metadata" class="panel" style="opacity:0;">
+         <div id="dialog__Metadata" class="panel">
             <div class="header">
                 <h4>Step 3.</h4>
                 <h2>Set Video Details</h2>
@@ -79,19 +79,19 @@
                         <option value="informative">Informative</option>
                     </select>
                 </div>
-                <button id="dialog__Metadata_Continue" class="subtext" href="#" onclick="dialog__Metadata_Continue()">Next Step</button>
+                <button id="dialog__Metadata_Continue" class="subtext" onclick="dialog__Next('metadata')">Next Step</button>
             </div>
             <div class="subtextContainer">
                 <a class="subtext" href="/">Restart</a>
                 <a class="subtext" href="/report-a-problem">Report a Problem</a>
             </div>
          </div>
-         <div id="dialog__Details" class="panel" style="opacity:0;">
+         <div id="dialog__Details" class="panel">
             <div class="header">
                 <h4>Step 4.</h4>
                 <h2>Confirm your Upload</h2>
                 <p>We're all set here! Make sure your video details are correct and send the upload when ready.</p>
-                
+
                 <div class="dialog__Details_VideoDetails">
                     <div class="details_Image">
                         <img id="dialog__Details_VideoThumbnail" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
@@ -129,20 +129,20 @@
                     <label for="termsCheckbox">I have read and agree to the OpenBroadcast <a href="#">Terms of Service</a></label>
                     <input id="termsCheckbox" type="checkbox">
                 </div>
-                
-                <button id="dialog__Details_Continue" class="subtext" href="#" onclick="dialog__Details_Continue()">Upload Video</button>
+
+                <button id="dialog__Details_Continue" class="subtext" onclick="dialog__Next('details')">Upload Video</button>
             </div>
             <div class="subtextContainer">
                 <a class="subtext" href="/">Restart</a>
                 <a class="subtext" href="/report-a-problem">Report a Problem</a>
             </div>
          </div>
-         <div id="dialog__UploadStatus" class="panel" style="opacity:0;">
+         <div id="dialog__UploadStatus" class="panel">
             <div class="header">
                 <h4>Step 5.</h4>
                 <h2>Upload in Progress</h2>
                 <p>Your video is being sent to OpenBroadcast. Don't close this browser tab!</p>
-                
+
                 <br>
                 <span class="text">Uploading - 100%</span>
                 <div class="progress">

@@ -2,7 +2,7 @@
 function init() {
     window.utility_VideoFileInput = document.getElementById("utility_VideoFileInput");
     window.utility_ThumbnailFileInput = document.getElementById("utility_ThumbnailFileInput");
-    
+
     window.memory__VideoFileInput_PreviousFileName = "";
     window.memory__VideoFileInput_CurrentFileName = "";
 
@@ -18,6 +18,18 @@ function init() {
     window.dialog__Thumbnail = document.getElementById("dialog__Thumbnail");
     window.dialog__Details = document.getElementById("dialog__Details");
     window.dialog__UploadStatus = document.getElementById("dialog__UploadStatus");
+
+    window.DialogNameMap = {
+      "init": dialog__Upload,
+      "upload": dialog__Upload,
+      "metadata": dialog__Metadata,
+      "thumbnail": dialog__Thumbnail,
+      "details": dialog__Details,
+      "uploadstatus": dialog__UploadStatus
+    };
+    window.DialogNameOrder = ["init", "upload", "thumbnail", "metadata", "details", "uploadstatus"];
+
+    dialog__Next("init");
 
     window.dialog__Upload_Buttons_SelectVideoFile = document.getElementById("dialog__Upload_SelectVideoFile");
     window.dialog__Upload_Buttons_Continue = document.getElementById("dialog__Upload_Continue");
@@ -37,7 +49,7 @@ function init() {
     window.dialog__Details_VideoResolution = document.getElementById("dialog__Details_VideoResolution");
     window.dialog__Details_VideoFileSize = document.getElementById("dialog__Details_VideoFileSize");
     window.dialog__Details_VideoThumbnail = document.getElementById("dialog__Details_VideoThumbnail");
-    
+
     window.memory__VideoData = {
         title: "",
         description: "",
@@ -53,14 +65,14 @@ function init() {
 
 function dialog__Upload_ViewRules(anchor) {
     let viewRules_Element = document.getElementById("dialog__Upload_ViewRules");
-    
+
     if (viewRules_Element.style.display == "none") {
         viewRules_Element.style.display = "block";
         anchor.innerText = "Hide Rules";
     }
     else {
         anchor.innerText = "View Rules";
-        document.getElementById("dialog__Upload_ViewRules").style.display = "None";   
+        document.getElementById("dialog__Upload_ViewRules").style.display = "None";
     }
 }
 function dialog__Upload_SelectVideoFile() {
@@ -97,7 +109,7 @@ function utility_DisplayAlertBarMessage({messageContent, length_ms, type}) {
 function dialog__Upload_VideoFileInput__Event_OnChange() {
     if (utility_VideoFileInput.length == 0) {
         utility_DisplayAlertBarMessage({
-            messageContent: "No video selected!", 
+            messageContent: "No video selected!",
             type: "warning"
         })
         return; // File selection is empty.
@@ -122,6 +134,7 @@ function dialog__Upload_VideoFileInput__Event_OnChange() {
 
         // Swapping the file selection button with the continue-to-next-panel button.
         dialog__Upload_Buttons_Continue.style.display = "flex";
+        dialog__Thumbnail_Load();
     }
     if (currentFileName == "") {
         utility_DisplayAlertBarMessage({
@@ -129,51 +142,54 @@ function dialog__Upload_VideoFileInput__Event_OnChange() {
             type: "error"
         });
     }
-    dialog__Thumbnail_Load();
 }
-function dialog__Upload_Continue() {
-    dialog__Upload.style.display = "none";
+function dialog__Next(currentDialogName) {
+  let currentDialogIndex = DialogNameOrder.indexOf(currentDialogName);
+  let nextDialogName = DialogNameOrder[currentDialogIndex+1];
 
-    dialog__Thumbnail.style.opacity = 1;
-    // dialog__Thumbnail_Load(); Moved to run upon file upload.
-}
-function dialog__Thumbnail_Continue() {
-    dialog__Thumbnail.style.display = "none";
+  let currentDialogObj = DialogNameMap[currentDialogName];
+  let nextDialogObj = DialogNameMap[nextDialogName];
 
-    dialog__Metadata.style.opacity = 1;
-    dialog__Metadata_Buttons_Continue.style.backgroundColor = "red";
-}
-function dialog__Metadata_Continue() {
+  if (currentDialogName == "metadata") {
     if (dialog__Metadata_CheckMetadataValidity()) {
-        memory__VideoData.title = dialog__Metadata_Input_VideoTitle.value;
-        
-        memory__VideoData.description = dialog__Metadata_Input_VideoDescription.value;
-        if (memory__VideoData.description == "") {
-            memory__VideoData.description = "A video uploaded to OpenBroadcast.";
-        }
+      memory__VideoData.title = dialog__Metadata_Input_VideoTitle.value;
 
-        memory__VideoData.category = dialog__Metadata_Input_Category.value;
-        if (memory__VideoData.category == "misc") {
-            memory__VideoData.category_str = "Miscellaneous";
-        }
-        else if (memory__VideoData.category == "informative") {
-            memory__VideoData.category_str = "Informative";
-        }
-        else if (memory__VideoData.category == "funny") {
-            memory__VideoData.category_str = "Funny";
-        }
+      memory__VideoData.description = dialog__Metadata_Input_VideoDescription.value;
+      if (memory__VideoData.description == "") {
+          memory__VideoData.description = "A video uploaded to OpenBroadcast.";
+      }
+      memory__VideoData.category = dialog__Metadata_Input_Category.value;
+      if (memory__VideoData.category == "misc") {
+          memory__VideoData.category_str = "Miscellaneous";
+      }
+      else if (memory__VideoData.category == "informative") {
+          memory__VideoData.category_str = "Informative";
+      }
+      else if (memory__VideoData.category == "funny") {
+          memory__VideoData.category_str = "Funny";
+      }
+      dialog__Metadata.style.display = "none";
+      dialog__Details.style.opacity = 1;
 
-        dialog__Metadata.style.display = "none";
-        dialog__Details.style.opacity = 1;        
-
-        dialog__Details_PopulateData();
+      dialog__Details_PopulateData();
     }
-}
-function dialog__Details_Continue() {
-    dialog__Details.style.display = "none";
-    dialog__UploadStatus.style.opacity = 1;
-}
+    else {
+      return;
+    }
+  }
+  else if (currentDialogName == "thumbnail") {
+    dialog__Metadata_Buttons_Continue.style.backgroundColor = "red";
+  }
 
+  currentDialogObj.style.display = "none";
+  let currentDialogHeader = currentDialogObj.querySelector(".header");
+  currentDialogHeader.style.opacity = 0;
+
+  nextDialogObj.style.display = "flex";
+  let nextDialogHeader = nextDialogObj.querySelector(".header");
+  nextDialogHeader.style.opacity = 1;
+
+}
 
 function dialog__Metadata_CheckMetadataValidity() {
     let titleValid = dialog__Metadata_CheckTitleValidity();
@@ -268,8 +284,6 @@ function dialog__Metadata_CheckCategoryValidity() {
     return false;
 }
 
-
-
 const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
     return new Promise((resolve) => {
         const canvas = document.createElement("canvas");
@@ -294,7 +308,7 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             if (minutes < 10) {
               minutes = "0" + minutes;
             }
-      
+
             seconds = video.duration % 60;
             seconds = Math.floor(seconds);
             if (seconds < 10) {
@@ -302,13 +316,13 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             }
 
             memory__VideoData.duration_str = minutes + ":" + seconds;
-      
+
             var displayFileSize;
-      
+
             filesizekilobytes = fileObject.size / 1024;
             if (filesizekilobytes > 1024) {
               displayFileSize = Math.ceil(fileObject.size / 1024 / 1024) + "MB"; // MB
-            } 
+            }
             else if (filesizekilobytes < 1024) {
               displayFileSize = Math.ceil(fileObject.size / 1024) + "KB";
             }
@@ -327,13 +341,13 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             return resolve(canvas.toDataURL("image/png"));
         }
     })
-    
+
 }
 
 function dialog__Thumbnail_Load() {
     dialog__Thumbnail_DataURIFromFile(utility_VideoFileInput.files[0]).then(function (thumbnailDataURL) {
         utility_ThumbnailFileInput.setAttribute("onchange", null); // Temporarily disable the onchange to guarantee it doesn't trigger from setting the thumbnail file input element programmatically.
-        dialog__Thumbnail_ImageDisplay.src = thumbnailDataURL; 
+        dialog__Thumbnail_ImageDisplay.src = thumbnailDataURL;
         memory__VideoData.thumbnail_DataURL = thumbnailDataURL;
         utility_ThumbnailFileInput.setAttribute("onchange", "dialog__Thumbnail_ThumbnailFileInput_Event_OnChange()");
     });
