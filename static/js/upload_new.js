@@ -2,7 +2,9 @@
 function init() {
     window.utility_VideoFileInput = document.getElementById("utility_VideoFileInput");
     window.utility_ThumbnailFileInput = document.getElementById("utility_ThumbnailFileInput");
+    
     window.uploadObject = undefined;
+    window.statusPollerInterval = undefined;
 
     window.memory__VideoFileInput_PreviousFileName = "";
     window.memory__VideoFileInput_CurrentFileName = "";
@@ -52,6 +54,39 @@ function init() {
     window.dialog__Details_VideoThumbnail = document.getElementById("dialog__Details_VideoThumbnail");
 
     window.dialog__UploadStatus_ProgressBar = document.getElementById("dialog__UploadStatus_progressBar");
+    window.dialog__UploadStatus_StatusText = document.getElementById("dialog__UploadStatus_statusText");
+
+    window.VideoStatusCodes = {
+      0: {
+        messageContent: "Upload is stuck in progress. This error should not exist, contact Gio directly if you see this in normal operation. (Error 0x01)",
+        type: "error"
+      },
+      1: {
+        messageContent: "Video uploaded successfully.",
+        type: "info"
+      },
+      2: {
+        messageContent: "OpenBroadcast is processing your video... (This usually takes a minute)",
+        type: "info"
+      },
+      3: {
+        messageContent: "Your video is transcoding. It will be available soon!",
+        type: "info"
+      },
+      4: {
+        messageContent: "Your video has been successfully registered on OpenBroadcast!",
+        type: "info",
+        callback: dialog__UploadStatus_StatusCompletionCallback
+      },
+      5: {
+        messageContent: "There was an error processing your video (Error 0x05)",
+        type: "error"
+      },
+      6: {
+        messageContent: "Your upload has failed! There may be a problem with your video file. This is not typically connection related. (Error 0x06)",
+        type: "error"
+      }
+    }
 
     window.memory__VideoData = {
         title: "",
@@ -165,7 +200,7 @@ function dialog__Next(currentDialogName) {
       if (memory__VideoData.category == "misc") {
           memory__VideoData.category_str = "Miscellaneous";
       }
-      else if (memory__VideoData.category == "informative") {
+      else if (memory__VideoData.category == "info") {
           memory__VideoData.category_str = "Informative";
       }
       else if (memory__VideoData.category == "funny") {
@@ -182,6 +217,9 @@ function dialog__Next(currentDialogName) {
   }
   else if (currentDialogName == "thumbnail") {
     dialog__Metadata_Buttons_Continue.style.backgroundColor = "red";
+  }
+  else if (currentDialogName == "details") {
+    dialog__UploadStatus_CreateUpload();
   }
 
   currentDialogObj.style.display = "none";
@@ -281,7 +319,7 @@ function dialog__Metadata_CheckDescriptionValidity() {
 }
 function dialog__Metadata_CheckCategoryValidity() {
     let category = dialog__Metadata_Input_Category.value;
-    if (["misc", "funny", "informative"].includes(category)) {
+    if (["misc", "funny", "info"].includes(category)) {
         return true;
     }
     return false;
@@ -399,7 +437,7 @@ function DataURLToBlob(dataURL) {
   return new Blob([ia], {type: mimeString});
 }
 
-async function dialog__UploadStatus_StartUpload() {
+async function dialog__UploadStatus_CreateUpload() {
   if (memory__VideoData.thumbnail_DataURL == null) {
     return;
   }
@@ -438,11 +476,21 @@ async function dialog__UploadStatus_StartUpload() {
       },
       onProgress: function (bytesUploaded, bytesTotal) {
         let percentage = ((bytesUploaded / bytesTotal) * 100).toFixed(2);
+        
+        dialog__UploadStatus_ProgressBar.style.width = percentage + "%";
+        dialog__UploadStatus_StatusText.innerText = "Uploading - " + percentage + "%";
       },
-      onSuccess: function () {}
-    }).then(function () {
-      dialog__UploadStatus_TryStartUpload();
+      onSuccess: function () {
+        utility_DisplayAlertBarMessage({
+          messageContent: "Upload complete! OpenBroadcast is processing your video. This page will update as the video's status changes.",
+          length_ms: 60000,
+          type: 'info'
+        })
+        dialog__UploadStatus_StartPoller(jsonData['metadata']['guid']);
+      }
     });
+  }).then(function () {
+    dialog__UploadStatus_TryStartUpload();
   });
 }
 
@@ -450,12 +498,42 @@ function dialog__UploadStatus_TryStartUpload() {
   if (uploadObject == undefined) {
     return;
   }
-  uploadObject.findPreviousUploads().then(function (previousUploads)) {
+  uploadObject.findPreviousUploads().then(function (previousUploads) {
     if (previousUploads.length) {
       uploadObject.resumeFromPreviousUpload(previousUploads[0]);
     }
     uploadObject.start();
   });
 }
+function dialog__UploadStatus_StartPoller(guid) {
+  if (guid == undefined) {
+    return;
+  }
 
+  headers = { "guid": guid }
 
+  statusPollerInterval = setInterval(function () {
+    fetch("/uploads/status", { method: "GET", headers: headers } ).then((response) => {
+      return response.json();
+    }).then((jsonData) => {
+      let uploadStatus = jsonData["status"]
+      console.log(uploadStatus);
+      
+      let statusInfo = VideoStatusCodes[uploadStatus];
+      utility_DisplayAlertBarMessage({
+        messageContent: statusInfo.messageContent,
+        length_ms: 12000,
+        type: statusInfo.type
+      })
+      var callback = statusInfo.callback;
+      if (callback != undefined) {
+        callback();
+      }
+      console.log(statusInfo); // debug
+    })
+  }, 10000);
+}
+function dialog__UploadStatus_StatusCompletionCallback() {
+  clearInterval(statusPollerInterval);
+  console.log("Hello from the completion callback!");
+}

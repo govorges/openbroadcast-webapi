@@ -83,6 +83,23 @@ def uploads_create():
 
     return jsonify(responseData)
 
+@api.route("/uploads/status", methods=["GET"])
+def uploads_status():
+    guid = request.headers.get("guid")
+    if guid is None or guid == "":
+        return make_response("Upload guid is missing.", 400)
+    
+    try:
+        video = api_Video.videos__Retrieve(guid=guid)
+    except:
+        return make_response("Error retrieving video with provided guid", 500)
+
+    responseData = {
+        "status": video.get("status")
+    }
+    return jsonify(responseData)
+
+
 @api.route("/videos/upload", methods=["GET"])
 def videos_upload():
     return render_template("upload_new.html")

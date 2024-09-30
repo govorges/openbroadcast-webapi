@@ -34,14 +34,13 @@ class VideoAPI:
 
         return r
     
-    def uploads__Capture(self, id: str, signatureHash: str):
-        requestURL = f"{self.API_Endpoint_URL}/uploads/capture"
+    def videos__Retrieve(self, guid: str):
+        requestURL = f"{self.API_Endpoint_URL}/videos/retrieve"
         requestHeaders = {
-            "id": id,
-            "signature": signatureHash
+            "guid": guid,
         }
-        r = requests.post(requestURL, headers=requestHeaders)
-        return r.status_code
+        r = requests.get(requestURL, headers=requestHeaders)
+        return r.json()
 
 
 

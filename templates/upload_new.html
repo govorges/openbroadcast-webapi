@@ -76,7 +76,7 @@
                     <select id="dialog__Metadata_Input_Category" onchange="dialog__Metadata_CheckMetadataValidity()">
                         <option value="misc">Miscellaneous</option>
                         <option value="funny">Funny</option>
-                        <option value="informative">Informative</option>
+                        <option value="info">Informative</option>
                     </select>
                 </div>
                 <button id="dialog__Metadata_Continue" class="subtext" onclick="dialog__Next('metadata')">Next Step</button>
@@ -144,7 +144,7 @@
                 <p>Your video is being sent to OpenBroadcast. Don't close this browser tab!</p>
 
                 <br>
-                <span class="text">Uploading - 100%</span>
+                <span class="text" id="dialog__UploadStatus_statusText"></span>
                 <div class="progress">
                     <div id="dialog__UploadStatus_progressBar"></div>
                 </div>
