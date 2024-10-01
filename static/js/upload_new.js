@@ -573,6 +573,7 @@ function dialog__UploadStatus_UpdateProgressTable(status) {
 }
 function dialog__UploadStatus_StatusCompletionCallback() {
   clearInterval(TimeElapsedInterval);
+  clearInterval(statusPollerInterval);
 }
 
 function Start_TimeElapsedInterval() {
@@ -580,6 +581,7 @@ function Start_TimeElapsedInterval() {
     clearInterval(TimeElapsedInterval);
     TimeElapsed_Seconds = 0;
   }
+
   TimeElapsedInterval = setInterval(function () {
     if (currentStage >= 4) { // No point in showing time elapsed of the completion/error stages.
       clearInterval(TimeElapsedInterval);
@@ -594,15 +596,15 @@ function Start_TimeElapsedInterval() {
 
     if (currentStage == 1) {
       let filesize_megabytes = memory__VideoData.filesize_kilobytes / 1024;
-      let eta_seconds = ((filesize_megabytes / 10) * 6).toFixed(2);
+      let eta_seconds = (((filesize_megabytes / 10) * 6) * 2).toFixed(2);
 
       dialog__UploadStatus_StatusExplainer.innerText = "Processing - OpenBroadcast is processing your video. (Estimate: " + eta_seconds + "s)";
     }
     if (currentStage == 2) {
       let filesize_megabytes = memory__VideoData.filesize_kilobytes / 1024;
-      let eta_seconds = ((filesize_megabytes / 8) * 5).toFixed(2);
+      let eta_seconds = (((filesize_megabytes / 8) * 5) * 2).toFixed(2);
   
-      dialog__UploadStatus_StatusExplainer.innerText = "<a>Transcoding</a> - OpenBroadcast is transcoding your video. (Estimate: " + eta_seconds + "s)";
+      dialog__UploadStatus_StatusExplainer.innerText = "Transcoding - OpenBroadcast is transcoding your video. (Estimate: " + eta_seconds + "s)";
     }
     if (currentStage == 3) {
       dialog__UploadStatus_StatusExplainer.innerText = "Complete - Your video is now registered on OpenBroadcast! The Roku channel's feeds update every 60 seconds, if you don't see it immediately wait a moment and relaunch the channel.";
