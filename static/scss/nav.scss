@@ -94,7 +94,7 @@ header.header {
                 list-style-type: none;
 
                 >li {
-                    font-size: 1.2vw;
+                    font-size: medium;
 
                     >a {
                         border: 1px solid $secondary-text;
@@ -131,7 +131,7 @@ header.header {
     }
 
     >.material-icons {
-        font-size: 1.2vw !important;
+        font-size: medium !important;
     }
 }
 
@@ -167,13 +167,13 @@ header.header {
                 margin-left: 0 !important;
 
                 > ul {
-                    font-size: 1.8vh;
+                    font-size: large;
                 }
             }
         }
 
         > .material-icons {
-            font-size: 1.8vh !important;
+            font-size: large !important;
         }
     }
 }

@@ -141,13 +141,23 @@
             <div class="header">
                 <h4>Step 5.</h4>
                 <h2>Upload in Progress</h2>
-                <p>Your video is being sent to OpenBroadcast. Don't close this browser tab!</p>
-
                 <br>
-                <span class="text" id="dialog__UploadStatus_statusText"></span>
                 <div class="progress">
-                    <div id="dialog__UploadStatus_progressBar"></div>
+                    <div id="dialog__UploadStatus_progressBar">
+                        <span class="text" id="dialog__UploadStatus_statusText"></span>
+                    </div>
                 </div>
+                <br>
+                <table id="dialog__UploadStatus_progressTable">
+                    <tr>
+                      <th>Uploading</th>
+                      <th>Processing</th>
+                      <th>Transcoding</th>
+                      <th>Complete</th>
+                      <th>Error</th>
+                    </tr>
+                </table>
+                <p id="dialog__UploadStatus_statusExplainer">Uploading - Your video is being sent to OpenBroadcast.</p>
             </div>
             <div class="subtextContainer">
                 <a class="subtext" href="/">Restart</a>

@@ -55,7 +55,8 @@ function init() {
 
     window.dialog__UploadStatus_ProgressBar = document.getElementById("dialog__UploadStatus_progressBar");
     window.dialog__UploadStatus_StatusText = document.getElementById("dialog__UploadStatus_statusText");
-
+    window.dialog__UploadStatus_ProgessTable = document.getElementById("dialog__UploadStatus_progressTable");
+    window.dialog__UploadStatus_StatusExplainer = document.getElementById("dialog__UploadStatus_statusExplainer");
     // TODO: error callbacks to yell at users that things broke
     window.VideoStatusCodes = [
       {
@@ -96,10 +97,14 @@ function init() {
         category_str: "",
         duration_str: "",
         resolution_str: "",
+        filesize_kilobytes: 0,
         filesize_str: "",
         thumbnail_DataURL: "",
     }
 
+    window.currentStage = null;
+    window.TimeElapsedInterval = null;
+    window.TimeElapsed_Seconds = 0;
 }
 
 function dialog__Upload_ViewRules(anchor) {
@@ -362,6 +367,7 @@ const dialog__Thumbnail_DataURIFromFile = (fileObject) => {
             var displayFileSize;
 
             filesizekilobytes = fileObject.size / 1024;
+            memory__VideoData.filesize_kilobytes = filesizekilobytes;
             if (filesizekilobytes > 1024) {
               displayFileSize = Math.ceil(fileObject.size / 1024 / 1024) + "MB"; // MB
             }
@@ -486,7 +492,8 @@ async function dialog__UploadStatus_CreateUpload() {
           messageContent: "Upload complete! OpenBroadcast is processing your video. This page will update as the video's status changes.",
           length_ms: 60000,
           type: 'info'
-        })
+        });
+        dialog__UploadStatus_UpdateProgressTable(1);
         dialog__UploadStatus_StartPoller(jsonData['metadata']['guid']);
       }
     });
@@ -504,6 +511,7 @@ function dialog__UploadStatus_TryStartUpload() {
       uploadObject.resumeFromPreviousUpload(previousUploads[0]);
     }
     uploadObject.start();
+    dialog__UploadStatus_UpdateProgressTable(0);
   });
 }
 function dialog__UploadStatus_StartPoller(guid) {
@@ -517,14 +525,17 @@ function dialog__UploadStatus_StartPoller(guid) {
     fetch("/uploads/status", { method: "GET", headers: headers } ).then((response) => {
       return response.json();
     }).then((jsonData) => {
-      let uploadStatus = jsonData["status"]
+      let uploadStatus = jsonData["status"];
       
       let statusInfo = VideoStatusCodes[uploadStatus];
       utility_DisplayAlertBarMessage({
         messageContent: statusInfo.messageContent,
         length_ms: 12000,
         type: statusInfo.type
-      })
+      });
+
+      dialog__UploadStatus_UpdateProgressTable(uploadStatus);
+
       var callback = statusInfo.callback;
       if (callback != undefined) {
         callback();
@@ -532,7 +543,74 @@ function dialog__UploadStatus_StartPoller(guid) {
     })
   }, 10000);
 }
+
+function dialog__UploadStatus_UpdateProgressTable(status) {
+  let fillColor = "var(--accent-1)";
+
+  if (status == 2) { // Some stages last for like 4 milliseconds.
+    status = 1;
+  }
+  else if (status == 3) {
+    status = 2;
+  }
+  else if (status == 4) {
+    status = 3;
+  }
+  else if (status > 4) {
+    status = 4;
+    fillColor = "maroon";
+  }
+
+  if (currentStage != status) {
+    Start_TimeElapsedInterval();
+  }
+  currentStage = status;
+
+  let progressTableCell = dialog__UploadStatus_ProgessTable.querySelectorAll("tr > th")[currentStage];
+
+  progressTableCell.style.backgroundColor = fillColor;
+  progressTableCell.style.color = "var(--secondary-text)";
+}
 function dialog__UploadStatus_StatusCompletionCallback() {
-  clearInterval(statusPollerInterval);
-  console.log("Hello from the completion callback!");
+  clearInterval(TimeElapsedInterval);
+}
+
+function Start_TimeElapsedInterval() {
+  if (TimeElapsedInterval != null) {
+    clearInterval(TimeElapsedInterval);
+    TimeElapsed_Seconds = 0;
+  }
+  TimeElapsedInterval = setInterval(function () {
+    if (currentStage >= 4) { // No point in showing time elapsed of the completion/error stages.
+      clearInterval(TimeElapsedInterval);
+      return;
+    }
+    TimeElapsed_Seconds += 1;
+  
+    let progressTableCell = dialog__UploadStatus_ProgessTable.querySelectorAll("tr > th")[currentStage];
+  
+    let cleanProgressTableCellText = progressTableCell.innerText.split("(")[0].replace(" ", "");
+    progressTableCell.innerText = cleanProgressTableCellText + " (" + TimeElapsed_Seconds + "s)";
+
+    if (currentStage == 1) {
+      let filesize_megabytes = memory__VideoData.filesize_kilobytes / 1024;
+      let eta_seconds = ((filesize_megabytes / 10) * 6).toFixed(2);
+
+      dialog__UploadStatus_StatusExplainer.innerText = "Processing - OpenBroadcast is processing your video. (Estimate: " + eta_seconds + "s)";
+    }
+    if (currentStage == 2) {
+      let filesize_megabytes = memory__VideoData.filesize_kilobytes / 1024;
+      let eta_seconds = ((filesize_megabytes / 8) * 5).toFixed(2);
+  
+      dialog__UploadStatus_StatusExplainer.innerText = "<a>Transcoding</a> - OpenBroadcast is transcoding your video. (Estimate: " + eta_seconds + "s)";
+    }
+    if (currentStage == 3) {
+      dialog__UploadStatus_StatusExplainer.innerText = "Complete - Your video is now registered on OpenBroadcast! The Roku channel's feeds update every 60 seconds, if you don't see it immediately wait a moment and relaunch the channel.";
+    }
+
+  }, 1000);
+
+}
+function End_TimeElapsedInterval() {
+  clearInterval(TimeElapsedInterval);
 }

@@ -72,6 +72,9 @@ body {
             align-self: center;
 
             width: 50%;
+            @media only screen and (orientation:portrait) {
+                width: 90%;
+            }
 
             padding-inline: 1vw;
             padding-block: 1vh;
@@ -81,17 +84,14 @@ body {
             border: 0.1vw solid $secondary-background;
             opacity: 0;
             > h4 {
-                font-size: 1vw;
+                font-size: medium;
                 text-align: left;
                 font-weight: lighter;
                 margin-block: 0;
             }
             > h2 {
-                font-size: 1.4vw;
+                font-size: large;
                 border-bottom: 0.1vw solid $secondary-background;
-            }
-            > p {
-                font-size: 1vw;
             }
             > button {
                 display: flex;
@@ -165,14 +165,14 @@ body {
                 }
                 > input {
                     padding-block: 0.4vh;
-                    font-size: 1vw;
+                    font-size: medium;
                 }
                 > select {
                     width: 25%;
                     
                     text-align: center;
                     align-self: center;
-                    font-size: 1vw;
+                    font-size: medium;
 
                     cursor: pointer;
                 }
@@ -262,11 +262,22 @@ body {
                 background-color: $secondary-background;
 
                 > div {
-                    width: 0%;
+                    min-width: fit-content;
                     height: 2vh;
 
                     background-color: $accent-1;
-                    color: $accent-1;
+                    color: $secondary-text;
+
+                    text-align: center;
+                    align-items: center;
+                }
+            }
+            > #dialog__UploadStatus_progressTable {
+                tr > th {
+                    border: 2px solid $main-background;
+                    
+                    padding-block: 1vh;
+                    padding-inline: 1vw;
                 }
             }
         }
