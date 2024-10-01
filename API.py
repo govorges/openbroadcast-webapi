@@ -102,7 +102,6 @@ def uploads_status():
 
 @api.route("/videos/upload", methods=["GET"])
 def videos_upload():
-    sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
     return render_template("upload_new.html")
 
 if __name__ == "__main__":
