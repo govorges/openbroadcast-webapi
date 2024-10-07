@@ -14,14 +14,10 @@ class VideoAPI:
             "id": id 
         }
         
-        r = requests.post(requestURL, headers=headers, json=video_metadata)
-        try:
-            request_return_data = r.json()
-        except json.JSONDecodeError:
-            request_return_data = {}
-        object_data = request_return_data.get("object_data")
+        request = requests.post(requestURL, headers=headers, json=video_metadata)
+        object = request.json().get("object")
 
-        return object_data 
+        return object
 
     def videos__GenerateID(self):
         requestURL = f"{self.API_Endpoint_URL}/videos/generate_id"
