@@ -1,0 +1,58 @@
+<html>
+    <head>
+        <title>Open Broadcast | Home</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/openbroadcast.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/reports.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    </head>
+    <nav>
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+    </nav>
+    <body>
+        <div class="centerBox">
+            <h2>Report a Problem</h2>
+            <p>Sorry you're having a problem with OpenBroadcast! Here's how to report it to us.</p>
+            <table>
+                <tr>
+                    <th>Issue Type</th>
+                    <th>Subject (Include)</th>
+                    <th>Email Address</th>
+                </tr>
+                <tr>
+                    <td>DMCA Complaints</td>
+                    <td>DMCA - </td>
+                    <th rowspan="3">reports@openbroadcast.cz</td>
+                </tr>
+                <tr>
+                    <td>Issues with Content</td>
+                    <td>Content Issue - </td>
+                </tr>
+                <tr>
+                    <td>Site Problems</td>
+                    <td>Website - </td>
+                </tr>
+                <tr>
+                    <td>Careers</td>
+                    <td>Careers - </td>
+                    <th>gio@openbroadcast.cz</th>
+                </tr>
+            </table>
+            <br><br>
+            <p class="dmca">For DMCA/Content related issues, please include the following details of the video in question:
+                <ol>
+                    <li>Video Title</li>
+                    <li>Video ID <a href="#">(How to Find?)<i class="material-icons">open_in_new</i></a></li>
+                    <li>Timestamps of the content you own/have a problem with</li>
+                    <li>(DMCA) Proof of ownership/Link to source material</li>
+                </ol>
+            </p>
+        </div>
+    </body>
+    <footer>
+        {% include 'footer.html' %}
+        {% block footerContent %}
+        {% endblock %}
+      </footer>
+</html>

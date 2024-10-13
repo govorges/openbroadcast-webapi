@@ -1,0 +1,39 @@
+body {
+  font-family: "Mallory Book", sans-serif;
+  overflow-y: hidden; }
+
+.centerBox {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center; }
+  .centerBox > h3 {
+    text-align: center; }
+  .centerBox > .aboutContainer {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+    width: 100%; }
+    .centerBox > .aboutContainer > .card {
+      display: flex;
+      flex-direction: column;
+      background-color: #000215;
+      width: 20%;
+      color: white;
+      text-align: center;
+      padding-inline: 1vw;
+      line-height: 1.75;
+      margin-bottom: 2vh; }
+      .centerBox > .aboutContainer > .card > h3 {
+        border-bottom: 2px solid #0871ff; }
+      .centerBox > .aboutContainer > .card > p {
+        justify-content: center;
+        align-items: center; }
+        .centerBox > .aboutContainer > .card > p > a {
+          color: #0871ff;
+          text-decoration: none; }
+          .centerBox > .aboutContainer > .card > p > a > i {
+            font-size: medium;
+            display: inline;
+            padding-inline-start: 0.2vw; }

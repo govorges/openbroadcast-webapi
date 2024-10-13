@@ -1,97 +1,178 @@
 <html>
 
 <head>
-  <title>Open Broadcast | Upload</title>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
-  <script type="text/javascript" src="{{ url_for('static', filename='/js/upload.js') }}"></script>
-  <link rel="stylesheet" href="{{ url_for('static', filename='/css/openbroadcast.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='/css/upload.css') }}">
-  <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap"
-    rel="stylesheet">
+    <title>Open Broadcast | Upload</title>
+    <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='/js/upload.js') }}"></script>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/openbroadcast.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='/css/upload.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
 </head>
 <nav>
-  {% include 'navbar.html' %}
-  {% block navbarContent %}
-  {% endblock %}
+    {% include 'navbar.html' %}
+    {% block navbarContent %}
+    {% endblock %}
 </nav>
 
-<body onload="OnReady()">
-  <div class="centerBox">
-    <div class="splitBox">
-      <h3>Upload a Video</h3>
-      <p>Choose a file to upload to OpenBroadcast</p>
-      <button onclick="Event__UploadClicked()">Upload</button>
+<body onload="init()">
+    <div class="PanelDisplayBox">
+        <!-- Container element for our different dialog panels. -->
+         <div id="dialog__Upload" class="panel">
+            <div class="header">
+                <h4>Step 1.</h4>
+                <h2>Upload a File</h2>
+                <p>Welcome to OpenBroadcast! To start, choose a video to upload.</p>
+                <a class="subtext" href="#" onclick="dialog__Upload_SelectVideoFile()">Choose a Video File</a>
+                <span id="dialog__Upload_SelectedVideoSubtext" class="subtext"></span><br>
+                <button style="display: none;" id="dialog__Upload_Continue" class="subtext" href="#" onclick="dialog__Next('upload')">Next Step</button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/reports/">Report a Problem</a>
+            </div>
+         </div>
+         <div id="dialog__Thumbnail" class="panel">
+            <div class="header">
+                <h4>Step 2.</h4>
+                <h2>Set a Thumbnail</h2>
+                <p>Almost there! Now, lets set a thumbnail for your video.</p>
+                <img id="thumbnailDisplay" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
+                You can use this default option<br>
+                or... <a class="subtext" href="#" onclick="dialog__Thumbnail_SelectThumbnailFile()">Upload your own thumbnail<span class='markdown_Code'>.PNG</span></a>
+                <br>
+                <button id="dialog__Thumbnail_Continue" onclick="dialog__Next('thumbnail')">
+                    <span>Continue</span><i class="material-icons">arrow_forward</i>
+                </button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/reports/">Report a Problem</a>
+            </div>
+         </div>
+         <div id="dialog__Metadata" class="panel">
+            <div class="header">
+                <h4>Step 3.</h4>
+                <h2>Set Video Details</h2>
+                <p>You've chosen a video, now lets get some details about your upload.</p>
+                <div class="inputRow">
+                    <label for="dialog__Metadata_Input_Title" id="titleLabel">
+                        <span>Video Title</span>
+                        <span class="subtext">Maximum length of 120 characters. Minimum length of 12 characters. <span class="markdown_Code">Required</span></span>
+                    </label>
+                    <input type="text" onchange="dialog__Metadata_CheckMetadataValidity()" id="dialog__Metadata_Input_Title" placeholder="Your video title">
+                </div>
+                <div class="inputRow">
+                    <label for="dialog__Metadata_Input_Description" id="descLabel">
+                        <span>Video Description</span>
+                        <span class="subtext">Maximum length of 800 characters. <span class="markdown_Code">Optional</span></span>
+                    </label>
+                    <input type="text" onchange="dialog__Metadata_CheckMetadataValidity()" id="dialog__Metadata_Input_Description" placeholder="Your video description">
+                </div>
+                <div class="inputRow">
+                    <span>Video Category</span>
+                    <span class="subtext">This determines what part of the channel your video will be placed in.</span>
+                    <select id="dialog__Metadata_Input_Category" onchange="dialog__Metadata_CheckMetadataValidity()">
+                        <option value="misc">Miscellaneous</option>
+                        <option value="funny">Funny</option>
+                        <option value="info">Informative</option>
+                    </select>
+                </div>
+                <button id="dialog__Metadata_Continue" class="subtext" onclick="dialog__Next('metadata')">Next Step</button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/reports/">Report a Problem</a>
+            </div>
+         </div>
+         <div id="dialog__Details" class="panel">
+            <div class="header">
+                <h4>Step 4.</h4>
+                <h2>Confirm your Upload</h2>
+                <p>We're all set here! Make sure your video details are correct and send the upload when ready.</p>
+
+                <div class="dialog__Details_VideoDetails">
+                    <div class="details_Image">
+                        <img id="dialog__Details_VideoThumbnail" src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}">
+                    </div>
+                    <div class="details">
+                        <div class="dataRow">
+                            <span class="tagName">Title</span>
+                            <span class="tagData" id="dialog__Details_Title"></span>
+                        </div>
+                        <div class="dataRow">
+                            <span class="tagName">Description</span>
+                            <span class="tagData description" id="dialog__Details_Description"></span>
+                        </div>
+                        <div class="dataRow">
+                            <span class="tagName">Category</span>
+                            <span class="tagData" id="dialog__Details_Category"></span>
+                        </div>
+                        <div class="dataRow">
+                            <table id="videoDetailsTable">
+                                <tr>
+                                  <th>Length</th>
+                                  <th>Resolution</th>
+                                  <th>File Size</th>
+                                </tr>
+                                <tr>
+                                  <td id="dialog__Details_VideoLength"></td>
+                                  <td id="dialog__Details_VideoResolution"></td>
+                                  <td id="dialog__Details_VideoFileSize"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="terms">
+                    <label for="termsCheckbox">I have read and agree to the OpenBroadcast <a href="#">Terms of Service</a></label>
+                    <input id="termsCheckbox" type="checkbox">
+                </div>
+
+                <button id="dialog__Details_Continue" class="subtext" onclick="dialog__Next('details')">Upload Video</button>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/reports/">Report a Problem</a>
+            </div>
+         </div>
+         <div id="dialog__UploadStatus" class="panel">
+            <div class="header">
+                <h4>Step 5.</h4>
+                <h2>Upload Status</h2>
+                <br>
+                <div class="progress">
+                    <div id="dialog__UploadStatus_progressBar">
+                        <span class="text" id="dialog__UploadStatus_statusText"></span>
+                    </div>
+                </div>
+                <br>
+                <table id="dialog__UploadStatus_progressTable">
+                    <tr>
+                      <th>Uploading</th>
+                      <th>Processing</th>
+                      <th>Transcoding</th>
+                      <th>Complete</th>
+                    </tr>
+                </table>
+                <p id="dialog__UploadStatus_statusExplainer">Uploading - Your video is being sent to OpenBroadcast.</p>
+            </div>
+            <div class="subtextContainer">
+                <a class="subtext" href="/">Restart</a>
+                <a class="subtext" href="/reports/">Report a Problem</a>
+            </div>
+         </div>
     </div>
-    <div class="bottomBar">
-      <div id="uploadStatusMessage">NO FILE SELECTED</div>
-    </div>
-    <div class="videoDisplay" id="videoDetails_Display">
-      <div class="thumbnailDisplay" id="thumbnailDisplay">
-        <span>Selected Thumbnail</span>
-        <img src="{{ url_for('static', filename='/images/example_thumbnail.jpg') }}" id="display_Thumbnail0">
-        <div class="thumbnailCarousel_Display">
-          <button onclick="Event__ThumbnailUploadClicked()">Upload Custom Thumbnail</button>
-          Your video thumbnail should have a 4:3 or 16:9 aspect ratio. This preview is not perfectly representative of what the final image will look like.
-        </div>
-      </div>
-      <div class="videoOptionsDisplay">
-        <label class="videoTitle" for="videoTitle_Input">
-          Video Title
-          <span class="labelTinyText">Maximum length of 120 characters. *Required Field</span>
-        </label>
-        <input type="text" id="videoTitle_Input" placeholder="Video Title">
-        <br>
-        <label class="videoDesc" for="videoDesc_Input">
-          Video Description
-          <span class="labelTinyText">Maximum length of 800 characters. *Required Field</span>
-        </label>
-        <input type="text" id="videoDesc_Input" placeholder="Video Description">
-        <br>
-        <label class="videoCategory" for="videoCategory_Input">
-          Category
-          <span class="labelTinyText">Select a category for your video. This will determine where it's shown in the
-            OpenBroadcast Roku channel.</span>
-        </label>
-        <div class="categorySelector">
-          <input type="radio" name="videoCategory" id="videoCategory_Funny" onchange="Event__CategorySelectionChanged()">
-          <label for="videoCategory_Funny">Funny</label>
-          <input type="radio" name="videoCategory" id="videoCategory_Informative" onchange="Event__CategorySelectionChanged()">
-          <label for="videoCategory_Informative">Informative</label>
-          <input type="radio" checked name="videoCategory" id="videoCategory_Misc" onchange="Event__CategorySelectionChanged()">
-          <label for="videoCategory_Misc">Miscellaneous</label>
-        </div>
-        <span id="selectedCategoryDisplay">Selected: Miscellaneous</span>
-        <br>
-        <div class="uploadedVideoDetails">
-          <div class="header">Video Details</div>
-          <table id="videoDetailsTable">
-            <tr>
-              <th>Length</th>
-              <th>Resolution</th>
-              <th>File Size</th>
-            </tr>
-            <tr>
-              <th id="display_VideoLength"></th>
-              <th id="display_VideoResolution"></th>
-              <th id="display_VideoFileSize"></th>
-            </tr>
-          </table>
-        </div>
-      </div>
-    </div>
-    <button onclick="Event__createFileUpload()" id="videoSendButton">SEND VIDEO TO OPENBROADCAST</button>
-  </div>
 </body>
-<elementStore style="display:none;">
-  <input type="file" id="videoDetails_File" accept=".mp4">
-  <input type="file" id="videoDetails_ThumbnailUpload" accept=".png, .jpg, .jpeg">
+
+<elementStore style="display: none;">
+    <input type="file" id="utility_VideoFileInput" accept=".mp4" onchange="dialog__Upload_VideoFileInput__Event_OnChange()">
+    <input type="file" id="utility_ThumbnailFileInput" accept=".png" onchange="dialog__Thumbnail_ThumbnailFileInput_Event_OnChange()">
 </elementStore>
-
 <footer>
-  {% include 'footer.html' %}
-  {% block footerContent %}
-  {% endblock %}
+    {% include 'footer.html' %}
+    {% block footerContent %}
+    {% endblock %}
 </footer>
-
 </html>

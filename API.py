@@ -33,7 +33,11 @@ def index():
 def status():
     return f"Alive"
 
-@api.route("/uploads/create", methods=["POST"])
+@api.route("/videos/upload", methods=["GET"])
+def videos_upload():
+    return render_template("upload.html")
+
+@api.route("/videos/upload/create", methods=["POST"])
 def uploads_create():
     metadata = request.form.get("metadata")
     if metadata is None:
@@ -83,7 +87,7 @@ def uploads_create():
 
     return jsonify(responseData)
 
-@api.route("/uploads/status", methods=["GET"])
+@api.route("/videos/upload/status", methods=["GET"])
 def uploads_status():
     guid = request.headers.get("guid")
     if guid is None or guid == "":
@@ -100,9 +104,13 @@ def uploads_status():
     return jsonify(responseData)
 
 
-@api.route("/videos/upload", methods=["GET"])
-def videos_upload():
-    return render_template("upload_new.html")
+@api.route("/about/", methods=["GET"])
+def about():
+    return render_template("about.html")
+
+@api.route("/reports/", methods=["GET"])
+def reports():
+    return render_template("reports.html")
 
 if __name__ == "__main__":
     api.run("127.0.0.1", 5000, True)

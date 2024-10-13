@@ -1,0 +1,36 @@
+body {
+  font-family: "Mallory Book", sans-serif;
+  overflow-y: hidden; }
+
+.centerBox {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  align-items: center; }
+  .centerBox > h3 {
+    margin-bottom: 0; }
+  .centerBox > p {
+    margin-top: 0; }
+  .centerBox > table {
+    width: 50%;
+    text-align: center; }
+    .centerBox > table > tbody > tr > th {
+      width: 50%;
+      background-color: #0871ff;
+      color: white; }
+    .centerBox > table > tbody > tr > th[rowspan="3"] {
+      padding-inline: 1vw; }
+    .centerBox > table > tbody > tr > td {
+      width: 50%;
+      font-weight: bold;
+      border-bottom: 2px solid #000215; }
+  .centerBox p.dmca {
+    font-size: large; }
+  .centerBox > ol {
+    text-align: left;
+    font-weight: bold; }
+    .centerBox > ol > li > a {
+      color: #0871ff; }
+      .centerBox > ol > li > a > i {
+        font-size: medium;
+        font-weight: bold; }

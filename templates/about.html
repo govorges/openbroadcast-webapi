@@ -1,0 +1,55 @@
+<html>
+    <head>
+        <title>Open Broadcast | Home</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/openbroadcast.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='/css/about.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    </head>
+    <nav>
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+    </nav>
+    <body>
+        <div class="centerBox">
+            <br>
+            <div class="aboutContainer">
+                <div class="card">
+                    <h3>What is OpenBroadcast?</h3>
+                    <p>OpenBroadcast is a Roku channel that delivers user-uploaded content.</p>
+                </div>
+                <div class="card">
+                    <h3>How do I use it?</h3>
+                    <p>You can upload videos to OpenBroadcast 
+                        <a target="_blank" href="/videos/upload">here<i class="material-icons">open_in_new</i></a> 
+                        and you can view uploaded videos on the 
+                        <a target="_blank" href="https://roku.com/">OpenBroadcast Roku Channel<i class="material-icons">open_in_new</i></a>.</p>
+                </div>
+                <div class="card">
+                    <h3>Who made it?</h3>
+                    <p>OpenBroadcast was made by one person (hi), with some consulting help from the people at 
+                        <a target="_blank" href="https://screw.wtf/">SCREW<i class="material-icons">open_in_new</i></a>.<br><br>
+                        If you want to contact the creator of OpenBroadcast, you can do so through the email address in the footer.
+                </div>
+                <div class="card">
+                    <h3>How was it made?</h3>
+                    <p>OpenBroadcast is made as a proof of concept personal project for learning purposes, so I tried to use some stuff I was unfamiliar with.
+                        <br><br>Currently, my stack includes: SCSS, Flask/Gunicorn, Docker, OpenCV2, & Postgres.
+                </div>
+                <div class="card">
+                    <h3>What keeps it running?</h3>
+                    <p>OpenBroadcast is supported primarily by ads on the channel that run every once in a while between videos.</p>
+                </div>
+                <div class="card">
+                    <h3>Why was it made?</h3>
+                    <p>It was made to kind of hit that "Old Internet" niche, where people would share content just because they thought it was interesting, not for virality.</p>
+                </div>
+            </div>
+        </div>
+    </body>
+    <footer>
+        {% include 'footer.html' %}
+        {% block footerContent %}
+        {% endblock %}
+      </footer>
+</html>

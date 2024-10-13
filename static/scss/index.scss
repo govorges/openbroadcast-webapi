@@ -1,0 +1,115 @@
+$main-background: #cedeeb;
+$main-text: black;
+$secondary-background: #000215;
+$secondary-text: white;
+$accent-1: #0871ff;
+$nav-font: "Fredoka", "Ubuntu", sans-serif;
+$primary-text-font: "Ubuntu", sans-serif;
+$secondary-text-font: 'Righteous', sans-serif;
+$header-font: "Mallory Book", sans-serif;
+
+body {
+    font-family: $header-font;
+    overflow-y: hidden;
+}
+.centerBox { 
+    padding-inline: 5vw;
+    height: 80vh;
+
+    overflow-y: scroll;
+    
+    > .section {
+        text-align: center;
+        font-weight: lighter;
+        > .content {
+            display: flex;
+            flex-direction: row;
+
+            > .split {
+                display: flex;
+                flex-direction: column;
+                
+                align-items: center;
+
+                width: 50%;
+                text-align: center;
+
+                > .question {
+                    display: flex;
+                    flex-direction: column;
+
+                    width: 90%;
+
+                    align-items: center;
+                    margin-bottom: 1vh;
+
+                    color: $secondary-text;
+                    background-color: $secondary-background;
+
+                    > span.question {
+                        width: fit-content;
+                        font-size: larger;
+
+                        border-bottom: 1px solid $secondary-text;
+                        background-color: $accent-1;
+
+                        margin-bottom: 1vh;
+
+                        padding-inline: 1vw;
+                        padding-block: 0.5vh;
+
+                        width: 100%;
+                        text-align: left;
+                    }
+                    > span.answer {
+                        font-size: large;
+                        width: 100%;
+
+                        margin-bottom: 1vh;
+
+                        padding-inline: 1vw;
+                        padding-block: 0.5vh;
+                        > a {
+                            color: $accent-1;
+                            > i {
+                                font-size: medium;
+                            }
+                        }
+                    }
+                }
+                > .route {
+                    border: 2px solid $accent-1;
+                    
+                    padding-inline: 1vw;
+                    padding-block: 1vh;
+
+                    transition: 0.2s ease-in-out all;
+
+                    text-decoration: none;
+                    color: $main-text;
+
+                    width: 75%;
+
+                    > h3 {
+                        margin: 0;
+
+                        text-decoration: underline;
+                        color: $accent-1;
+
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        text-decoration: none;
+                        
+                        > i {
+                            margin-inline-end: 0.2vw;
+                        }
+                    }
+                }
+                > .route:hover {
+                    transform: scale(1.04);
+                }
+            }
+        }
+    }
+}

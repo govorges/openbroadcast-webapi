@@ -1,0 +1,64 @@
+$main-background: #cedeeb;
+$main-text: black;
+$secondary-background: #000215;
+$secondary-text: white;
+$accent-1: #0871ff;
+$nav-font: "Fredoka", "Ubuntu", sans-serif;
+$primary-text-font: "Ubuntu", sans-serif;
+$secondary-text-font: 'Righteous', sans-serif;
+$header-font: "Mallory Book", sans-serif;
+
+body {
+    font-family: $header-font;
+    overflow-y: hidden;
+}
+.centerBox {
+    display: flex;
+    flex-direction: column;
+
+    text-align: center;
+    align-items: center;
+
+    > h3 {
+        margin-bottom: 0;
+    }
+    > p {
+        margin-top: 0;
+    }
+
+    > table {
+        width: 50%;
+        text-align: center;
+        > tbody > tr {
+            > th {
+                width: 50%;
+                background-color: $accent-1;
+                color: $secondary-text;
+            }
+            > th[rowspan="3"] {
+                padding-inline: 1vw;
+            }
+            > td {
+                width: 50%;
+                font-weight: bold;
+                border-bottom: 2px solid $secondary-background;
+            }
+        }
+    }
+    p.dmca {
+        font-size: large;
+    }
+    > ol {
+        text-align: left;
+        font-weight: bold;
+        > li {
+            > a {
+                color: $accent-1;
+                > i {
+                    font-size: medium;
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
