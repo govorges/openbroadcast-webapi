@@ -52,6 +52,7 @@ function init() {
     window.dialog__Details_VideoResolution = document.getElementById("dialog__Details_VideoResolution");
     window.dialog__Details_VideoFileSize = document.getElementById("dialog__Details_VideoFileSize");
     window.dialog__Details_VideoThumbnail = document.getElementById("dialog__Details_VideoThumbnail");
+    window.dialog__Details_TermsCheckbox = document.getElementById("termsCheckbox");
 
     window.dialog__UploadStatus_ProgressBar = document.getElementById("dialog__UploadStatus_progressBar");
     window.dialog__UploadStatus_StatusText = document.getElementById("dialog__UploadStatus_statusText");
@@ -225,7 +226,18 @@ function dialog__Next(currentDialogName) {
     dialog__Metadata_Buttons_Continue.style.backgroundColor = "red";
   }
   else if (currentDialogName == "details") {
-    dialog__UploadStatus_CreateUpload();
+    if (!dialog__Details_TermsCheckbox.checked) {
+      utility_DisplayAlertBarMessage({
+        messageContent: "You have to agree to the OpenBroadcast Terms of Service before uploading a video!",
+        length_ms: 10000,
+        type: "error"
+      });
+
+      return;
+    }
+    else {
+      dialog__UploadStatus_CreateUpload();
+    }
   }
 
   currentDialogObj.style.display = "none";

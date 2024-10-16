@@ -1,4 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, make_response, jsonify
+from flask import Flask, render_template, request, make_response, jsonify
+
+from flask_limiter import Limiter
+from flask_limiter.util import get_remote_address
+
 import sass
 
 from werkzeug.utils import secure_filename
@@ -10,6 +14,7 @@ import json
 
 HOME_DIR = path.dirname(path.realpath(__file__))
 UPLOAD_DIR = path.join(HOME_DIR, "uploads")
+sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
 
 api_Video = VideoAPI()
 
@@ -17,17 +22,41 @@ api = Flask(__name__)
 api.config['MAX_CONTENT_LENGTH'] = 512 * 1000 * 1000 # Maximum file size is 512MB
 api.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 
-# SCSS Compilation to CSS at runtime.
-sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
+limiter = Limiter(
+    app=api,
+    key_func=get_remote_address,
+    default_limits=["600 per hour", "6 per second"]
+)
 
-ALLOWED_EXTENSIONS = ["mp4"]
+@api.errorhandler(404)
+def error_404(e):
+    '''Not Found'''
+    error_data = {
+        "name": "Page Not Found",
+        "message": f"Sorry! The page you were looking for, <span class='markdown_Code'>{request.url}</span> does not exist."
+    }
+    response = make_response(render_template("pages/Error.html", error=error_data))
+    response.status_code = 404
+    
+    return response
 
-def _allowedFile(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+@api.errorhandler(429)
+def error_429(e):
+    '''Rate Limit Exceeded'''
+    error_data = {
+        "name": "Rate Limit Exceeded",
+        "message": f"You've exceeded the rate limit for this page. Try again later."
+    }
+    response = make_response(render_template("pages/Error.html", error=error_data))
+    response.status_code = 429
+    
+    return response
+
+
 
 @api.route("/", methods=["GET", "POST"])
 def index():
-    return render_template("index.html")
+    return render_template("pages/Index.html")
 
 @api.route("/status", methods=["GET"])
 def status():
@@ -35,9 +64,10 @@ def status():
 
 @api.route("/videos/upload", methods=["GET"])
 def videos_upload():
-    return render_template("upload.html")
+    return render_template("pages/Upload.html")
 
 @api.route("/videos/upload/create", methods=["POST"])
+@limiter.limit("5 per day")
 def uploads_create():
     metadata = request.form.get("metadata")
     if metadata is None:
@@ -88,6 +118,7 @@ def uploads_create():
     return jsonify(responseData)
 
 @api.route("/videos/upload/status", methods=["GET"])
+@limiter.limit("1 per second")
 def uploads_status():
     guid = request.headers.get("guid")
     if guid is None or guid == "":
@@ -106,11 +137,11 @@ def uploads_status():
 
 @api.route("/about/", methods=["GET"])
 def about():
-    return render_template("about.html")
+    return render_template("pages/About.html")
 
 @api.route("/reports/", methods=["GET"])
 def reports():
-    return render_template("reports.html")
+    return render_template("pages/Reports.html")
 
 if __name__ == "__main__":
     api.run("127.0.0.1", 5000, True)
