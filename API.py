@@ -28,14 +28,6 @@ limiter = Limiter(
     default_limits=["600 per hour", "6 per second"]
 )
 
-@api.before_request
-def before_request():
-    scheme = request.headers.get('X-Forwarded-Proto')
-    if scheme and scheme == 'http' and request.url.startswith('http://'):
-        url = request.url.replace('http://', 'https://', 1)
-        code = 301
-        return redirect(url, code=code)
-
 @api.errorhandler(404)
 def error_404(e):
     '''Not Found'''
