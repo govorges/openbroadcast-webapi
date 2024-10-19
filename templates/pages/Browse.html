@@ -1,0 +1,29 @@
+<html>
+    <head>
+        <title>Open Broadcast | Browse</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/openbroadcast.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/browse.css') }}">
+
+        <script type="text/javascript" src="{{ url_for('static', filename='js/openbroadcast.js') }}" onload="global_init()"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/browse.js') }}"></script>
+
+        <link rel="preload" href="https://openbroadcast.b-cdn.net/feeds/MostRecent.xml" as="fetch" crossorigin="anonymous">
+
+        <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    </head>
+    <nav>
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+    </nav>
+    <body onload="init()">
+        <div class="centerBox">
+            
+        </div>
+    </body>
+    <footer>
+        {% include 'footer.html' %}
+        {% block footerContent %}
+        {% endblock %}
+      </footer>
+</html>

@@ -41,7 +41,8 @@ body {
             width: 100%;
             margin-bottom: 1vh;
             padding-inline: 1vw;
-            padding-block: 0.5vh; }
+            padding-block: 0.5vh;
+            line-height: 1.75; }
             .centerBox > .section > .content > .split > .question > span.answer > a {
               color: #0871ff; }
               .centerBox > .section > .content > .split > .question > span.answer > a > i {

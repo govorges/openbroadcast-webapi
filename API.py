@@ -143,5 +143,9 @@ def about():
 def reports():
     return render_template("pages/Reports.html")
 
+@api.route("/browse/", methods=["GET"])
+def browse():
+    return render_template("pages/Browse.html")
+
 if __name__ == "__main__":
     api.run("127.0.0.1", 5000, True)
