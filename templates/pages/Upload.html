@@ -2,8 +2,11 @@
 
 <head>
     <title>Open Broadcast | Upload</title>
+    
     <script src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/openbroadcast.js') }}" onload="global_init()"></script>
     <script type="text/javascript" src="{{ url_for('static', filename='js/upload.js') }}"></script>
+    
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/openbroadcast.css') }}">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/upload.css') }}">

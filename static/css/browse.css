@@ -1,0 +1,75 @@
+body {
+  font-family: "Mallory Book", sans-serif;
+  overflow-y: hidden; }
+
+.centerBox {
+  padding-inline: 1vw; }
+  .centerBox > h4 {
+    text-align: center;
+    margin: 0;
+    font-family: "Ubuntu", sans-serif; }
+  .centerBox > .feedContainer {
+    background-color: #000215;
+    color: white;
+    text-align: center;
+    width: fit-content; }
+    .centerBox > .feedContainer > h2 {
+      width: 100%;
+      background-color: #0871ff;
+      text-align: left;
+      text-indent: 1vw;
+      font-family: "Fredoka", "Ubuntu", sans-serif;
+      font-weight: 200; }
+    .centerBox > .feedContainer > .channelRow {
+      display: flex;
+      flex-direction: row;
+      width: 100vw;
+      padding-block-end: 1vh;
+      padding-inline: 2vw;
+      overflow-x: scroll;
+      background-color: #000215;
+      color: white;
+      font-family: "Fredoka", "Ubuntu", sans-serif;
+      font-weight: 200; }
+      .centerBox > .feedContainer > .channelRow > .channelItem {
+        display: flex;
+        flex-direction: column;
+        width: 20%;
+        min-width: 20%;
+        margin-inline-end: 1vw; }
+        .centerBox > .feedContainer > .channelRow > .channelItem > h3 {
+          text-align: center;
+          font-size: medium;
+          margin: 0;
+          padding-block: 0.2vh;
+          width: 100%;
+          background-color: #0871ff;
+          color: white;
+          text-overflow: ellipsis;
+          overflow: hidden;
+          white-space: nowrap;
+          font-weight: 200; }
+        .centerBox > .feedContainer > .channelRow > .channelItem > img {
+          height: auto;
+          width: 100%;
+          margin-bottom: 0; }
+        .centerBox > .feedContainer > .channelRow > .channelItem > .metadata {
+          display: flex;
+          flex-direction: row;
+          justify-content: space-between;
+          padding-block: 0.2vh;
+          background-color: #0871ff;
+          color: white;
+          font-weight: 300;
+          align-items: center; }
+          .centerBox > .feedContainer > .channelRow > .channelItem > .metadata > span {
+            width: 33%;
+            font-size: medium;
+            padding-inline: 0.4vw;
+            text-align: center; }
+          .centerBox > .feedContainer > .channelRow > .channelItem > .metadata > span:first-child {
+            text-align: left; }
+          .centerBox > .feedContainer > .channelRow > .channelItem > .metadata > span:last-child {
+            text-align: right; }
+          .centerBox > .feedContainer > .channelRow > .channelItem > .metadata .videoId {
+            font-size: smaller; }

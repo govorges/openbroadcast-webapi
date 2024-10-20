@@ -1,5 +1,7 @@
 
 function init() {
+    global_init();
+    
     window.utility_VideoFileInput = document.getElementById("utility_VideoFileInput");
     window.utility_ThumbnailFileInput = document.getElementById("utility_ThumbnailFileInput");
     
@@ -9,8 +11,6 @@ function init() {
     window.memory__VideoFileInput_PreviousFileName = "";
     window.memory__VideoFileInput_CurrentFileName = "";
 
-    window.utility_AlertBar = document.getElementById("alertBar");
-    window.alertBar_HideTimout = null;
     utility_DisplayAlertBarMessage({
         messageContent:"Welcome to OpenBroadcast!",
         length_ms: 3000
@@ -122,34 +122,6 @@ function dialog__Upload_ViewRules(anchor) {
 }
 function dialog__Upload_SelectVideoFile() {
     utility_VideoFileInput.click();
-}
-function utility_DisplayAlertBarMessage({messageContent, length_ms, type}) {
-    if (messageContent == null) return;
-    if (length_ms == null) length_ms = 10000;
-    if (type == null) type = "info";
-
-    utility_AlertBar.innerHTML = messageContent;
-    utility_AlertBar.style.opacity = 1;
-
-    if (type == "info") {
-        utility_AlertBar.style.backgroundColor = "var(--accent-1)";
-    }
-    if (type == "error") {
-        utility_AlertBar.style.backgroundColor = "maroon";
-    }
-    if (type == "warning") {
-        utility_AlertBar.style.backgroundColor = "orange";
-    }
-
-    if (alertBar_HideTimout != null) {
-        clearTimeout(alertBar_HideTimout);
-    }
-
-    alertBar_HideTimout = setTimeout(() => {
-        utility_AlertBar.style.opacity = 0;
-        alertBar_HideTimout = null;
-    }, (length_ms));
-
 }
 function dialog__Upload_VideoFileInput__Event_OnChange() {
     if (utility_VideoFileInput.length == 0) {

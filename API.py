@@ -25,8 +25,13 @@ api.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 limiter = Limiter(
     app=api,
     key_func=get_remote_address,
-    default_limits=["600 per hour", "6 per second"]
+    default_limits=["12 per second"]
 )
+
+@api.before_request
+def before_request():
+    if api.debug:
+        sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
 
 @api.errorhandler(404)
 def error_404(e):
@@ -67,7 +72,7 @@ def videos_upload():
     return render_template("pages/Upload.html")
 
 @api.route("/videos/upload/create", methods=["POST"])
-@limiter.limit("5 per day")
+@limiter.limit("30 per day")
 def uploads_create():
     metadata = request.form.get("metadata")
     if metadata is None:
@@ -118,7 +123,7 @@ def uploads_create():
     return jsonify(responseData)
 
 @api.route("/videos/upload/status", methods=["GET"])
-@limiter.limit("1 per second")
+@limiter.limit("2 per second")
 def uploads_status():
     guid = request.headers.get("guid")
     if guid is None or guid == "":
@@ -142,6 +147,10 @@ def about():
 @api.route("/reports/", methods=["GET"])
 def reports():
     return render_template("pages/Reports.html")
+
+@api.route("/browse/", methods=["GET"])
+def browse():
+    return render_template("pages/Browse.html")
 
 if __name__ == "__main__":
     api.run("127.0.0.1", 5000, True)
