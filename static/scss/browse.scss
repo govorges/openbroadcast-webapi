@@ -12,3 +12,114 @@ body {
     font-family: $header-font;
     overflow-y: hidden;
 }
+.centerBox {
+    padding-inline: 1vw;
+    > h4 {
+        text-align: center;
+        margin: 0;
+        font-family: $primary-text-font;
+    }
+    > .feedContainer {
+        background-color: $secondary-background;
+        color: $secondary-text;
+
+        text-align: center;
+        width: fit-content;
+
+        > h2 {
+            width: 100%;
+            background-color: $accent-1;
+
+            text-align: left;
+            text-indent: 1vw;
+
+            font-family: "Fredoka", "Ubuntu", sans-serif;
+            font-weight: 200;
+        }
+
+        > .channelRow {
+            display: flex;
+            flex-direction: row;
+    
+            width: 100vw;
+            padding-block-end: 1vh;
+            padding-inline: 2vw;
+            overflow-x: scroll;
+    
+            background-color: $secondary-background;
+            color: $secondary-text;
+
+            font-family: "Fredoka", "Ubuntu", sans-serif;
+            font-weight: 200;
+    
+            > .channelItem {
+                display: flex;
+                flex-direction: column;
+                
+    
+                width: 20%;
+                min-width: 20%;
+                margin-inline-end: 1vw;
+    
+                > h3 {
+                    text-align: center;
+                    font-size: medium;
+    
+                    margin: 0;
+                    padding-block: 0.2vh;
+    
+                    width: 100%;
+    
+                    background-color: $accent-1;
+                    color: $secondary-text;
+    
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                    white-space: nowrap;
+
+                    font-weight: 200;
+                }
+            
+                > img {
+                    height: auto;
+                    width: 100%;
+    
+                    margin-bottom: 0;
+                }
+                
+                > .metadata {
+                    display: flex;
+                    flex-direction: row;
+    
+                    justify-content: space-between;
+                    padding-block: 0.2vh;
+    
+                    background-color: $accent-1;
+                    color: $secondary-text;
+    
+                    font-weight: 300;
+
+                    align-items: center;
+
+
+                    > span {
+                        width: 33%;
+                        font-size: medium;
+                        padding-inline: 0.4vw;
+
+                        text-align: center;
+                    }
+                    > span:first-child {
+                        text-align: left;
+                    }
+                    >span:last-child {
+                        text-align: right;
+                    }
+                    .videoId {
+                        font-size: smaller;
+                    }
+                }
+            }
+        }
+    }
+}

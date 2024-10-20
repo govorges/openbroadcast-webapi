@@ -17,10 +17,25 @@
         {% endblock %}
     </nav>
     <body onload="init()">
-        <div class="centerBox">
-            
+        <div class="centerBox" id="centerBox">
+            <h4>
+                This page allows you to view what videos are available on OpenBroadcast. <u>Watching videos is currently restricted to the Roku channel.</u>
+            </h4>
         </div>
     </body>
+    <elementStore>
+        <div style="display:none;" class="channelRow" id="channelRowTemplate">
+        </div>
+        <div style="display:none;" class="channelItem" id="channelItemTemplate">
+            <h3 title="%irc:title%" name="irc:title">%irc:title%</h3>
+            <img name="irc:poster" src="%irc:poster%">
+            <div class="metadata">
+                <span name="irc:releasedate" title="%unparsed_releasedate%">%irc:releasedate%</span>
+                <span name="videoId" class="videoId" title="Video ID: %video_id%">%video_id%</span>
+                <span name="irc:length">%irc:length%</span>
+            </div>
+        </div>
+    </elementStore>
     <footer>
         {% include 'footer.html' %}
         {% block footerContent %}
