@@ -120,6 +120,9 @@ body {
                     }
                 }
             }
+            > .channelItem:last-child {
+                margin-inline-end: 20%;
+            }
         }
     }
 }
