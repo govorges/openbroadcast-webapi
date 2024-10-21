@@ -15,6 +15,7 @@ body {
 }
 .centerBox {
     padding-inline: 1vw;
+    overflow-x: hidden;
     > h4 {
         text-align: center;
         margin: 0;
