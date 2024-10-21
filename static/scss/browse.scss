@@ -11,6 +11,7 @@ $header-font: "Mallory Book", sans-serif;
 body {
     font-family: $header-font;
     overflow-y: hidden;
+    overflow-x: hidden;
 }
 .centerBox {
     padding-inline: 1vw;
