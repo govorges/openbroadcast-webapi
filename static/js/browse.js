@@ -1,17 +1,6 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+window.onload = (function() {
+    init();
+})
 
 async function init() {
     global_init();
