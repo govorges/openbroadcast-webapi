@@ -1,8 +1,13 @@
+window.initialized = false;
 window.onload = (function() {
     init();
+    initialized = true;
 })
 
 async function init() {
+    if (initialized) {
+        return;
+    }
     global_init();
 
     window.display_CenterBox = document.getElementById("centerBox");
