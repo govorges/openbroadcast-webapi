@@ -58,6 +58,14 @@ flow = Flow.from_client_secrets_file(
     redirect_uri = "https://openbroadcast.cz/authentication/callback"
 )
 
+def _force_https(app):
+    def wrapper(environ, start_response):
+        environ['wsgi.url_scheme'] = 'https'
+        return app(environ, start_response)
+    return wrapper
+
+_force_https(api)
+
 def authentication_required(function):
     def wrapper(*args, **kwargs):
         if 'google_id' not in session.keys():
