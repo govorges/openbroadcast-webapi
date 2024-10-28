@@ -168,7 +168,7 @@ def authentication_callback():
 @api.route("/login", endpoint="authentication_login")
 @api.route("/authentication/login")
 def authentication_login():
-    authorization_url, state = flow.authorization_url()
+    authorization_url, state = flow.authorization_url(prompt="consent")
     session["state"] = state
     return redirect(authorization_url)
 
