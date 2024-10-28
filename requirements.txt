@@ -1,4 +1,8 @@
 Flask
+Flask-OAuthlib
+google-auth
+google-auth-httplib2
+google_auth_oauthlib
 flask_limiter
 gunicorn
 requests

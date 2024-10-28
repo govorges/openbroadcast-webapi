@@ -1,0 +1,38 @@
+<html>
+    <head>
+        <title>OpenBroadcast | Account</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/openbroadcast.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/account.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        
+        <script type="text/javascript" src="{{ url_for('static', filename='js/account.js') }}"></script>
+        <script type="text/javascript" src="{{ url_for('static', filename='js/openbroadcast.js') }}"></script>
+       
+        {% block user %}
+        <data id="user.Email" style="display:none;">{{ user['email'] }}</data>
+        <data id="user.Id" style="display:none;">{{ user['id'] }}</data>
+        {% endblock %}
+    </head>
+    <nav>
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+    </nav>
+    <body>
+        <div class="centerBox">
+            <h3>You've successfully signed in to OpenBroadcast.</h3>
+            <h4>More account functionality is coming soon. Until then, feel free to use the service!</h4>
+            <h4>Your data is currently not stored anywhere on OpenBroadcast.</h4>
+            <h4>Signed in as: <span class="markdown_Code" id="user.EmailDisplay"></h4>
+            <div class="anchors">
+                <a href="/authentication/logout">Logout</a><a href="/">Return to Home</a> 
+            </div>       
+
+        </div>
+    </body>
+    <footer>
+        {% include 'footer.html' %}
+        {% block footerContent %}
+        {% endblock %}
+      </footer>
+</html>

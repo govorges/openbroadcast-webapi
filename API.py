@@ -1,7 +1,17 @@
-from flask import Flask, render_template, request, make_response, jsonify, redirect
+from flask import (
+    Flask, render_template, request, 
+    make_response, jsonify, redirect, 
+    abort, session, url_for
+)
 
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
+
+import requests
+from google.oauth2 import id_token
+from google_auth_oauthlib.flow import Flow
+from pip._vendor import cachecontrol
+import google.auth.transport.requests
 
 import sass
 
@@ -14,24 +24,77 @@ import json
 
 HOME_DIR = path.dirname(path.realpath(__file__))
 UPLOAD_DIR = path.join(HOME_DIR, "uploads")
-sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
+
+sass.compile(
+    dirname=(
+        path.join(HOME_DIR, "static", "scss"),
+        path.join(HOME_DIR, "static", "css")
+    )
+)
+
 
 api_Video = VideoAPI()
 
 api = Flask(__name__)
-api.config['MAX_CONTENT_LENGTH'] = 512 * 1000 * 1000 # Maximum file size is 512MB
+api.config['MAX_CONTENT_LENGTH'] = 64 * 1000 * 1000 # Maximum file size is 64MB
 api.config["UPLOAD_FOLDER"] = UPLOAD_DIR
+
+api_oauth_config_path = path.join(HOME_DIR, "client_secret.json")
+api_oauth_config = json.loads(
+    open(path.join(HOME_DIR, "client_secret.json")).read()
+)
+GOOGLE_OAUTH_CLIENT_ID = api_oauth_config.get("web").get("client_id")
+api.secret_key = api_oauth_config.get("web").get("client_secret")
 
 limiter = Limiter(
     app=api,
     key_func=get_remote_address,
-    default_limits=["12 per second"]
+    default_limits=["30 per 2 seconds"]
 )
+
+flow = Flow.from_client_secrets_file(
+    client_secrets_file = api_oauth_config_path,
+    scopes = ["https://www.googleapis.com/auth/userinfo.email", "openid"],
+    redirect_uri = "https://openbroadcast.cz/authentication/callback"
+)
+
+def authentication_required(function):
+    def wrapper(*args, **kwargs):
+        if 'google_id' not in session.keys():
+            return abort(401)
+        else:
+            return function()
+    return wrapper
 
 @api.before_request
 def before_request():
-    if api.debug:
-        sass.compile(dirname=(path.join(HOME_DIR, "static", "scss"), path.join(HOME_DIR, "static", "css")))
+        # Don't recompile CSS while we're requesting static files.
+        # JS/PNG/etc don't need CSS & CSS shouldn't be recompiled before requesting it.
+        # Recompiling CSS before the request will sometimes break in a weird fucked up race condition.
+        if api.debug and api.static_url_path not in request.path:
+            print(f"Compiling SCSS -> CSS [For: {request.path}]")
+            sass.compile(
+                dirname=(
+                    path.join(HOME_DIR, "static", "scss"),
+                    path.join(HOME_DIR, "static", "css")
+                )
+            )
+
+@api.errorhandler(401)
+def error_401(e):
+    '''Invalid Authentication'''
+    error_data = {
+        "name": "This page requires you to be logged in!",
+        "message": 
+            f"Sorry! This page is only for users who are logged in. \
+            <a style='color:var(--accent-1)' href='/authentication/login'> \
+            Login with Google \
+            </a>"
+    }
+    response = make_response(render_template("pages/Error.html", error=error_data))
+    response.status_code = 401
+    
+    return response
 
 @api.errorhandler(404)
 def error_404(e):
@@ -57,7 +120,63 @@ def error_429(e):
     
     return response
 
+@api.route("/authentication/details", methods=['GET'], endpoint="authentication_details")
+def authentication_details():
+    '''
+    Unauthenticated route to retrieve auth details. 
+    Returns jsonify'd dict of `user_id` & `email`, values are null if unauthenticated.
+    '''
+    session_details = {
+        "user_id": session.get('google_id'),
+        "email": session.get("email")
+    }
+    return jsonify(session_details)
 
+@api.route("/authentication/callback")
+def authentication_callback():
+    flow.fetch_token(authorization_response = request.url)
+
+    if not session["state"] == request.args["state"]:
+        abort(500)
+    
+    credentials = flow.credentials
+    request_session = requests.session()
+    cached_session = cachecontrol.CacheControl(request_session)
+    token_request = google.auth.transport.requests.Request(session = cached_session)
+
+    id_info = id_token.verify_oauth2_token(
+        id_token = credentials.id_token,
+        request = token_request,
+        audience = GOOGLE_OAUTH_CLIENT_ID,
+        clock_skew_in_seconds = 60
+    )
+
+    session["google_id"] = id_info.get("sub")
+    session["email"] = id_info.get("email")
+    session["id_token"] = credentials.id_token
+
+    return redirect("/account")
+
+@api.route("/login", endpoint="authentication_login")
+@api.route("/authentication/login")
+def authentication_login():
+    authorization_url, state = flow.authorization_url()
+    session["state"] = state
+    return redirect(authorization_url)
+
+@api.route("/logout", endpoint="authentication_logout")
+@api.route("/authentication/logout")
+def authentication_logout():
+    session.clear()
+    return redirect("/")
+
+@api.route("/account", endpoint="account")
+@authentication_required
+def account():
+    return render_template("pages/Account.html", user = {
+        "email": session['email'],
+        "id": session['google_id']
+    })
 
 @api.route("/", methods=["GET", "POST"])
 def index():
@@ -67,13 +186,14 @@ def index():
 def status():
     return f"Alive"
 
-@api.route("/videos/upload", methods=["GET"])
+@api.route("/videos/upload", methods=["GET"], endpoint="videos_upload")
+@authentication_required
 def videos_upload():
     return render_template("pages/Upload.html")
 
-@api.route("/videos/upload/create", methods=["POST"])
-@limiter.limit("30 per day")
-def uploads_create():
+@api.route("/videos/upload/create", methods=["POST"], endpoint="video_uploads_create")
+@limiter.limit("30 per day", key_func=lambda: session['google_id'])
+def video_uploads_create():
     metadata = request.form.get("metadata")
     if metadata is None:
         return make_response("No metadata retrieved.", 400)
@@ -122,9 +242,9 @@ def uploads_create():
 
     return jsonify(responseData)
 
-@api.route("/videos/upload/status", methods=["GET"])
-@limiter.limit("2 per second")
-def uploads_status():
+@api.route("/videos/upload/status", methods=["GET"], endpoint="video_uploads_status")
+@limiter.limit("2 per second", key_func=lambda: session['google_id'])
+def video_uploads_status():
     guid = request.headers.get("guid")
     if guid is None or guid == "":
         return make_response("Upload guid is missing.", 400)
@@ -153,4 +273,7 @@ def browse():
     return render_template("pages/Browse.html")
 
 if __name__ == "__main__":
-    api.run("127.0.0.1", 5000, True)
+    debug = True
+    if debug:
+        environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1' # Useful for OAuth testing over HTTP
+    api.run("127.0.0.1", 5000, debug)
