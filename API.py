@@ -18,6 +18,7 @@ import sass
 from werkzeug.utils import secure_filename
 
 from services.Video import VideoAPI
+from services.Library import LibraryAPI
 
 from os import path, environ
 import json
@@ -34,6 +35,7 @@ sass.compile(
 
 
 api_Video = VideoAPI()
+api_Library = LibraryAPI()
 
 api = Flask(__name__)
 api.config['MAX_CONTENT_LENGTH'] = 64 * 1000 * 1000 # Maximum file size is 64MB
@@ -77,8 +79,7 @@ def authentication_required(function):
 @api.before_request
 def before_request():
         # Don't recompile CSS while we're requesting static files.
-        # JS/PNG/etc don't need CSS & CSS shouldn't be recompiled before requesting it.
-        # Recompiling CSS before the request will sometimes break in a weird fucked up race condition.
+        #       (otherwise the CSS breaks mid-request)
         if api.debug and api.static_url_path not in request.path:
             print(f"Compiling SCSS -> CSS [For: {request.path}]")
             sass.compile(
@@ -163,6 +164,13 @@ def authentication_callback():
     session["email"] = id_info.get("email")
     session["id_token"] = credentials.id_token
 
+    try: # Temporary try/except while testing.
+        api_Library.library__Register(
+            google_id=session["google_id"]
+        )
+    except:
+        pass
+
     return redirect("/account")
 
 @api.route("/login", endpoint="authentication_login")
@@ -201,6 +209,7 @@ def videos_upload():
 
 @api.route("/videos/upload/create", methods=["POST"], endpoint="video_uploads_create")
 @limiter.limit("30 per day", key_func=lambda: session['google_id'])
+@authentication_required
 def video_uploads_create():
     metadata = request.form.get("metadata")
     if metadata is None:
@@ -252,6 +261,7 @@ def video_uploads_create():
 
 @api.route("/videos/upload/status", methods=["GET"], endpoint="video_uploads_status")
 @limiter.limit("2 per second", key_func=lambda: session['google_id'])
+@authentication_required
 def video_uploads_status():
     guid = request.headers.get("guid")
     if guid is None or guid == "":
@@ -266,7 +276,6 @@ def video_uploads_status():
         "status": video.get("status")
     }
     return jsonify(responseData)
-
 
 @api.route("/about/", methods=["GET"])
 def about():
