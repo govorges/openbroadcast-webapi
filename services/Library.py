@@ -19,9 +19,28 @@ class LibraryAPI:
 
         return object
 
+    def upload__Create(self, google_id: str, videoId: str) -> dict | None:
+        requestURL = f"{self.API_Endpoint_URL}/library/upload/create"
+        payload = {
+            "Accessor": google_id,
+            "videoId": videoId
+        }
 
+        request = requests.post(requestURL, json=payload)
+        object = request.json()
 
+        return object
+    
+    def video__Create(self, google_id: str, data: dict) -> dict | None:
+        requestURL = f"{self.API_Endpoint_URL}/library/video/create"
+        payload = {
+            "Accessor": google_id,
+            "video_data": data
+        }
 
+        request = requests.post(requestURL, json=payload)
+        object = request.json()
 
+        return object
 
 
