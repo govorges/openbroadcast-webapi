@@ -16,8 +16,6 @@ import google.auth.transport.requests
 import sass
 
 from werkzeug.utils import secure_filename
-
-from services.Video import VideoAPI
 from services.Library import LibraryAPI
 
 from os import path, environ
@@ -33,17 +31,15 @@ sass.compile(
     )
 )
 
-
-api_Video = VideoAPI()
 api_Library = LibraryAPI()
 
 api = Flask(__name__)
 api.config['MAX_CONTENT_LENGTH'] = 64 * 1000 * 1000 # Maximum file size is 64MB
 api.config["UPLOAD_FOLDER"] = UPLOAD_DIR
 
-api_oauth_config_path = path.join(HOME_DIR, "client_secret.json")
+api_oauth_config_path = path.join(HOME_DIR, "storage", "secrets", "client_secret.json")
 api_oauth_config = json.loads(
-    open(path.join(HOME_DIR, "client_secret.json")).read()
+    open(api_oauth_config_path).read()
 )
 GOOGLE_OAUTH_CLIENT_ID = api_oauth_config.get("web").get("client_id")
 api.secret_key = api_oauth_config.get("web").get("client_secret")
@@ -206,76 +202,6 @@ def status():
 @authentication_required
 def videos_upload():
     return render_template("pages/Upload.html")
-
-@api.route("/videos/upload/create", methods=["POST"], endpoint="video_uploads_create")
-@limiter.limit("30 per day", key_func=lambda: session['google_id'])
-@authentication_required
-def video_uploads_create():
-    metadata = request.form.get("metadata")
-    if metadata is None:
-        return make_response("No metadata retrieved.", 400)
-    try:
-        metadata = json.loads(metadata)
-    except json.JSONDecodeError:
-        return make_response("Invalid JSON provided", 400)
-
-    title = metadata.get("title")
-    if title is None or title == "":
-        return make_response("No title provided.", 400)
-    if not isinstance(title, str):
-        return make_response("Invalid data.", 400)
-    if len(title) >= 120:
-        return make_response("Title is too large!", 400)
-
-    description = metadata.get("description")
-    if description is None or description == "":
-        metadata['description'] = "A video uploaded to OpenBroadcast."
-        description = metadata["description"]
-    if not isinstance(description, str):
-        return make_response("Invalid data.", 400)
-    if len(description) >= 800:
-        return make_response("Description is too large!", 400)
-
-    category = metadata.get("category", "misc")
-    if category not in ["funny", "info", "misc"]:
-        return make_response("Category does not exist. Video wouldn't appear in a feed so it has been rejected.", 400)
-
-    videoID = api_Video.videos__GenerateID()
-
-    thumbnail = request.files["thumbnail"]
-    thumbnail_filename = secure_filename(f"{videoID}.png")
-    thumbnail.save(path.join(api.config["UPLOAD_FOLDER"], thumbnail_filename))
-
-    api_Video.videos__UploadThumbnail(thumbnail_filename)
-
-    uploadData = api_Video.uploads__Create(videoID, metadata)
-    if uploadData.get("signature") is None:
-        return make_response("Error creating TUS signature", 400)
-
-    responseData = {
-        "signature": uploadData.get("signature"),
-        "metadata": uploadData.get("metadata")
-    }
-
-    return jsonify(responseData)
-
-@api.route("/videos/upload/status", methods=["GET"], endpoint="video_uploads_status")
-@limiter.limit("2 per second", key_func=lambda: session['google_id'])
-@authentication_required
-def video_uploads_status():
-    guid = request.headers.get("guid")
-    if guid is None or guid == "":
-        return make_response("Upload guid is missing.", 400)
-    
-    try:
-        video = api_Video.videos__Retrieve(guid=guid)
-    except:
-        return make_response("Error retrieving video with provided guid", 500)
-
-    responseData = {
-        "status": video.get("status")
-    }
-    return jsonify(responseData)
 
 @api.route("/about/", methods=["GET"])
 def about():
