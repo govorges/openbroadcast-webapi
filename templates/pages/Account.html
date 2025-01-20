@@ -6,19 +6,13 @@
         <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
         
         <script type="text/javascript" src="{{ url_for('static', filename='js/account.js') }}"></script>
-        <script type="text/javascript" src="{{ url_for('static', filename='js/openbroadcast.js') }}"></script>
-       
-        {% block user %}
-        <data id="user.Email" style="display:none;">{{ user['email'] }}</data>
-        <data id="user.Id" style="display:none;">{{ user['id'] }}</data>
-        {% endblock %}
     </head>
     <nav>
         {% include 'navbar.html' %}
         {% block content %}
         {% endblock %}
     </nav>
-    <body>
+    <body onload="global_init()">
         <div class="centerBox">
             <h3>You've successfully signed in to OpenBroadcast.</h3>
             <h4>More account functionality is coming soon. Until then, feel free to use the service!</h4>

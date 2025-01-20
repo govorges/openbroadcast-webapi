@@ -15,7 +15,7 @@
         {% block content %}
         {% endblock %}
     </nav>
-    <body onload="Load()">
+    <body onload="Load();global_init();">
         <data style="display:none" id="errorMessage">{{ error['message'] }}</data>
         <div class="centerBox">
             <h2>{{ error['name'] }}</h2>

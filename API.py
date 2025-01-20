@@ -72,6 +72,15 @@ def authentication_required(function):
             return function()
     return wrapper
 
+@api.context_processor
+def inject_user():
+    return dict(user = {
+        "email": session.get('email'),
+        "id": session.get('google_id')
+    })
+
+
+
 @api.before_request
 def before_request():
         # Don't recompile CSS while we're requesting static files.
@@ -185,10 +194,7 @@ def authentication_logout():
 @api.route("/account", endpoint="account")
 @authentication_required
 def account():
-    return render_template("pages/Account.html", user = {
-        "email": session['email'],
-        "id": session['google_id']
-    })
+    return render_template("pages/Account.html")
 
 @api.route("/", methods=["GET", "POST"])
 def index():
