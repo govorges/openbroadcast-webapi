@@ -1,11 +1,6 @@
 function global_init() {
     window.utility_AlertBar = document.getElementById("alertBar");
     window.alertBar_HideTimout = null;
-
-    let user_email = document.getElementById("user.Email").innerText;
-    if (user_email != null && user_email !== "") {
-        document.getElementById("navBarAccountDisplay").innerHTML = '<i class="material-icons">person</i>' + user_email;
-    }
 }
 
 function utility_DisplayAlertBarMessage({messageContent, length_ms, type}) {
