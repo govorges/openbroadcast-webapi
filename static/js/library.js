@@ -18,9 +18,9 @@ function change_selected_tab(anchor) {
     });
 }
 
-function RetrieveVideos() {
+async function RetrieveVideos() {
     // Retrieves a dictionary of video objects from the Library service.
-    let videoData = fetch("/library/videos", {
+    let videoData = await fetch("/library/videos", {
         method: "GET",
         headers: { // Setting cookie header to pass session information.
             "cookie": document.cookie
@@ -34,14 +34,14 @@ function RetrieveVideos() {
         else {
             return response;
         }
-    }).then( (response) => response.json() );
+    }).then( (response) => { return response.json(); });
     
     return videoData;
 }
 
-function RetrieveCollections() {
+async function RetrieveCollections() {
     // Retrieves a dictionary of collection objects from the Library service.
-    let collectionData = fetch("/library/collections", {
+    let collectionData = await fetch("/library/collections", {
         method: "GET",
         headers: { // Setting cookie header to pass session information.
             "cookie": document.cookie
@@ -55,7 +55,7 @@ function RetrieveCollections() {
         else {
             return response;
         }
-    }).then( (response) => response.json() );
+    }).then( (response) => { return response.json(); } );
     
     return collectionData;
 }
