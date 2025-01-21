@@ -230,6 +230,10 @@ def reports():
 def browse():
     return render_template("pages/Browse.html")
 
+@api.route("/library", methods=["GET"])
+def library():
+    return render_template("pages/Library.html")
+
 if __name__ == "__main__":
     debug = True
     if debug:

@@ -1,0 +1,31 @@
+<html>
+    <head>
+        <title>OpenBroadcast | Library</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/openbroadcast.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/library.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        
+        <script type="text/javascript" src="{{ url_for('static', filename='js/library.js') }}"></script>
+    </head>
+    <nav>
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+    </nav>
+    <body onload="init()">
+        <div class="tabs">
+            <a onclick="change_selected_tab(this)" href="#manageLibrary" class="currentView" id="tabs_#manageLibrary">Manage Library</a>
+            <a onclick="change_selected_tab(this)" href="#advertising" id="tabs_#advertising">Advertising</a>
+            <a onclick="change_selected_tab(this)" href="#security" id="tabs_#security">Security</a>
+        </div>
+        <p id="tabs_#manageLibrary_desc">Upload videos, setup collections, and build content feeds.</p>
+        <p id="tabs_#advertising_desc" style="display:none;">Configure advertisements on videos in your Library.</p>
+        <p id="tabs_#security_desc" style="display:none;">Fine-tune security settings to make sure your content isn't being taken advantage of.</p>
+        <div class="centerBox" id="centerBox"></div>
+    </body>
+    <footer>
+        {% include 'footer.html' %}
+        {% block footerContent %}
+        {% endblock %}
+    </footer>
+</html>

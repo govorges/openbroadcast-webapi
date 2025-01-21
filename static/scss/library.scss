@@ -1,0 +1,52 @@
+$main-background: #cedeeb;
+$main-text: black;
+$secondary-background: #000215;
+$secondary-text: white;
+$accent-1: #0871ff;
+$nav-font: "Fredoka", "Ubuntu", sans-serif;
+$primary-text-font: "Ubuntu", sans-serif;
+$secondary-text-font: 'Righteous', sans-serif;
+$header-font: "Mallory Book", sans-serif;
+
+body {
+    font-family: $header-font;
+    overflow-y: hidden;
+
+    > h3 {
+        text-align: center;
+
+        margin-block: 0;
+        font-weight: 200;
+    }
+    > .tabs > a {
+        margin-inline-start: 2vw;
+        margin-block: 0;
+
+        font-weight: 300;
+        font-size: larger;
+        text-align: left;
+
+        color: $accent-1;
+    }
+    > .tabs > a.currentView {
+        color: $main-text;
+        pointer-events: none;
+        cursor: default;
+    }
+    > p {
+        text-align: left;
+        text-indent: 4vw;
+        margin-top: 0;
+    }
+}
+.centerBox {
+    padding-inline: 1vw;
+    overflow-x: hidden;
+
+    > .centerBoxNavigation {
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        justify-content: center;
+    }
+}
