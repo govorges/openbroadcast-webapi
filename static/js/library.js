@@ -18,6 +18,48 @@ function change_selected_tab(anchor) {
     });
 }
 
+function RetrieveVideos() {
+    // Retrieves a dictionary of video objects from the Library service.
+    let videoData = fetch("/library/videos", {
+        method: "GET",
+        headers: { // Setting cookie header to pass session information.
+            "cookie": document.cookie
+        }
+    }).then( (response) => {
+        if (response.status != 200) {
+            console.error(
+                "/library/videos - Video retrieval unsuccessful."
+            );
+        }
+        else {
+            return response;
+        }
+    }).then( (response) => response.json() );
+    
+    return videoData;
+}
+
+function RetrieveCollections() {
+    // Retrieves a dictionary of collection objects from the Library service.
+    let collectionData = fetch("/library/collections", {
+        method: "GET",
+        headers: { // Setting cookie header to pass session information.
+            "cookie": document.cookie
+        }
+    }).then( (response) => {
+        if (response.status != 200) {
+            console.error(
+                "/library/collections - Collection retrieval unsuccessful."
+            );
+        }
+        else {
+            return response;
+        }
+    }).then( (response) => response.json() );
+    
+    return collectionData;
+}
+
 function init() {
     global_init();
 
@@ -30,4 +72,7 @@ function init() {
     }
     selectedTab_El = document.getElementById("tabs_" + selectedTab);
     change_selected_tab(selectedTab_El);
+
+    window.Collections = {};
+    window.Videos = {};
 }

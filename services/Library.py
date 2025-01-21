@@ -29,6 +29,28 @@ class LibraryAPI:
         object = request.json()
 
         return object
+    
+    def library__RetrieveCollections(self, google_id: str) -> dict | None:
+        requestURL = f"{self.API_Endpoint_URL}/library/collections"
+        payload = { 
+            "Accessor": google_id 
+        }
+        
+        request = requests.get(requestURL, json=payload)
+        object = request.json()
+
+        return object
+    
+    def library__RetrieveVideos(self, google_id: str) -> dict | None:
+        requestURL = f"{self.API_Endpoint_URL}/library/videos"
+        payload = { 
+            "Accessor": google_id 
+        }
+        
+        request = requests.get(requestURL, json=payload)
+        object = request.json()
+
+        return object
 
     def upload__Create(self, google_id: str, videoId: str) -> dict | None:
         requestURL = f"{self.API_Endpoint_URL}/library/upload/create"

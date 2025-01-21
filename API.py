@@ -230,9 +230,28 @@ def reports():
 def browse():
     return render_template("pages/Browse.html")
 
-@api.route("/library", methods=["GET"])
+
+
+@api.route("/library", methods=["GET"], endpoint='library')
+@authentication_required
 def library():
     return render_template("pages/Library.html")
+
+@api.route("/library/collections", methods=["GET"], endpoint="library_Collections_GET")
+@authentication_required
+def library_Collections_GET():
+    collections = api_Library.library__RetrieveCollections(
+        google_id = session.get("google_id")
+    )
+    return jsonify(collections)
+
+@api.route("/library/videos", methods=["GET"], endpoint="library_Videos_GET")
+@authentication_required
+def library_Videos_GET():
+    videos = api_Library.library__RetrieveVideos(
+        google_id = session.get("google_id")
+    )
+    return jsonify(videos)
 
 if __name__ == "__main__":
     debug = True
