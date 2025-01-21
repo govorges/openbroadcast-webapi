@@ -21,6 +21,8 @@ from services.Library import LibraryAPI
 from os import path, environ
 import json
 
+import datetime
+
 HOME_DIR = path.dirname(path.realpath(__file__))
 UPLOAD_DIR = path.join(HOME_DIR, "uploads")
 
@@ -79,7 +81,13 @@ def inject_user():
         "id": session.get('google_id')
     })
 
-
+# If more filters are added, move to a Filters.py | api.add_template_filter() relevant
+@api.template_filter('toDate')
+def toDate(timestamp):
+    """Converts a POSIX timestamp to a formatted datetime string. """
+    date_format = "%Y-%m-%d"
+    time = datetime.datetime.fromtimestamp(timestamp)
+    return datetime.datetime.strftime(time, date_format)
 
 @api.before_request
 def before_request():
@@ -194,7 +202,8 @@ def authentication_logout():
 @api.route("/account", endpoint="account")
 @authentication_required
 def account():
-    return render_template("pages/Account.html")
+    userDetails = api_Library.library__Details(session.get("google_id"))
+    return render_template("pages/Account.html", userDetails=userDetails)
 
 @api.route("/", methods=["GET", "POST"])
 def index():

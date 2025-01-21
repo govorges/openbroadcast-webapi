@@ -34,6 +34,10 @@ body {
                 width: 50%;
                 text-align: center;
 
+                > h2 {
+                    font-family: monospace;
+                }
+
                 > .question {
                     display: flex;
                     flex-direction: column;
@@ -81,9 +85,6 @@ body {
                 }
                 > .route {
                     border: 2px solid $accent-1;
-                    
-                    padding-inline: 1vw;
-                    padding-block: 1vh;
 
                     transition: 0.2s ease-in-out all;
 
@@ -97,21 +98,22 @@ body {
                     > h3 {
                         margin: 0;
 
-                        text-decoration: underline;
-                        color: $accent-1;
+                        background-color: $accent-1;
+                        color: $secondary-text;
 
                         display: flex;
-                        justify-content: center;
+                        justify-content: left;
                         align-items: center;
                         text-decoration: none;
-                        
-                        > i {
-                            margin-inline-end: 0.2vw;
-                        }
+
+                        text-indent: 1vw;
+                        padding-block: 0.5vh;
                     }
                 }
                 > .route:hover {
-                    transform: scale(1.04);
+                    > p {
+                        text-decoration: underline;
+                    }
                 }
             }
         }

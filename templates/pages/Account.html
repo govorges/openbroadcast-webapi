@@ -14,19 +14,19 @@
     </nav>
     <body onload="init()">
         <div class="centerBox">
-            <h3>You've successfully signed in to OpenBroadcast.</h3>
-            <h4>More account functionality is coming soon. Until then, feel free to use the service!</h4>
-            <h4>Your data is currently not stored anywhere on OpenBroadcast.</h4>
-            <h4>Signed in as: <span class="markdown_Code" id="user.EmailDisplay"></h4>
-            <div class="anchors">
-                <a href="/authentication/logout">Logout</a><a href="/">Return to Home</a> 
-            </div>       
-
+            <div class="settings">
+                <h3><span class="markdown_Code">{{ user['email'] }}</span></h3>
+                <h5>OpenBroadcast User Since: <span class="markdown_Code">{{ userDetails['date_registered'] | toDate }}</span></h5>
+                
+                <div class="anchors">
+                    <a href="/authentication/logout">Logout</a><a href="/">Return to Home</a> 
+                </div>   
+            </div>    
         </div>
     </body>
     <footer>
         {% include 'footer.html' %}
         {% block footerContent %}
         {% endblock %}
-      </footer>
+    </footer>
 </html>

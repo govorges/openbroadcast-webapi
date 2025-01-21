@@ -21,17 +21,35 @@ body {
 
     text-align: center;
 
-    > .anchors {
-        display: flex;
-        flex-direction: row;
+    > .settings {
+        width: fit-content;
+        border: 1px solid var(--main-text);
 
-        justify-content: space-between;
-        width: 30%;
-
+        text-align: center;
         align-self: center;
 
-        > a {
-            color: $accent-1;
+        padding-inline: 10vw;
+        padding-block: 1lh;
+
+        > h3 {
+            margin-block: 0;
+        }
+        > h5 {
+            margin-top: 0.25lh;
+        }
+
+        > .anchors {
+            display: flex;
+            flex-direction: row;
+    
+            justify-content: space-between;
+            width: 100%;
+    
+            align-self: center;
+    
+            > a {
+                color: $accent-1;
+            }
         }
     }
 }

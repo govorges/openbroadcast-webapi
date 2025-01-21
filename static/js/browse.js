@@ -5,10 +5,9 @@ window.onload = (function() {
 })
 
 async function init() {
-    if (initialized) {
-        return;
-    }
     global_init();
+
+    return;
 
     window.display_CenterBox = document.getElementById("centerBox");
 
