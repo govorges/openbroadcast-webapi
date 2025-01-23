@@ -21,8 +21,56 @@
         <p id="tabs_#manageLibrary_desc">Upload videos, setup collections, and build content feeds.</p>
         <p id="tabs_#advertising_desc" style="display:none;">Configure advertisements on videos in your Library.</p>
         <p id="tabs_#security_desc" style="display:none;">Fine-tune security settings to make sure your content isn't being taken advantage of.</p>
-        <div class="centerBox" id="centerBox"></div>
+        <div class="centerBox" id="centerBox">
+            <div class="details">
+                <h3>Collections</h3>
+                <p>Organize videos into collections to deliver them in the same location of your service as different MRSS/Media RSS Feeds. Viewership statistics are also able to be filtered by collection.</p>
+            </div>
+            <div id="collection_container">
+                <div class="loader">
+                    <span>Loading...</span>
+                </div>
+            </div>
+            <div class="details">
+                <h3 class="videoPath"><a title="Return to Library" class="library" onclick="change_collection_selection(null)">Library</a> / <a></a></span></h3>
+                <p>Upload videos to your Library and deliver them however you need. You can move them into a collection after uploading, or you can upload directly to the selected collection.</p>
+                <div class="utilityBar">
+                    <input type="text" placeholder="Search...">
+                    <span class="details">
+                        <span></span>
+                    </span>
+                    <a href="#">Upload a Video</a>
+                </div>
+            </div>
+            <div id="video_container">
+                <div class="loader">
+                    <span>Loading...</span>
+                </div>
+            </div>
+        </div>
     </body>
+    <elementStore>
+        <div id="collection_Template" style="display:none;">
+            <div class="collection">
+                <span class="name" title="Select this collection" onclick="change_collection_selection(this)">%%Name%%</span>
+                <guid name="collectionGuid" style="display: none;" id="%%Guid%%"></guid>
+                <div class="row">
+                    <div class="rowItem">
+                        <span class="title">Videos</span>
+                        <span class="videoCount">%%Video_Count%%</span>
+                    </div>
+                    <div class="rowItem">
+                        <span class="title">Storage Used</span>
+                        <span class="size">%%Storage%%</span>
+                    </div>
+                </div>
+                <div class="settings">
+                    <a href="#">Copy Feed URL</a>
+                    <a href="#">Edit Collection</a>
+                </div>
+            </div>
+        </div>
+    </elementStore>
     <footer>
         {% include 'footer.html' %}
         {% block footerContent %}

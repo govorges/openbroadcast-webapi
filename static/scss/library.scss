@@ -18,6 +18,9 @@ body {
         margin-block: 0;
         font-weight: 200;
     }
+    > .tabs {
+        margin-top: 1vh;
+    }
     > .tabs > a {
         margin-inline-start: 2vw;
         margin-block: 0;
@@ -48,5 +51,202 @@ body {
         flex-direction: row;
         text-align: center;
         justify-content: center;
+    }
+
+    > .details {
+        width: 90%;
+
+        display: flex;
+        flex-direction: column;
+
+        justify-self: center;
+
+        > h3 {
+            margin: 0;
+        }
+
+        > .videoPath {
+            margin-top: 1vh;
+            margin-bottom: 0;
+
+            font-size: larger;
+            color: $main-text;
+
+            > a {
+                color: $accent-1;
+            }
+
+            > :last-child {
+                color: $main-text;
+            }
+
+            > .library {
+                color: $main-text;
+            }
+            
+            > a[href="#"] {
+                color: $accent-1;
+            }
+        }
+
+        > p {
+            text-indent: 2vw;
+            margin: 0;
+        }
+
+        > .utilityBar {
+            width: 100%;
+
+            display: flex;
+            flex-direction: row;
+
+            justify-content: space-between;
+
+            border-top: 1px solid $main-text;
+            padding-top: 1%;
+
+            > a {
+                color: $accent-1;
+            }
+        }
+    }
+
+    > #collection_container {
+        width: 90%;
+        height: 15vh;
+
+        display: flex;
+        flex-direction: row;
+
+        justify-content: flex-start;
+        justify-self: center;
+
+        border: 1px solid $main-text;
+
+        > .loader {
+            font-family: monospace;
+
+            width: 100%;
+            height: 100%;
+
+            text-align: center;
+            justify-content: center;
+            align-content: center;
+
+            font-size: larger;
+        }
+        
+        > .collection {
+            width: 20%;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            text-align: center;
+
+            overflow-x: hidden;
+            border: 1px solid $main-text;
+
+            > .name {
+                width: 100%;
+                font-size: large;
+
+                background-color: $accent-1;
+                color: $secondary-text;
+
+                padding: 1%;
+
+                cursor: pointer;
+                transition: 0.1s ease-in-out all;
+
+                text-decoration: underline;
+            }
+            > .selected {
+                background-color: $secondary-background;
+            }
+            > .name:hover {
+                background-color: $secondary-background;
+            }
+            > .row {
+                display: flex;
+                flex-direction: row;
+
+                height: 40%;
+
+                > .rowItem {
+                    display: flex;
+                    flex-direction: column;
+
+                    width: 50%;
+
+                    > .title {
+                        font-size: normal;
+                        width: 100%;
+                    }
+                    
+                    > .videoCount {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                    }
+                    > .size {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                    }
+                }
+            }
+            > .settings {
+                align-items: center;
+                justify-content: space-between;
+
+                display: flex;
+                flex-direction: row;
+
+                > a {
+                    width: 50%;
+                    text-align: center;
+
+                    color: $accent-1;
+                }
+                > a:hover {
+                    color: $secondary-background;
+                }
+            }
+        }
+    }
+    > #video_container {
+        width: 90%;
+        height: 30vh;
+
+        margin-top: 1vh;
+
+        display: flex;
+        flex-direction: row;
+
+        justify-content: flex-start;
+        justify-self: center;
+
+        border: 1px solid $main-text;
+
+        > .loader {
+            font-family: monospace;
+
+            width: 100%;
+            height: 100%;
+
+            text-align: center;
+            justify-content: center;
+            align-content: center;
+
+            font-size: larger;
+
+            > span > a {
+                color: $accent-1;
+            }
+        }
     }
 }
