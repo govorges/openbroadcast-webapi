@@ -1,4 +1,4 @@
-$main-background: #cedeeb;
+$main-background: #C8D3D5;
 $main-text: black;
 $secondary-background: #000215;
 $secondary-text: white;
@@ -29,7 +29,18 @@ body {
         font-size: larger;
         text-align: left;
 
+        display: inline-flex;
+        flex-direction: row;
+
+        align-items: center;
+        text-decoration: none;
+
         color: $accent-1;
+
+        > span {
+            text-indent: 0.5em;
+            text-decoration: underline;
+        }
     }
     > .tabs > a.currentView {
         color: $main-text;
@@ -83,7 +94,7 @@ body {
             > .library {
                 color: $main-text;
             }
-            
+
             > a[href="#"] {
                 color: $accent-1;
             }
@@ -108,6 +119,11 @@ body {
             > a {
                 color: $accent-1;
             }
+            > input[type="text"] {
+                background-color: transparent;
+                border: 0;
+                border-bottom: 1px solid;
+            }
         }
     }
 
@@ -121,7 +137,7 @@ body {
         justify-content: flex-start;
         justify-self: center;
 
-        border: 1px solid $main-text;
+        overflow-x: scroll;
 
         > .loader {
             font-family: monospace;
@@ -147,6 +163,9 @@ body {
 
             overflow-x: hidden;
             border: 1px solid $main-text;
+
+            padding: 1%;
+            margin-inline: 1vw;
 
             > .name {
                 width: 100%;
@@ -217,6 +236,10 @@ body {
                 }
             }
         }
+    }
+    > #collection_container::-webkit-scrollbar {
+        background: transparent; /* make scrollbar transparent */
+        width: 0px;
     }
     > #video_container {
         width: 90%;

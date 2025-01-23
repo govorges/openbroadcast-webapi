@@ -14,9 +14,15 @@
     </nav>
     <body onload="init()">
         <div class="tabs">
-            <a onclick="change_selected_tab(this)" href="#manageLibrary" class="currentView" id="tabs_#manageLibrary">Manage Library</a>
-            <a onclick="change_selected_tab(this)" href="#advertising" id="tabs_#advertising">Advertising</a>
-            <a onclick="change_selected_tab(this)" href="#security" id="tabs_#security">Security</a>
+            <a onclick="change_selected_tab(this)" href="#manageLibrary" class="currentView" id="tabs_#manageLibrary">
+                <i class="material-icons">video_library</i><span>Manage Library</span>
+            </a>
+            <a onclick="change_selected_tab(this)" href="#advertising" id="tabs_#advertising">
+                <i class="material-icons">ads_click</i><span>Advertising</span>
+            </a>
+            <a onclick="change_selected_tab(this)" href="#security" id="tabs_#security">
+                <i class="material-icons">local_police</i><span>Security</span>
+            </a>
         </div>
         <p id="tabs_#manageLibrary_desc">Upload videos, setup collections, and build content feeds.</p>
         <p id="tabs_#advertising_desc" style="display:none;">Configure advertisements on videos in your Library.</p>
