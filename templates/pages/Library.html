@@ -77,7 +77,12 @@
                 </div>
                 <div class="settings">
                     <a href="#">Copy Feed URL</a>
-                    <a href="#">Edit Collection</a>
+                    <a href="#" onclick="edit_collection(this)">Edit Collection</a>
+                </div>
+                <div class="settings" name="innerSettings" style="display:none;">
+                    <a href="#" onclick="rename_collection(this)">Rename</a>
+                    <a href="#" onclick="delete_collection(this)">Delete</a>
+                    <a href="#" onclick="edit_collection(this)">Cancel</a>
                 </div>
             </div>
         </div>

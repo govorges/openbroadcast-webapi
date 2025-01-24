@@ -255,6 +255,28 @@ def library_Collections_Add():
     )
     return jsonify(creation_response)
 
+@api.route("/library/collections/delete", methods=['POST'], endpoint="library_Collections_Delete")
+@authentication_required
+def library_Collections_Delete():
+    collection_guid = request.json.get("guid")
+    creation_response = api_Library.library__DeleteCollection(
+        google_id = session.get("google_id"),
+        collection_guid = collection_guid
+    )
+    return jsonify(creation_response)
+
+@api.route("/library/collections/update", methods=['POST'], endpoint="library_Collections_Update")
+@authentication_required
+def library_Collections_Update():
+    collection_guid = request.json.get("guid")
+    collection_name = request.json.get("name")
+
+    creation_response = api_Library.library__UpdateCollection(
+        google_id = session.get("google_id"),
+        collection_guid = collection_guid,
+        collection_name = collection_name
+    )
+    return jsonify(creation_response)
 
 
 @api.route("/library/videos", methods=["GET"], endpoint="library_Videos_GET")

@@ -79,6 +79,10 @@ function change_collection_selection(collectionName_El) {
     if (collectionName_El != null) {
         let collectionGuid_El = collectionName_El.parentNode.getElementsByTagName("guid")[0];
         guid = collectionGuid_El.id;
+
+        if (collectionName_El.contentEditable == "true" || collectionName_El.contentEditable == true) {
+            return;
+        }
     }
 
     if (window.SelectedCollection != null) {
@@ -87,6 +91,7 @@ function change_collection_selection(collectionName_El) {
         if (window.SelectedCollection.guid == guid) {
             window.SelectedCollection = null;
             update_videopath_display();
+            utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500})
             return; // Toggling the selection.
         }
         window.SelectedCollection = null;
@@ -103,6 +108,10 @@ function change_collection_selection(collectionName_El) {
             });
         }
     })
+
+    if (window.SelectedCollection == null) {
+        utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500})
+    }
 
     update_videopath_display();
     // function utility_DisplayAlertBarMessage({messageContent, length_ms, type}) {
@@ -122,7 +131,11 @@ async function add_collection() {
             });
         }
         else {
-            let collection_response = await fetch("/library/collections/add", {
+            utility_DisplayAlertBarMessage({
+                messageContent: "Creating collection, '" + name + "'...",
+                length_ms: 3000,
+            });
+            await fetch("/library/collections/add", {
                 method: "POST",
                 headers: { // Setting cookie header to pass session information.
                     "cookie": document.cookie,
@@ -144,6 +157,10 @@ async function add_collection() {
                     });
                 }
                 else {
+                    utility_DisplayAlertBarMessage({
+                        messageContent: "Collection, '" + name + "' created successfully!",
+                        length_ms: 3000,
+                    });
                     return response;
                 }
             }).then( (response) => { return response.json(); } );
@@ -161,8 +178,8 @@ async function add_collection() {
 
 }
 
-function populate_collections() {
-    RetrieveCollections().then((result) => {
+async function populate_collections() {
+    await RetrieveCollections().then((result) => {
         collection_container.innerHTML = "";
         result.forEach((collection) => {
             let template = document.getElementById("collection_Template").innerHTML;
@@ -177,6 +194,152 @@ function populate_collections() {
         });
     });
 }
+
+function edit_collection(anchor_el) {
+    let collection_element = anchor_el.parentNode.parentNode;
+    let settings = collection_element.querySelector(".settings");
+    let innerSettings = collection_element.querySelector("div[name='innerSettings']");
+    let name_el = collection_element.querySelector(".name");
+
+    if (settings.style.display == "none") {
+        settings.style.display = "flex";
+        innerSettings.style.display = "none";
+
+        if (innerSettings.querySelector("a").innerText == "Confirm" && name_el.getAttribute("data-old-name") != null) {
+            name_el.innerText = name_el.getAttribute("data-old-name");
+            name_el.removeAttribute("data-old-name");
+            name_el.contentEditable = false;
+        }
+    }  
+    else {
+        settings.style.display = "none";
+        innerSettings.style.display = "flex";
+    }
+}
+
+async function rename_collection(anchor_el) {
+    let collection_element = anchor_el.parentNode.parentNode;
+    let collection_name_element = collection_element.querySelector(".name");
+    let collection_guid_element = collection_element.querySelector("guid");
+
+    let collection_name = collection_name_element.innerText;
+    let collection_guid = collection_guid_element.id;
+
+    if (anchor_el.innerText != "Confirm") {
+        // Rename clicked
+        collection_name_element.setAttribute("data-old-name", collection_name);
+
+        collection_name_element.contentEditable = true;
+        collection_name_element.focus();
+        setTimeout(() => {
+            collection_name_element.setSelectionRange(0, -1);
+        }, 10)
+
+        anchor_el.innerText = "Confirm";
+    }
+    else {
+        // Confirm clicked
+        anchor_el.innerText = "Rename";
+
+        collection_name_element.removeAttribute("data-old-name");
+        collection_name_element.contentEditable = false;
+
+        edit_collection(anchor_el); // resetting the collection element settings view
+
+        let new_name = collection_name_element.innerText;
+
+        await fetch("/library/collections/update", {
+            method: "POST",
+            headers: { // Setting cookie header to pass session information.
+                "cookie": document.cookie,
+                "accept": "application/json",
+                "content-type": "application/json"
+            },
+            body: JSON.stringify({
+                guid: collection_guid,
+                name: new_name
+            })
+        }).then( (response) => {
+            if (response.status != 200) {
+                console.error(
+                    "/library/collections/update - Collection update unsuccessful."
+                );
+                utility_DisplayAlertBarMessage({
+                    messageContent: "Collection was not renamed! (" + response.status + ")",
+                    length_ms: 3000,
+                    type: "error"
+                });
+            }
+            else {
+                utility_DisplayAlertBarMessage({
+                    messageContent: "Collection renamed successfully!",
+                    length_ms: 3000,
+                });
+                window.Collections.forEach((collection, index) => {
+                    if (collection.guid == collection_guid) {
+                        collection.name = new_name;
+                        window.Collections[index] = collection
+                        if (window.SelectedCollection != null && window.SelectedCollection.guid == collection.guid) {
+                            // untoggle -> toggle
+                            change_collection_selection(collection_name_element);
+                            change_collection_selection(collection_name_element);
+                        }
+                    }
+                })
+                return response;
+            }
+        }).then( (response) => { return response.json(); } );
+        
+    }
+}
+
+async function delete_collection(anchor_el) {
+    let collection_element = anchor_el.parentNode.parentNode;
+    let collection_guid = collection_element.querySelector("guid").id;
+    let collection_name = collection_element.querySelector(".name").innerText;
+
+    utility_DisplayAlertBarMessage({
+        messageContent: "Deleting collection, '" + collection_name + "'...",
+        length_ms: 3000
+    });
+
+    await fetch("/library/collections/delete", {
+        method: "POST",
+        headers: { // Setting cookie header to pass session information.
+            "cookie": document.cookie,
+            "accept": "application/json",
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            guid: collection_guid
+        })
+    }).then( (response) => {
+        if (response.status != 200) {
+            console.error(
+                "/library/collections/delete - Collection deletion unsuccessful."
+            );
+            utility_DisplayAlertBarMessage({
+                messageContent: "Collection was not deleted! (" + response.status + ")",
+                length_ms: 3000,
+                type: "error"
+            });
+        }
+        else {
+            if (window.SelectedCollection != null && window.SelectedCollection.guid == collection_guid) {
+                change_collection_selection(null);
+            }
+            populate_collections();
+            utility_DisplayAlertBarMessage({
+                messageContent: "Collection '" + collection_name + "' deleted successfully!",
+                length_ms: 3000
+            });
+            return response;
+        }
+    });
+    
+}
+
+
 
 function init() {
     global_init();

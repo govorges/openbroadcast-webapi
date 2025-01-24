@@ -210,6 +210,12 @@ body {
             > .name:hover {
                 background-color: $secondary-background;
             }
+            > .name[contenteditable="true"] {
+                cursor: text;
+            }
+            > .name[contenteditable="true"]:hover {
+                background-color: $accent-1;
+            }
             > .row {
                 display: flex;
                 flex-direction: row;

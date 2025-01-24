@@ -51,7 +51,38 @@ class LibraryAPI:
             "collection_name": collection_name
         }
         
-        request = requests.get(requestURL, json=payload)
+        request = requests.post(requestURL, json=payload)
+        object = request.json()
+
+        return object
+    
+    def library__DeleteCollection(self, google_id: str, collection_guid: str) -> dict | None:
+        if collection_guid is None:
+            return None
+        
+        requestURL = f"{self.API_Endpoint_URL}/library/collections/delete"
+        payload = { 
+            "Accessor": google_id,
+            "guid": collection_guid
+        }
+        
+        request = requests.post(requestURL, json=payload)
+        object = request.json()
+
+        return object
+    
+    def library__UpdateCollection(self, google_id: str, collection_guid: str, collection_name: str) -> dict | None:
+        if collection_guid is None or collection_name is None:
+            return None
+        
+        requestURL = f"{self.API_Endpoint_URL}/library/collections/update"
+        payload = { 
+            "Accessor": google_id,
+            "guid": collection_guid,
+            "name": collection_name
+        }
+        
+        request = requests.post(requestURL, json=payload)
         object = request.json()
 
         return object
