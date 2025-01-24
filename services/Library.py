@@ -41,6 +41,21 @@ class LibraryAPI:
 
         return object
     
+    def library__AddCollection(self, google_id: str, collection_name: str) -> dict | None:
+        if collection_name is None:
+            return None
+        
+        requestURL = f"{self.API_Endpoint_URL}/library/collections/add"
+        payload = { 
+            "Accessor": google_id,
+            "collection_name": collection_name
+        }
+        
+        request = requests.get(requestURL, json=payload)
+        object = request.json()
+
+        return object
+    
     def library__RetrieveVideos(self, google_id: str) -> dict | None:
         requestURL = f"{self.API_Endpoint_URL}/library/videos"
         payload = { 

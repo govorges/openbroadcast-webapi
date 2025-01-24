@@ -31,6 +31,11 @@
             <div class="details">
                 <h3>Collections</h3>
                 <p>Organize videos into collections to deliver them in the same location of your service as different MRSS/Media RSS Feeds. Viewership statistics are also able to be filtered by collection.</p>
+                <div id='collection_adder'>
+                    <input type='text' placeholder='Collection Name' style='display:none;'>
+                    <i class='material-icons' onclick='add_collection()'>add_box</i>
+                    <span onclick='add_collection()'>Create Collection</span>
+                </div>
             </div>
             <div id="collection_container">
                 <div class="loader">

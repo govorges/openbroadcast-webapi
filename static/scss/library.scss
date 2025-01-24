@@ -72,6 +72,30 @@ body {
 
         justify-self: center;
 
+        > #collection_adder {
+            align-self: center;
+            color: $accent-1;
+    
+            display: flex;
+            flex-direction: row;
+    
+            width: 100%;
+            
+            justify-content: right;
+            align-items: center;
+    
+            text-decoration: none;
+            margin-bottom: 1vh;
+    
+            > i {
+                cursor: pointer;
+            }   
+            span {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+
         > h3 {
             margin: 0;
         }
@@ -131,13 +155,12 @@ body {
         width: 90%;
         height: 15vh;
 
-        display: flex;
-        flex-direction: row;
-
-        justify-content: flex-start;
         justify-self: center;
 
-        overflow-x: scroll;
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        text-wrap-mode: nowrap;
 
         > .loader {
             font-family: monospace;
@@ -155,13 +178,13 @@ body {
         > .collection {
             width: 20%;
 
-            display: flex;
+            display: inline-flex;
             flex-direction: column;
             justify-content: space-between;
 
             text-align: center;
 
-            overflow-x: hidden;
+            overflow: hidden;
             border: 1px solid $main-text;
 
             padding: 1%;
@@ -238,8 +261,11 @@ body {
         }
     }
     > #collection_container::-webkit-scrollbar {
-        background: transparent; /* make scrollbar transparent */
-        width: 0px;
+        background: $secondary-background;
+    }
+    > #collection_container::-webkit-scrollbar-thumb {
+        background-color: $accent-1;
+        border: 0.1vh solid $secondary-background;
     }
     > #video_container {
         width: 90%;

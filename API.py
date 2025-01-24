@@ -245,6 +245,18 @@ def library_Collections_GET():
     )
     return jsonify(collections)
 
+@api.route("/library/collections/add", methods=["POST"], endpoint="library_Collections_Add")
+@authentication_required
+def library_Collections_Add():
+    collection_name = request.json.get("collection_name")
+    creation_response = api_Library.library__AddCollection(
+        google_id = session.get("google_id"),
+        collection_name = collection_name
+    )
+    return jsonify(creation_response)
+
+
+
 @api.route("/library/videos", methods=["GET"], endpoint="library_Videos_GET")
 @authentication_required
 def library_Videos_GET():

@@ -108,7 +108,75 @@ function change_collection_selection(collectionName_El) {
     // function utility_DisplayAlertBarMessage({messageContent, length_ms, type}) {
 }
 
+async function add_collection() {
+    let collection_adder = document.getElementById("collection_adder");
+    let collection_name_element = collection_adder.querySelector('input');
+    let label_element = collection_adder.querySelector("span");
+    if (collection_name_element.style.display != "none") {
+        let name = collection_name_element.value;
+        if (name == "") {
+            utility_DisplayAlertBarMessage({
+                messageContent: "Collection name was invalid!",
+                length_ms: 3000,
+                type: "error"
+            });
+        }
+        else {
+            let collection_response = await fetch("/library/collections/add", {
+                method: "POST",
+                headers: { // Setting cookie header to pass session information.
+                    "cookie": document.cookie,
+                    "accept": "application/json",
+                    "content-type": "application/json"
+                },
+                body: JSON.stringify({
+                    collection_name: name
+                })
+            }).then( (response) => {
+                if (response.status != 200) {
+                    console.error(
+                        "/library/collections/add - Collection addition unsuccessful."
+                    );
+                    utility_DisplayAlertBarMessage({
+                        messageContent: "Collection was not added! (" + response.status + ")",
+                        length_ms: 3000,
+                        type: "error"
+                    });
+                }
+                else {
+                    return response;
+                }
+            }).then( (response) => { return response.json(); } );
+            populate_collections();
+        }
+        collection_name_element.style.display = "none";
+        collection_name_element.value = "";
+        label_element.innerText = "Create Collection";
+    }
+    else {
+        collection_name_element.style.display = "block";
+        label_element.innerText = "Confirm"
+        collection_name_element.focus();
+    }
 
+}
+
+function populate_collections() {
+    RetrieveCollections().then((result) => {
+        collection_container.innerHTML = "";
+        result.forEach((collection) => {
+            let template = document.getElementById("collection_Template").innerHTML;
+            template = template.replace("%%Name%%", collection.name);
+            template = template.replace("%%Guid%%", collection.guid);
+            template = template.replace("%%Video_Count%%", collection.videoCount);
+            template = template.replace("%%Storage%%", collection.totalSize);
+
+            collection_container.innerHTML += template;
+
+            window.Collections.push(collection);
+        });
+    });
+}
 
 function init() {
     global_init();
@@ -129,20 +197,7 @@ function init() {
     });
 
     window.Collections = [];
-    RetrieveCollections().then((result) => {
-        collection_container.innerHTML = "";
-        result.forEach((collection) => {
-            let template = document.getElementById("collection_Template").innerHTML;
-            template = template.replace("%%Name%%", collection.name);
-            template = template.replace("%%Guid%%", collection.guid);
-            template = template.replace("%%Video_Count%%", collection.videoCount);
-            template = template.replace("%%Storage%%", collection.totalSize);
-
-            collection_container.innerHTML += template;
-
-            window.Collections.push(collection);
-        });
-    });
+    populate_collections();
     window.SelectedCollection = null;
 
     window.Videos = [];
