@@ -209,11 +209,24 @@ function edit_collection(anchor_el) {
             name_el.innerText = name_el.getAttribute("data-old-name");
             name_el.removeAttribute("data-old-name");
             name_el.contentEditable = false;
+            innerSettings.querySelector("a").innerText == "Rename";
+        }
+        if (innerSettings.querySelectorAll("a")[1].innerText == "Are you sure?") {
+            innerSettings.querySelectorAll("a")[1].innerText = "Delete";
         }
     }  
     else {
         settings.style.display = "none";
         innerSettings.style.display = "flex";
+    }
+}
+
+function enter_keypress_sendevent(event, target) {
+    if (event.key == "Enter") {
+        event.preventDefault();
+
+        target.focus();
+        target.click();
     }
 }
 
@@ -298,9 +311,27 @@ async function delete_collection(anchor_el) {
     let collection_guid = collection_element.querySelector("guid").id;
     let collection_name = collection_element.querySelector(".name").innerText;
 
+    if (anchor_el.innerText == "Delete") {
+        anchor_el.innerText = "Are you sure?";
+        utility_DisplayAlertBarMessage({
+            messageContent: "Are you sure you want to delete the collection, '" + collection_name + "' (Click again to confirm)",
+            length_ms: 10000,
+            type: "warning"
+        });
+        anchor_el.disabled = true;
+        setTimeout(() => {
+            anchor_el.disabled = false;
+        }, 500);
+        return;
+    }
+    else if (anchor_el.disabled) {
+        return;
+    }
+
     utility_DisplayAlertBarMessage({
         messageContent: "Deleting collection, '" + collection_name + "'...",
-        length_ms: 3000
+        length_ms: 3000,
+        type: "error"
     });
 
     await fetch("/library/collections/delete", {

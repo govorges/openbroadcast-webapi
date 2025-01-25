@@ -18,7 +18,7 @@ function utility_DisplayAlertBarMessage({messageContent, length_ms, type}) {
         utility_AlertBar.style.backgroundColor = "maroon";
     }
     if (type == "warning") {
-        utility_AlertBar.style.backgroundColor = "orange";
+        utility_AlertBar.style.backgroundColor = "#FF6F01";
     }
 
     if (alertBar_HideTimout != null) {
