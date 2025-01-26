@@ -111,7 +111,7 @@ class LibraryAPI:
         return object
     
     def video__Create(self, google_id: str, data: dict) -> dict | None:
-        requestURL = f"{self.API_Endpoint_URL}/library/video/create"
+        requestURL = f"{self.API_Endpoint_URL}/library/videos/create"
         payload = {
             "Accessor": google_id,
             "video_data": data

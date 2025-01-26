@@ -370,7 +370,84 @@ async function delete_collection(anchor_el) {
     
 }
 
+// Multi-upload support is very useful!
 
+async function create_video_upload(file) {
+    let selectedCollection = window.SelectedCollection
+    let collection_guid;
+    if (selectedCollection == null) {
+        collection_guid = null;
+    }
+    else {
+        collection_guid = selectedCollection.guid;
+    }
+    await fetch("/library/videos/create", {
+        method: "POST",
+        headers: {
+            "cookie": document.cookie,
+            "content-type": "application/json"
+        },
+        body: JSON.stringify({
+            filename: file.name,
+            collection: collection_guid
+        })
+    }).then( (response) => {
+        if (response.status != 200) {
+            console.error(
+                "/library/videos/create - Video creation unsuccessful"
+            );
+            utility_DisplayAlertBarMessage({
+                messageContent: "Creation of Video object failed! (" + response.status + ")",
+                length_ms: 5000,
+                type: "error"
+            });
+        }
+        else {
+            return response.json();
+        }
+    }).then( (upload_signature) => { 
+        var upload = new tus.Upload(file, {
+            endpoint: "https://video.bunnycdn.com/tusupload",
+            retryDelays: [0, 3000, 5000, 10000, 20000, 60000, 60000],
+            headers: {
+                AuthorizationSignature: upload_signature.signature,
+                AuthorizatioNExpire: upload_signature.expiration,
+                VideoId: upload_signature.videoId,
+                LibraryId: upload_signature.libraryId
+            },
+            metadata: {
+                filetype: file.type,
+                title: file.name,
+                collection: collection_guid
+            },
+            onError: function (error) {
+                console.error(error);
+                utility_DisplayAlertBarMessage({
+                    messageContent: "Upload of '" + file.name + "' has encountered a problem! Retrying...",
+                    length_ms: 10000,
+                    type: "error"
+                });
+            },
+            onProgress: function (bytesUploaded, bytesTotal) {
+                console.log(bytesUploaded, bytesTotal);
+            },
+            onSuccess: function () {
+                utility_DisplayAlertBarMessage({
+                    messageContent: "Upload of '" + file.name + "' has finished successfully!",
+                    length_ms: 10000,
+                    type: "info"
+                });
+            }
+        });
+
+        upload.findPreviousUploads().then(function (previousUploads) {
+            if (previousUploads.length) {
+                upload.resumeFromPreviousUpload(previousUploads[0]);
+            }
+            upload.start();
+        });
+    });
+}
 
 function init() {
     global_init();
@@ -402,4 +479,13 @@ function init() {
             loader_El.innerHTML = "<span>No videos found! <a href=#>Click here to upload</a> or drag & drop a file to get started.</span>";
         }
     });
+
+    window.CurrentVideoFile = null;
+    window.VideoFileInput = document.getElementById("video_upload_container");
+    window.VideoFileInput.onchange = function () {
+        console.log(window.VideoFileInput.files);
+        for (const file of window.VideoFileInput.files) {
+            create_video_upload(file);
+        }
+    }
 }

@@ -1,0 +1,28 @@
+body {
+  font-family: "Mallory Book", sans-serif;
+  overflow-y: hidden; }
+
+.centerBox {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  text-align: center; }
+  .centerBox > .settings {
+    width: fit-content;
+    border: 1px solid var(--main-text);
+    text-align: center;
+    align-self: center;
+    padding-inline: 10vw;
+    padding-block: 1lh; }
+    .centerBox > .settings > h3 {
+      margin-block: 0; }
+    .centerBox > .settings > h5 {
+      margin-top: 0.25lh; }
+    .centerBox > .settings > .anchors {
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      width: 100%;
+      align-self: center; }
+      .centerBox > .settings > .anchors > a {
+        color: #0871ff; }

@@ -4,6 +4,7 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/openbroadcast.css') }}">
         <link rel="stylesheet" href="{{ url_for('static', filename='css/library.css') }}">
         <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
         
         <script type="text/javascript" src="{{ url_for('static', filename='js/library.js') }}"></script>
     </head>
@@ -50,7 +51,7 @@
                     <span class="details">
                         <span></span>
                     </span>
-                    <a href="#">Upload a Video</a>
+                    <a onclick="window.VideoFileInput.click()">Upload a Video</a>
                 </div>
             </div>
             <div id="video_container">
@@ -61,6 +62,7 @@
         </div>
     </body>
     <elementStore>
+        <input style="display:none;" type="file" id="video_upload_container" accept=".4mv,.amv,.avi,.flv,.m4p,.m4v,.mkv,.mov,.mp3,.mp4,.mpeg,.mpg,.mxf,.ogg,.ts,.vod,.wav,.webm,.wmv">
         <div id="collection_Template" style="display:none;">
             <div class="collection">
                 <span class="name" title="Select this collection" onclick="change_collection_selection(this)" onkeypress="enter_keypress_sendevent(event, this.parentNode.querySelector('div.settings:last-child > a'))">%%Name%%</span>
