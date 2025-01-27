@@ -23,6 +23,8 @@ import json
 
 import datetime
 
+PULLZONE_HOSTNAME = environ['BUNNY_PULLZONE_HOSTNAME']
+
 HOME_DIR = path.dirname(path.realpath(__file__))
 UPLOAD_DIR = path.join(HOME_DIR, "uploads")
 
@@ -285,6 +287,8 @@ def library_Videos_GET():
     videos = api_Library.library__RetrieveVideos(
         google_id = session.get("google_id")
     )
+    for video in videos:
+        video['thumbnail'] = f"https://{PULLZONE_HOSTNAME}/{video['guid']}/thumbnail.jpg"
     return jsonify(videos)
 
 @api.route("/library/videos/create", methods=['POST'], endpoint="library_Videos_Create")

@@ -186,13 +186,90 @@ async function populate_collections() {
             template = template.replace("%%Name%%", collection.name);
             template = template.replace("%%Guid%%", collection.guid);
             template = template.replace("%%Video_Count%%", collection.videoCount);
-            template = template.replace("%%Storage%%", collection.totalSize);
+            
+            let formattedStorage;
+            if (collection.totalSize > 1000000) {
+                formattedStorage = collection.totalSize / 1000 / 1000; // MB = collection.totalSize / 1000 / 1000 / 1000; // MB
+                if (formattedStorage > 1000) {
+                    formattedStorage = formattedStorage / 1000;  // GB
+                    formattedStorage = Math.round(formattedStorage).toString() + " GB";
+                }
+                else {
+                    formattedStorage = Math.round(formattedStorage) + " MB";
+                }
+            }
+            else {
+                formattedStorage = ">1 MB";
+            }
+
+            template = template.replace("%%Storage%%", formattedStorage);
 
             collection_container.innerHTML += template;
 
             window.Collections.push(collection);
         });
     });
+}
+
+async function populate_videos() {
+    await RetrieveVideos().then((result) => {
+        let video_container = document.getElementById("video_container");
+        video_container.innerHTML = "";
+        result.forEach((video) => {
+            let template = document.getElementById("video_Template").innerHTML;
+            template = template.replace("%%Guid%%", video.guid);
+            template = template.replace("%%Name%%", video.title);
+            template = template.replace("%%Thumbnail%%", video.thumbnail); 
+
+            let hours = 0;
+            let minutes = 0;
+            let seconds = video.length;
+
+            while (seconds > 60) {
+                seconds -= 60;
+                minutes += 1;
+            }            
+            while (minutes > 60) {
+                minutes -= 60;
+                hours += 1;
+            }
+            if (seconds < 10) {
+                seconds = "0" + seconds;
+            }
+            if (minutes < 10) {
+                minutes = "0" + minutes;
+            }
+            if (hours < 10) {
+                hours = "0" + hours;
+            }
+
+            let durationStr = hours + ":" + minutes + ":" + seconds;
+            template = template.replace("%%Duration%%", durationStr);
+
+            let formattedStorage;
+            if (video.storageSize > 1000000) {
+                formattedStorage = video.storageSize / 1000 / 1000; // MB = collection.totalSize / 1000 / 1000 / 1000; // MB
+                if (formattedStorage > 1000) {
+                    formattedStorage = formattedStorage / 1000;  // GB
+                    formattedStorage = Math.round(formattedStorage).toString() + " GB";
+                }
+                else {
+                    formattedStorage = Math.round(formattedStorage) + " MB";
+                }
+            }
+            else {
+                formattedStorage = ">1 MB";
+            }
+            template = template.replace("%%Storage%%", formattedStorage);
+
+            video_container.innerHTML += template;
+            window.Videos.push(video);
+        });
+        if (window.Videos.length == 0) {
+            let loader_El = document.getElementById("video_container").querySelector(".loader");
+            loader_El.innerHTML = "<span>No videos found! <a href=#>Click here to upload</a> or drag & drop a file to get started.</span>";
+        }
+    })
 }
 
 function edit_collection(anchor_el) {
@@ -472,13 +549,8 @@ function init() {
     window.SelectedCollection = null;
 
     window.Videos = [];
-    RetrieveVideos().then((result) => {
-        window.Videos = result;
-        if (window.Videos.length == 0) {
-            let loader_El = document.getElementById("video_container").querySelector(".loader");
-            loader_El.innerHTML = "<span>No videos found! <a href=#>Click here to upload</a> or drag & drop a file to get started.</span>";
-        }
-    });
+    populate_videos();
+    window.SelectedVideo = null;
 
     window.CurrentVideoFile = null;
     window.VideoFileInput = document.getElementById("video_upload_container");

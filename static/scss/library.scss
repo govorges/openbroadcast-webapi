@@ -142,6 +142,7 @@ body {
 
             > a {
                 color: $accent-1;
+                text-decoration: underline;
             }
             > input[type="text"] {
                 background-color: transparent;
@@ -287,6 +288,11 @@ body {
         justify-content: flex-start;
         justify-self: center;
 
+        overflow-wrap: normal;
+
+        flex-wrap: wrap;
+        overflow-y: scroll;
+
         border: 1px solid $main-text;
 
         > .loader {
@@ -303,6 +309,77 @@ body {
 
             > span > a {
                 color: $accent-1;
+            }
+        }
+        > .video {
+            width: 15%;
+            margin-inline: 1.4%;
+            margin-block: 1%;
+            height: fit-content;
+
+            padding: 1%;
+            border: 1px solid;
+            
+            > img {
+                width: 100%;
+                height: auto;
+            }
+            .title {
+                font-size: large;
+
+                display: block;
+                width: 100%;
+
+                color: $accent-1;
+                text-decoration: underline;
+
+                text-align: center;
+                padding-block: 2.5%;
+            }
+            > .row {
+                display: flex;
+                flex-direction: row;
+
+                height: 40%;
+
+                > .rowItem {
+                    display: flex;
+                    flex-direction: column;
+
+                    width: 50%;
+
+                    text-align: center;
+
+                    > span {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+
+                    > span > i {
+                        margin-inline-end: 0.5vw;
+                    }
+
+                    > .title {
+                        font-size: normal;
+                        width: 100%;
+                    }
+                    
+                    > .videoCount {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                        padding: 1%;
+                    }
+                    > .size {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                        padding: 1%;
+                    }
+                }
             }
         }
     }
