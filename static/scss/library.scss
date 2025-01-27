@@ -143,11 +143,29 @@ body {
             > a {
                 color: $accent-1;
                 text-decoration: underline;
+                cursor: pointer;
             }
             > input[type="text"] {
                 background-color: transparent;
                 border: 0;
                 border-bottom: 1px solid;
+            }
+            > .upload {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                > a {
+                    color: $accent-1;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+                > i {
+                    text-decoration: none;
+                    cursor: pointer;
+                    color: $accent-1;
+
+                }
             }
         }
     }
@@ -278,7 +296,7 @@ body {
     }
     > #video_container {
         width: 90%;
-        height: 30vh;
+        height: 35vh;
 
         margin-top: 1vh;
 
@@ -314,7 +332,7 @@ body {
         > .video {
             width: 15%;
             margin-inline: 1.4%;
-            margin-block: 1%;
+            margin-block-start: 1%;
             height: fit-content;
 
             padding: 1%;
@@ -333,14 +351,28 @@ body {
                 color: $accent-1;
                 text-decoration: underline;
 
-                text-align: center;
-                padding-block: 2.5%;
+                text-align: left;
+                padding-block-start: 2%;
+
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow-x: hidden;
             }
             > .row {
                 display: flex;
                 flex-direction: row;
+                padding-block-start: 2%;
 
                 height: 40%;
+                > .collection {
+                    color: $secondary-text;
+                    background-color: $accent-1;
+
+                    padding: 1%;
+                    
+                    text-align: center;
+                    width: 100%;
+                }
 
                 > .rowItem {
                     display: flex;

@@ -91,7 +91,12 @@ function change_collection_selection(collectionName_El) {
         if (window.SelectedCollection.guid == guid) {
             window.SelectedCollection = null;
             update_videopath_display();
-            utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500})
+            utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500});
+            window.Videos.forEach((video) => {
+                if (video.collectionId == "") {
+                    create_video_element(video);
+                }
+            });
             return; // Toggling the selection.
         }
         window.SelectedCollection = null;
@@ -106,11 +111,25 @@ function change_collection_selection(collectionName_El) {
                 messageContent: "Collection \"" + collection.name + "\" has been selected!",
                 length_ms: 3000
             });
+
+            let video_container = document.getElementById("video_container");
+            video_container.innerHTML = "";
+
+            window.Videos.forEach((video) => {
+                if (video.collectionId == window.SelectedCollection.guid) {
+                    create_video_element(video);
+                }
+            });
         }
-    })
+    });
 
     if (window.SelectedCollection == null) {
         utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500})
+        window.Videos.forEach((video) => {
+            if (video.collectionId == "") {
+                create_video_element(video);
+            }
+        });
     }
 
     update_videopath_display();
@@ -211,58 +230,73 @@ async function populate_collections() {
     });
 }
 
+function create_video_element(video) {
+    let template = document.getElementById("video_Template").innerHTML;
+    template = template.replace("%%Guid%%", video.guid);
+    template = template.replaceAll("%%Name%%", video.title);
+    template = template.replace("%%Thumbnail%%", video.thumbnail); 
+
+    let hours = 0;
+    let minutes = 0;
+    let seconds = video.length;
+
+    while (seconds > 60) {
+        seconds -= 60;
+        minutes += 1;
+    }            
+    while (minutes > 60) {
+        minutes -= 60;
+        hours += 1;
+    }
+    if (seconds < 10) {
+        seconds = "0" + seconds;
+    }
+    if (minutes < 10) {
+        minutes = "0" + minutes;
+    }
+    if (hours < 10) {
+        hours = "0" + hours;
+    }
+
+    let durationStr = hours + ":" + minutes + ":" + seconds;
+    template = template.replace("%%Duration%%", durationStr);
+
+    let formattedStorage;
+    if (video.storageSize > 1000000) {
+        formattedStorage = video.storageSize / 1000 / 1000; // MB = collection.totalSize / 1000 / 1000 / 1000; // MB
+        if (formattedStorage > 1000) {
+            formattedStorage = formattedStorage / 1000;  // GB
+            formattedStorage = Math.round(formattedStorage).toString() + " GB";
+        }
+        else {
+            formattedStorage = Math.round(formattedStorage) + " MB";
+        }
+    }
+    else {
+        formattedStorage = ">1 MB";
+    }
+    template = template.replace("%%Storage%%", formattedStorage);
+
+    if (video.collectionId != "") {
+        window.Collections.forEach((collection) => {
+            if (collection.guid == video.collectionId) {
+                template = template.replaceAll("%%Collection%%", collection.name);
+            }
+        })
+    }
+    else {
+        template = template.replace('<span class="collection" title="%%Collection%%">%%Collection%%</span>', "");
+    }
+
+    video_container.innerHTML += template;
+}
+
 async function populate_videos() {
     await RetrieveVideos().then((result) => {
         let video_container = document.getElementById("video_container");
         video_container.innerHTML = "";
         result.forEach((video) => {
-            let template = document.getElementById("video_Template").innerHTML;
-            template = template.replace("%%Guid%%", video.guid);
-            template = template.replace("%%Name%%", video.title);
-            template = template.replace("%%Thumbnail%%", video.thumbnail); 
-
-            let hours = 0;
-            let minutes = 0;
-            let seconds = video.length;
-
-            while (seconds > 60) {
-                seconds -= 60;
-                minutes += 1;
-            }            
-            while (minutes > 60) {
-                minutes -= 60;
-                hours += 1;
-            }
-            if (seconds < 10) {
-                seconds = "0" + seconds;
-            }
-            if (minutes < 10) {
-                minutes = "0" + minutes;
-            }
-            if (hours < 10) {
-                hours = "0" + hours;
-            }
-
-            let durationStr = hours + ":" + minutes + ":" + seconds;
-            template = template.replace("%%Duration%%", durationStr);
-
-            let formattedStorage;
-            if (video.storageSize > 1000000) {
-                formattedStorage = video.storageSize / 1000 / 1000; // MB = collection.totalSize / 1000 / 1000 / 1000; // MB
-                if (formattedStorage > 1000) {
-                    formattedStorage = formattedStorage / 1000;  // GB
-                    formattedStorage = Math.round(formattedStorage).toString() + " GB";
-                }
-                else {
-                    formattedStorage = Math.round(formattedStorage) + " MB";
-                }
-            }
-            else {
-                formattedStorage = ">1 MB";
-            }
-            template = template.replace("%%Storage%%", formattedStorage);
-
-            video_container.innerHTML += template;
+            create_video_element(video);
             window.Videos.push(video);
         });
         if (window.Videos.length == 0) {
@@ -515,6 +549,8 @@ async function create_video_upload(file) {
                     type: "info"
                 });
             }
+        }).then((e) => {
+            populate_videos();
         });
 
         upload.findPreviousUploads().then(function (previousUploads) {

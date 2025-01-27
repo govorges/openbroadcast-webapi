@@ -51,7 +51,10 @@
                     <span class="details">
                         <span></span>
                     </span>
-                    <a onclick="window.VideoFileInput.click()">Upload a Video</a>
+                    <div class="upload">
+                        <i class="material-icons" onclick="window.VideoFileInput.click()">upload</i>
+                        <a onclick="window.VideoFileInput.click()">Upload a Video</a>
+                    </div>
                 </div>
             </div>
             <div id="video_container">
@@ -92,7 +95,7 @@
             <div class="video">
                 <img src="%%Thumbnail%%">
                 <guid name="videoGuid" style="display: none;" id="%%Guid%%"></guid>
-                <span class="title">%%Name%%</span>
+                <span class="title" title="%%Name%%">%%Name%%</span>
                 <div class="row">
                     <div class="rowItem">
                         <span class="size">
@@ -106,6 +109,9 @@
                             %%Storage%%
                         </span>
                     </div>
+                </div>
+                <div class="row">
+                    <span class="collection" title="%%Collection%%">%%Collection%%</span>
                 </div>
             </div>
         </div>
