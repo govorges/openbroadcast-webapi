@@ -36,6 +36,12 @@ async function RetrieveVideos() {
         }
     }).then( (response) => { return response.json(); });
     
+    videoData = videoData.sort(
+        (first, second) => { 
+            return Date.parse(first.dateUploaded) - Date.parse(second.dateUploaded)
+        }
+    )
+
     return videoData;
 }
 
@@ -232,9 +238,26 @@ async function populate_collections() {
 
 function create_video_element(video) {
     let template = document.getElementById("video_Template").innerHTML;
+
+    if (video.status == 0) {
+        return;
+    }
+    if (video.status == 2) {
+        template = template.replace('<img src="%%Thumbnail%%">', "<span class='status'>Video processing...<a href='#'>What's This?</a></span>"); 
+    }
+    else if (video.status == 3) {
+        template = template.replace('<img src="%%Thumbnail%%">', "<span class='status'>Video transcoding...<a href='#'>What's This?</a></span>");
+    }
+    else if (video.status > 4) {
+        template = template.replace('<img src="%%Thumbnail%%">', "Error with video (0x0" + video.status + ")");
+    }
+    else {
+        template = template.replace("%%Thumbnail%%", video.thumbnail); 
+    }
+
     template = template.replace("%%Guid%%", video.guid);
     template = template.replaceAll("%%Name%%", video.title);
-    template = template.replace("%%Thumbnail%%", video.thumbnail); 
+
 
     let hours = 0;
     let minutes = 0;
@@ -275,6 +298,10 @@ function create_video_element(video) {
     else {
         formattedStorage = ">1 MB";
     }
+
+    if (video.status != 4) {
+        formattedStorage = "N/A";
+    }
     template = template.replace("%%Storage%%", formattedStorage);
 
     if (video.collectionId != "") {
@@ -288,10 +315,53 @@ function create_video_element(video) {
         template = template.replace('<span class="collection" title="%%Collection%%">%%Collection%%</span>', "");
     }
 
-    video_container.innerHTML += template;
+    video_container.innerHTML = template + video_container.innerHTML;
+}
+
+function sort_library(by) {
+    if (by == "date (newest)") {
+        window.Videos = window.Videos.sort(
+            (first, second) => { 
+                return Date.parse(first.dateUploaded) - Date.parse(second.dateUploaded)
+            }
+        )
+    }
+    else if (by == "size (largest)") {
+        window.Videos = window.Videos.sort(
+            (first, second) => { 
+                return first.storageSize - second.storageSize
+            }
+        )
+    }
+    else if (by == "date (oldest)") {
+        window.Videos = window.Videos.sort(
+            (first, second) => { 
+                return Date.parse(first.dateUploaded) - Date.parse(second.dateUploaded)
+            }
+        )
+        window.Videos.reverse();
+    }
+    else if (by == "size (smallest)") {
+        window.Videos = window.Videos.sort(
+            (first, second) => { 
+                return first.storageSize - second.storageSize
+            }
+        )
+        window.Videos.reverse();
+    }
+    let video_container = document.getElementById("video_container");
+    video_container.innerHTML = "";
+    window.Videos.forEach( (video) => {
+        create_video_element(video);
+    })
 }
 
 async function populate_videos() {
+    utility_DisplayAlertBarMessage({
+        messageContent: "Loading Video Library...",
+        length_ms: 3000
+    });
+    window.Videos = [];
     await RetrieveVideos().then((result) => {
         let video_container = document.getElementById("video_container");
         video_container.innerHTML = "";
@@ -303,7 +373,9 @@ async function populate_videos() {
             let loader_El = document.getElementById("video_container").querySelector(".loader");
             loader_El.innerHTML = "<span>No videos found! <a href=#>Click here to upload</a> or drag & drop a file to get started.</span>";
         }
-    })
+    });
+    document.getElementById("sorter").value = "date (newest)";
+    
 }
 
 function edit_collection(anchor_el) {
@@ -542,15 +614,34 @@ async function create_video_upload(file) {
             onProgress: function (bytesUploaded, bytesTotal) {
                 console.log(bytesUploaded, bytesTotal);
             },
-            onSuccess: function () {
+            onSuccess: async function () {
                 utility_DisplayAlertBarMessage({
                     messageContent: "Upload of '" + file.name + "' has finished successfully!",
                     length_ms: 10000,
                     type: "info"
                 });
+
+                // Retrieve video data with guid : upload_signature.videoId
+                // create video element
+                await fetch("/library/video", {
+                    method: "GET",
+                    headers: {
+                        "cookie": document.cookie,
+                        "video": upload_signature.videoId,
+                        "accept": "application/json",
+                        "content-type": "application/json"
+                    }
+                }).then( (response) => {
+                    if (response.status == 200) {
+                        return response.json();
+                    }
+                }).then( (video) => {
+                    if (video != null && video != undefined) {
+                        window.Videos.push(video);
+                        create_video_element(video);
+                    }
+                })
             }
-        }).then((e) => {
-            populate_videos();
         });
 
         upload.findPreviousUploads().then(function (previousUploads) {
@@ -574,11 +665,6 @@ function init() {
     }
     selectedTab_El = document.getElementById("tabs_" + selectedTab);
     change_selected_tab(selectedTab_El);
-
-    utility_DisplayAlertBarMessage({
-        messageContent: "Loading Video Library...",
-        length_ms: 3000
-    });
 
     window.Collections = [];
     populate_collections();

@@ -47,9 +47,26 @@
                 <h3 class="videoPath"><a title="Return to Library" class="library" onclick="change_collection_selection(null)">Library</a> / <a></a></span></h3>
                 <p>Upload videos to your Library and deliver them however you need. You can move them into a collection after uploading, or you can upload directly to the selected collection.</p>
                 <div class="utilityBar">
-                    <input type="text" placeholder="Search...">
+                    <div class="sorter">
+                        Sort by:
+                        <select id="sorter" onchange="sort_library(this.value)">
+                            <option value="date (newest)">
+                                Date Uploaded (Newest)
+                            </option>
+                            <option value="date (oldest)">
+                                Date Uploaded (Oldest)
+                            </option>
+                            <option value="size (largest)">
+                                Size (Largest)
+                            </option>
+                            <option value="size (smallest)">
+                                Size (Smallest)
+                            </option>
+                        </select>
+                    </div>
                     <span class="details">
-                        <span></span>
+                        <i class="material-icons" onclick="populate_videos()">sync</i>
+                        <a onclick="populate_videos()">Refresh</a>
                     </span>
                     <div class="upload">
                         <i class="material-icons" onclick="window.VideoFileInput.click()">upload</i>

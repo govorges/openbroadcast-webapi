@@ -121,5 +121,16 @@ class LibraryAPI:
         object = request.json()
 
         return object
+    
+    def video__Retrieve(self, google_id: str, videoId: str):
+        requestURL = f"{self.API_Endpoint_URL}/library/videos/{videoId}"
+        payload = {
+            "Accessor": google_id
+        }
+
+        request = requests.get(requestURL, json=payload)
+        object = request.json()
+
+        return object
 
 

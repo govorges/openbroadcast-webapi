@@ -140,6 +140,25 @@ body {
             border-top: 1px solid $main-text;
             padding-top: 1%;
 
+            > .details {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                cursor: pointer;
+                color: $accent-1;
+
+                > i {
+                    color: $accent-1;
+                    text-decoration: none;
+                }
+
+                > a {
+                    color: $accent-1;
+                    text-decoration: underline;
+                }
+            }
+
             > a {
                 color: $accent-1;
                 text-decoration: underline;
@@ -337,6 +356,28 @@ body {
 
             padding: 1%;
             border: 1px solid;
+            
+            > .status {
+                text-align: center;
+                width: 100%;
+                
+                display: flex;
+                flex-direction: column;
+
+                padding: 1%;
+                padding-block: 3%;
+
+                align-items: center;
+                justify-content: center;
+
+                > a {
+                    font-size: smaller;
+                    color: $accent-1;
+                    text-decoration: underline;
+                    font-weight: bold;
+                    width: 100%;
+                }
+            }
             
             > img {
                 width: 100%;

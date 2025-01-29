@@ -294,7 +294,6 @@ def library_Videos_GET():
 @api.route("/library/videos/create", methods=['POST'], endpoint="library_Videos_Create")
 @authentication_required
 def library_Videos_Create():
-    # This route should, ideally, return to what the fuyck itamsdfajs uw sdnidwauhas,dhkn wkhkasjdmw kjashdwhkdiuo kuwhaksdiu u jw eajhsdbyi lkNo video title set")
     filename = request.json.get("filename")
     collection = request.json.get("collection")
 
@@ -312,6 +311,19 @@ def library_Videos_Create():
     )
 
     return jsonify(signature)
+
+@api.route("/library/video", methods=['GET'])
+@authentication_required
+def library_Video():
+    video = request.headers.get("video")
+    if video is None or video == "":
+        return make_response("Invalid request", 400)
+    
+    video = api_Library.video__Retrieve(
+        google_id = session.get("google_id"),
+        videoId = video
+    )
+    return jsonify(video)
 
 
 if __name__ == "__main__":
