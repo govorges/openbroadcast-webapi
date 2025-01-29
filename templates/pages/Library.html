@@ -68,11 +68,13 @@
                         <i class="material-icons" onclick="populate_videos()">sync</i>
                         <a onclick="populate_videos()">Refresh</a>
                     </span>
-                    <div class="upload">
+                    <div class="upload" id="uploader">
                         <i class="material-icons" onclick="window.VideoFileInput.click()">upload</i>
                         <a onclick="window.VideoFileInput.click()">Upload a Video</a>
                     </div>
                 </div>
+            </div>
+            <div class="uploadProgress" id="uploadProgress">
             </div>
             <div id="video_container">
                 <div class="loader">
@@ -82,7 +84,7 @@
         </div>
     </body>
     <elementStore>
-        <input style="display:none;" type="file" id="video_upload_container" accept=".4mv,.amv,.avi,.flv,.m4p,.m4v,.mkv,.mov,.mp3,.mp4,.mpeg,.mpg,.mxf,.ogg,.ts,.vod,.wav,.webm,.wmv">
+        <input style="display:none;" multiple="true" type="file" id="video_upload_container" accept=".4mv,.amv,.avi,.flv,.m4p,.m4v,.mkv,.mov,.mp3,.mp4,.mpeg,.mpg,.mxf,.ogg,.ts,.vod,.wav,.webm,.wmv">
         <div id="collection_Template" style="display:none;">
             <div class="collection">
                 <span class="name" title="Select this collection" onclick="change_collection_selection(this)" onkeypress="enter_keypress_sendevent(event, this.parentNode.querySelector('div.settings:last-child > a'))">%%Name%%</span>

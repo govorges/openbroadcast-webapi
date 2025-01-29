@@ -604,15 +604,33 @@ async function create_video_upload(file) {
                 collection: collection_guid
             },
             onError: function (error) {
-                console.error(error);
                 utility_DisplayAlertBarMessage({
                     messageContent: "Upload of '" + file.name + "' has encountered a problem! Retrying...",
                     length_ms: 10000,
                     type: "error"
                 });
+                window.CurrentFileIndex += 1;
+                create_video_upload(window.VideoFileInput.files[window.CurrentFileIndex]);
             },
             onProgress: function (bytesUploaded, bytesTotal) {
-                console.log(bytesUploaded, bytesTotal);
+                document.querySelectorAll(".uploadProgress_Inner")[window.CurrentFileIndex].style.display = "block";
+                document.getElementById("uploadProgress").style.display = "block";
+
+                var progress_percent = 0;
+                progress_percent = bytesUploaded / (bytesTotal / 100);
+                progress_percent = progress_percent.toFixed(2);
+                
+                let uploadProgress_El = document.querySelectorAll(".uploadProgress_Inner")[window.CurrentFileIndex];
+                let uploadProgress_El_Span = uploadProgress_El.querySelector("span");
+
+                uploadProgress_El.style.width = progress_percent + "%";
+                let display_index = window.CurrentFileIndex + 1;
+                if (progress_percent >= 100) {
+                    uploadProgress_El_Span.innerText = "Upload " + display_index + " of " + window.VideoFileInput.files.length + " - " + file.name + " complete!";
+                }
+                else {
+                    uploadProgress_El_Span.innerText = "Upload " + display_index + " of " + window.VideoFileInput.files.length + " - " + file.name + " (" + progress_percent + "% uploaded)"
+                }
             },
             onSuccess: async function () {
                 utility_DisplayAlertBarMessage({
@@ -620,7 +638,6 @@ async function create_video_upload(file) {
                     length_ms: 10000,
                     type: "info"
                 });
-
                 // Retrieve video data with guid : upload_signature.videoId
                 // create video element
                 await fetch("/library/video", {
@@ -641,6 +658,24 @@ async function create_video_upload(file) {
                         create_video_element(video);
                     }
                 })
+
+                window.CurrentFileIndex += 1;
+                if (window.VideoFileInput.files.length == window.CurrentFileIndex) {
+                    setTimeout(() => {
+                        let progressBars = document.querySelectorAll(".uploadProgress_Inner");
+                        progressBars.forEach((element) => {
+                            element.remove();
+                        });
+                        window.VideoFileInput.files = null;
+                        window.VideoFileInput.disabled = false;
+                        document.getElementById("uploader").style.display = "flex";
+                        document.getElementById("uploadProgress").style.display = "none";
+                    }, 10000);
+                    return;
+                }
+                else {
+                    create_video_upload(window.VideoFileInput.files[window.CurrentFileIndex]);
+                }
             }
         });
 
@@ -677,9 +712,18 @@ function init() {
     window.CurrentVideoFile = null;
     window.VideoFileInput = document.getElementById("video_upload_container");
     window.VideoFileInput.onchange = function () {
-        console.log(window.VideoFileInput.files);
-        for (const file of window.VideoFileInput.files) {
-            create_video_upload(file);
+        if (window.VideoFileInput.files == null || window.VideoFileInput.files.length == 0) {
+            return;
         }
+        let index = 1;
+        for (const file of window.VideoFileInput.files) {
+            console.log(file);
+            document.getElementById("uploadProgress").innerHTML += "<div class='uploadProgress_Inner'><span class='markdown_Code'>Upload " + index + " of " + window.VideoFileInput.files.length + " - " + file.name + " - In upload queue...</span></div>"
+            index += 1;
+        }
+        window.CurrentFileIndex = 0;
+        window.VideoFileInput.disabled = true;
+        document.getElementById("uploader").style.display = "none";
+        create_video_upload(window.VideoFileInput.files[0]);
     }
 }

@@ -456,4 +456,27 @@ body {
             }
         }
     }
+
+    > .uploadProgress {
+        width: 90%;
+        border: 1px solid;
+
+        height: fit-content;
+        justify-self: center;
+        background-color: $secondary-background;
+
+        display: none;
+
+        > .uploadProgress_Inner {
+            background-color: $accent-1;
+            color: $secondary-text;
+            height: 1lh;
+
+            width: 0%;
+
+            overflow-x: visible;
+            white-space: nowrap;
+
+        }
+    }
 }
