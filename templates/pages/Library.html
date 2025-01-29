@@ -1,0 +1,143 @@
+<html>
+    <head>
+        <title>OpenBroadcast | Library</title>
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/openbroadcast.css') }}">
+        <link rel="stylesheet" href="{{ url_for('static', filename='css/library.css') }}">
+        <link href="https://fonts.googleapis.com/css2?family=Arsenal+SC:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+        <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/tus-js-client@latest/dist/tus.min.js"></script>
+        
+        <script type="text/javascript" src="{{ url_for('static', filename='js/library.js') }}"></script>
+    </head>
+    <nav>
+        {% include 'navbar.html' %}
+        {% block content %}
+        {% endblock %}
+    </nav>
+    <body onload="init()">
+        <div class="tabs">
+            <a onclick="change_selected_tab(this)" href="#manageLibrary" class="currentView" id="tabs_#manageLibrary">
+                <i class="material-icons">video_library</i><span>Manage Library</span>
+            </a>
+            <a onclick="change_selected_tab(this)" href="#advertising" id="tabs_#advertising">
+                <i class="material-icons">ads_click</i><span>Advertising</span>
+            </a>
+            <a onclick="change_selected_tab(this)" href="#security" id="tabs_#security">
+                <i class="material-icons">local_police</i><span>Security</span>
+            </a>
+        </div>
+        <p id="tabs_#manageLibrary_desc">Upload videos, setup collections, and build content feeds.</p>
+        <p id="tabs_#advertising_desc" style="display:none;">Configure advertisements on videos in your Library.</p>
+        <p id="tabs_#security_desc" style="display:none;">Fine-tune security settings to make sure your content isn't being taken advantage of.</p>
+        <div class="centerBox" id="centerBox">
+            <div class="details">
+                <h3>Collections</h3>
+                <p>Organize videos into collections to deliver them in the same location of your service as different MRSS/Media RSS Feeds. Viewership statistics are also able to be filtered by collection.</p>
+                <div id='collection_adder'>
+                    <input type='text' placeholder='Collection Name' style='display:none;' onkeypress="enter_keypress_sendevent(event, this.parentNode.querySelector('span'))">
+                    <i class='material-icons' onclick='add_collection()'>add_box</i>
+                    <span onclick='add_collection()'>Create Collection</span>
+                </div>
+            </div>
+            <div id="collection_container">
+                <div class="loader">
+                    <span>Loading...</span>
+                </div>
+            </div>
+            <div class="details">
+                <h3 class="videoPath"><a title="Return to Library" class="library" onclick="change_collection_selection(null)">Library</a> / <a></a></span></h3>
+                <p>Upload videos to your Library and deliver them however you need. You can move them into a collection after uploading, or you can upload directly to the selected collection.</p>
+                <div class="utilityBar">
+                    <div class="sorter">
+                        Sort by:
+                        <select id="sorter" onchange="sort_library(this.value)">
+                            <option value="date (newest)">
+                                Date Uploaded (Newest)
+                            </option>
+                            <option value="date (oldest)">
+                                Date Uploaded (Oldest)
+                            </option>
+                            <option value="size (largest)">
+                                Size (Largest)
+                            </option>
+                            <option value="size (smallest)">
+                                Size (Smallest)
+                            </option>
+                        </select>
+                    </div>
+                    <span class="details">
+                        <i class="material-icons" onclick="populate_videos()">sync</i>
+                        <a onclick="populate_videos()">Refresh</a>
+                    </span>
+                    <div class="upload" id="uploader">
+                        <i class="material-icons" onclick="window.VideoFileInput.click()">upload</i>
+                        <a onclick="window.VideoFileInput.click()">Upload a Video</a>
+                    </div>
+                </div>
+            </div>
+            <div class="uploadProgress" id="uploadProgress">
+            </div>
+            <div id="video_container">
+                <div class="loader">
+                    <span>Loading...</span>
+                </div>
+            </div>
+        </div>
+    </body>
+    <elementStore>
+        <input style="display:none;" multiple="true" type="file" id="video_upload_container" accept=".4mv,.amv,.avi,.flv,.m4p,.m4v,.mkv,.mov,.mp3,.mp4,.mpeg,.mpg,.mxf,.ogg,.ts,.vod,.wav,.webm,.wmv">
+        <div id="collection_Template" style="display:none;">
+            <div class="collection">
+                <span class="name" title="Select this collection" onclick="change_collection_selection(this)" onkeypress="enter_keypress_sendevent(event, this.parentNode.querySelector('div.settings:last-child > a'))">%%Name%%</span>
+                <guid name="collectionGuid" style="display: none;" id="%%Guid%%"></guid>
+                <div class="row">
+                    <div class="rowItem">
+                        <span class="title">Videos</span>
+                        <span class="videoCount">%%Video_Count%%</span>
+                    </div>
+                    <div class="rowItem">
+                        <span class="title">Storage Used</span>
+                        <span class="size">%%Storage%%</span>
+                    </div>
+                </div>
+                <div class="settings">
+                    <a href="#">Copy Feed URL</a>
+                    <a href="#" onclick="edit_collection(this)">Edit Collection</a>
+                </div>
+                <div class="settings" name="innerSettings" style="display:none;">
+                    <a href="#" onclick="rename_collection(this)">Rename</a>
+                    <a href="#" onclick="delete_collection(this)">Delete</a>
+                    <a href="#" onclick="edit_collection(this)">Cancel</a>
+                </div>
+            </div>
+        </div>
+        <div id="video_Template" style="display:none;">
+            <div class="video">
+                <img src="%%Thumbnail%%">
+                <guid name="videoGuid" style="display: none;" id="%%Guid%%"></guid>
+                <span class="title" title="%%Name%%">%%Name%%</span>
+                <div class="row">
+                    <div class="rowItem">
+                        <span class="size">
+                            <i class="material-icons">timer</i>
+                            %%Duration%%
+                        </span>
+                    </div>
+                    <div class="rowItem">
+                        <span class="size">
+                            <i class="material-icons">storage</i>
+                            %%Storage%%
+                        </span>
+                    </div>
+                </div>
+                <div class="row">
+                    <span class="collection" title="%%Collection%%">%%Collection%%</span>
+                </div>
+            </div>
+        </div>
+    </elementStore>
+    <footer>
+        {% include 'footer.html' %}
+        {% block footerContent %}
+        {% endblock %}
+    </footer>
+</html>

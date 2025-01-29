@@ -1,0 +1,482 @@
+$main-background: #C8D3D5;
+$main-text: black;
+$secondary-background: #000215;
+$secondary-text: white;
+$accent-1: #0871ff;
+$nav-font: "Fredoka", "Ubuntu", sans-serif;
+$primary-text-font: "Ubuntu", sans-serif;
+$secondary-text-font: 'Righteous', sans-serif;
+$header-font: "Mallory Book", sans-serif;
+
+body {
+    font-family: $header-font;
+    overflow-y: hidden;
+
+    > h3 {
+        text-align: center;
+
+        margin-block: 0;
+        font-weight: 200;
+    }
+    > .tabs {
+        margin-top: 1vh;
+    }
+    > .tabs > a {
+        margin-inline-start: 2vw;
+        margin-block: 0;
+
+        font-weight: 300;
+        font-size: larger;
+        text-align: left;
+
+        display: inline-flex;
+        flex-direction: row;
+
+        align-items: center;
+        text-decoration: none;
+
+        color: $accent-1;
+
+        > span {
+            text-indent: 0.5em;
+            text-decoration: underline;
+        }
+    }
+    > .tabs > a.currentView {
+        color: $main-text;
+        pointer-events: none;
+        cursor: default;
+    }
+    > p {
+        text-align: left;
+        text-indent: 4vw;
+        margin-top: 0;
+    }
+}
+.centerBox {
+    padding-inline: 1vw;
+    overflow-x: hidden;
+
+    > .centerBoxNavigation {
+        display: flex;
+        flex-direction: row;
+        text-align: center;
+        justify-content: center;
+    }
+
+    > .details {
+        width: 90%;
+
+        display: flex;
+        flex-direction: column;
+
+        justify-self: center;
+
+        > #collection_adder {
+            align-self: center;
+            color: $accent-1;
+    
+            display: flex;
+            flex-direction: row;
+    
+            width: 100%;
+            
+            justify-content: right;
+            align-items: center;
+    
+            text-decoration: none;
+            margin-bottom: 1vh;
+    
+            > i {
+                cursor: pointer;
+            }   
+            span {
+                cursor: pointer;
+                text-decoration: underline;
+            }
+        }
+
+        > h3 {
+            margin: 0;
+        }
+
+        > .videoPath {
+            margin-top: 1vh;
+            margin-bottom: 0;
+
+            font-size: larger;
+            color: $main-text;
+
+            > a {
+                color: $accent-1;
+            }
+
+            > :last-child {
+                color: $main-text;
+            }
+
+            > .library {
+                color: $main-text;
+            }
+
+            > a[href="#"] {
+                color: $accent-1;
+            }
+        }
+
+        > p {
+            text-indent: 2vw;
+            margin: 0;
+        }
+
+        > .utilityBar {
+            width: 100%;
+
+            display: flex;
+            flex-direction: row;
+
+            justify-content: space-between;
+
+            border-top: 1px solid $main-text;
+            padding-top: 1%;
+
+            > .details {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                cursor: pointer;
+                color: $accent-1;
+
+                > i {
+                    color: $accent-1;
+                    text-decoration: none;
+                }
+
+                > a {
+                    color: $accent-1;
+                    text-decoration: underline;
+                }
+            }
+
+            > a {
+                color: $accent-1;
+                text-decoration: underline;
+                cursor: pointer;
+            }
+            > input[type="text"] {
+                background-color: transparent;
+                border: 0;
+                border-bottom: 1px solid;
+            }
+            > .upload {
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+
+                > a {
+                    color: $accent-1;
+                    text-decoration: underline;
+                    cursor: pointer;
+                }
+                > i {
+                    text-decoration: none;
+                    cursor: pointer;
+                    color: $accent-1;
+
+                }
+            }
+        }
+    }
+
+    > #collection_container {
+        width: 90%;
+        height: 15vh;
+
+        justify-self: center;
+
+        overflow-x: auto;
+        overflow-y: hidden;
+
+        text-wrap-mode: nowrap;
+
+        > .loader {
+            font-family: monospace;
+
+            width: 100%;
+            height: 100%;
+
+            text-align: center;
+            justify-content: center;
+            align-content: center;
+
+            font-size: larger;
+        }
+        
+        > .collection {
+            width: 20%;
+
+            display: inline-flex;
+            flex-direction: column;
+            justify-content: space-between;
+
+            text-align: center;
+
+            overflow: hidden;
+            border: 1px solid $main-text;
+
+            padding: 1%;
+            margin-inline: 1vw;
+
+            > .name {
+                width: 100%;
+                font-size: large;
+
+                background-color: $accent-1;
+                color: $secondary-text;
+
+                padding: 1%;
+
+                cursor: pointer;
+                transition: 0.1s ease-in-out all;
+
+                text-decoration: underline;
+            }
+            > .selected {
+                background-color: $secondary-background;
+            }
+            > .name:hover {
+                background-color: $secondary-background;
+            }
+            > .name[contenteditable="true"] {
+                cursor: text;
+            }
+            > .name[contenteditable="true"]:hover {
+                background-color: $accent-1;
+            }
+            > .row {
+                display: flex;
+                flex-direction: row;
+
+                height: 40%;
+
+                > .rowItem {
+                    display: flex;
+                    flex-direction: column;
+
+                    width: 50%;
+
+                    > .title {
+                        font-size: normal;
+                        width: 100%;
+                    }
+                    
+                    > .videoCount {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                        padding: 1%;
+                    }
+                    > .size {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                        padding: 1%;
+                    }
+                }
+            }
+            > .settings {
+                align-items: center;
+                justify-content: space-between;
+
+                display: flex;
+                flex-direction: row;
+
+                > a {
+                    width: 50%;
+                    text-align: center;
+
+                    color: $accent-1;
+                }
+                > a:hover {
+                    color: $secondary-background;
+                }
+            }
+        }
+    }
+    > #collection_container::-webkit-scrollbar {
+        background: $secondary-background;
+    }
+    > #collection_container::-webkit-scrollbar-thumb {
+        background-color: $accent-1;
+        border: 0.1vh solid $secondary-background;
+    }
+    > #video_container {
+        width: 90%;
+        height: 35vh;
+
+        margin-top: 1vh;
+
+        display: flex;
+        flex-direction: row;
+
+        justify-content: flex-start;
+        justify-self: center;
+
+        overflow-wrap: normal;
+
+        flex-wrap: wrap;
+        overflow-y: scroll;
+
+        border: 1px solid $main-text;
+
+        > .loader {
+            font-family: monospace;
+
+            width: 100%;
+            height: 100%;
+
+            text-align: center;
+            justify-content: center;
+            align-content: center;
+
+            font-size: larger;
+
+            > span > a {
+                color: $accent-1;
+            }
+        }
+        > .video {
+            width: 15%;
+            margin-inline: 1.4%;
+            margin-block-start: 1%;
+            height: fit-content;
+
+            padding: 1%;
+            border: 1px solid;
+            
+            > .status {
+                text-align: center;
+                width: 100%;
+                
+                display: flex;
+                flex-direction: column;
+
+                padding: 1%;
+                padding-block: 3%;
+
+                align-items: center;
+                justify-content: center;
+
+                > a {
+                    font-size: smaller;
+                    color: $accent-1;
+                    text-decoration: underline;
+                    font-weight: bold;
+                    width: 100%;
+                }
+            }
+            
+            > img {
+                width: 100%;
+                height: auto;
+            }
+            .title {
+                font-size: large;
+
+                display: block;
+                width: 100%;
+
+                color: $accent-1;
+                text-decoration: underline;
+
+                text-align: left;
+                padding-block-start: 2%;
+
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow-x: hidden;
+            }
+            > .row {
+                display: flex;
+                flex-direction: row;
+                padding-block-start: 2%;
+
+                height: 40%;
+                > .collection {
+                    color: $secondary-text;
+                    background-color: $accent-1;
+
+                    padding: 1%;
+                    
+                    text-align: center;
+                    width: 100%;
+                }
+
+                > .rowItem {
+                    display: flex;
+                    flex-direction: column;
+
+                    width: 50%;
+
+                    text-align: center;
+
+                    > span {
+                        display: flex;
+                        flex-direction: row;
+                        align-items: center;
+                    }
+
+                    > span > i {
+                        margin-inline-end: 0.5vw;
+                    }
+
+                    > .title {
+                        font-size: normal;
+                        width: 100%;
+                    }
+                    
+                    > .videoCount {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                        padding: 1%;
+                    }
+                    > .size {
+                        font-size: normal;
+                        font-weight: 500;
+
+                        width: 100%;
+                        padding: 1%;
+                    }
+                }
+            }
+        }
+    }
+
+    > .uploadProgress {
+        width: 90%;
+        border: 1px solid;
+
+        height: fit-content;
+        justify-self: center;
+        background-color: $secondary-background;
+
+        display: none;
+
+        > .uploadProgress_Inner {
+            background-color: $accent-1;
+            color: $secondary-text;
+            height: 1lh;
+
+            width: 0%;
+
+            overflow-x: visible;
+            white-space: nowrap;
+
+        }
+    }
+}

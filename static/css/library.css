@@ -1,0 +1,189 @@
+body {
+  font-family: "Mallory Book", sans-serif;
+  overflow-y: hidden; }
+  body > h3 {
+    text-align: center;
+    margin-block: 0;
+    font-weight: 200; }
+  body > .tabs {
+    margin-top: 1vh; }
+  body > .tabs > a {
+    margin-inline-start: 2vw;
+    margin-block: 0;
+    font-weight: 300;
+    font-size: larger;
+    text-align: left;
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    text-decoration: none;
+    color: #0871ff; }
+    body > .tabs > a > span {
+      text-indent: 0.5em;
+      text-decoration: underline; }
+  body > .tabs > a.currentView {
+    color: black;
+    pointer-events: none;
+    cursor: default; }
+  body > p {
+    text-align: left;
+    text-indent: 4vw;
+    margin-top: 0; }
+
+.centerBox {
+  padding-inline: 1vw;
+  overflow-x: hidden; }
+  .centerBox > .centerBoxNavigation {
+    display: flex;
+    flex-direction: row;
+    text-align: center;
+    justify-content: center; }
+  .centerBox > .details {
+    width: 90%;
+    display: flex;
+    flex-direction: column;
+    justify-self: center; }
+    .centerBox > .details > #collection_adder {
+      align-self: center;
+      color: #0871ff;
+      display: flex;
+      flex-direction: row;
+      width: 100%;
+      justify-content: right;
+      align-items: center;
+      text-decoration: none;
+      margin-bottom: 1vh; }
+      .centerBox > .details > #collection_adder > i {
+        cursor: pointer; }
+      .centerBox > .details > #collection_adder span {
+        cursor: pointer;
+        text-decoration: underline; }
+    .centerBox > .details > h3 {
+      margin: 0; }
+    .centerBox > .details > .videoPath {
+      margin-top: 1vh;
+      margin-bottom: 0;
+      font-size: larger;
+      color: black; }
+      .centerBox > .details > .videoPath > a {
+        color: #0871ff; }
+      .centerBox > .details > .videoPath > :last-child {
+        color: black; }
+      .centerBox > .details > .videoPath > .library {
+        color: black; }
+      .centerBox > .details > .videoPath > a[href="#"] {
+        color: #0871ff; }
+    .centerBox > .details > p {
+      text-indent: 2vw;
+      margin: 0; }
+    .centerBox > .details > .utilityBar {
+      width: 100%;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      border-top: 1px solid black;
+      padding-top: 1%; }
+      .centerBox > .details > .utilityBar > a {
+        color: #0871ff; }
+      .centerBox > .details > .utilityBar > input[type="text"] {
+        background-color: transparent;
+        border: 0;
+        border-bottom: 1px solid; }
+  .centerBox > #collection_container {
+    width: 90%;
+    height: 15vh;
+    justify-self: center;
+    overflow-x: auto;
+    overflow-y: hidden;
+    text-wrap-mode: nowrap; }
+    .centerBox > #collection_container > .loader {
+      font-family: monospace;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      justify-content: center;
+      align-content: center;
+      font-size: larger; }
+    .centerBox > #collection_container > .collection {
+      width: 20%;
+      display: inline-flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      overflow: hidden;
+      border: 1px solid black;
+      padding: 1%;
+      margin-inline: 1vw; }
+      .centerBox > #collection_container > .collection > .name {
+        width: 100%;
+        font-size: large;
+        background-color: #0871ff;
+        color: white;
+        padding: 1%;
+        cursor: pointer;
+        transition: 0.1s ease-in-out all;
+        text-decoration: underline; }
+      .centerBox > #collection_container > .collection > .selected {
+        background-color: #000215; }
+      .centerBox > #collection_container > .collection > .name:hover {
+        background-color: #000215; }
+      .centerBox > #collection_container > .collection > .name[contenteditable="true"] {
+        cursor: text; }
+      .centerBox > #collection_container > .collection > .name[contenteditable="true"]:hover {
+        background-color: #0871ff; }
+      .centerBox > #collection_container > .collection > .row {
+        display: flex;
+        flex-direction: row;
+        height: 40%; }
+        .centerBox > #collection_container > .collection > .row > .rowItem {
+          display: flex;
+          flex-direction: column;
+          width: 50%; }
+          .centerBox > #collection_container > .collection > .row > .rowItem > .title {
+            font-size: normal;
+            width: 100%; }
+          .centerBox > #collection_container > .collection > .row > .rowItem > .videoCount {
+            font-size: normal;
+            font-weight: 500;
+            width: 100%;
+            padding: 1%; }
+          .centerBox > #collection_container > .collection > .row > .rowItem > .size {
+            font-size: normal;
+            font-weight: 500;
+            width: 100%;
+            padding: 1%; }
+      .centerBox > #collection_container > .collection > .settings {
+        align-items: center;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: row; }
+        .centerBox > #collection_container > .collection > .settings > a {
+          width: 50%;
+          text-align: center;
+          color: #0871ff; }
+        .centerBox > #collection_container > .collection > .settings > a:hover {
+          color: #000215; }
+  .centerBox > #collection_container::-webkit-scrollbar {
+    background: #000215; }
+  .centerBox > #collection_container::-webkit-scrollbar-thumb {
+    background-color: #0871ff;
+    border: 0.1vh solid #000215; }
+  .centerBox > #video_container {
+    width: 90%;
+    height: 30vh;
+    margin-top: 1vh;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    justify-self: center;
+    border: 1px solid black; }
+    .centerBox > #video_container > .loader {
+      font-family: monospace;
+      width: 100%;
+      height: 100%;
+      text-align: center;
+      justify-content: center;
+      align-content: center;
+      font-size: larger; }
+      .centerBox > #video_container > .loader > span > a {
+        color: #0871ff; }

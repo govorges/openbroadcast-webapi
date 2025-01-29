@@ -23,6 +23,8 @@ import json
 
 import datetime
 
+PULLZONE_HOSTNAME = environ['BUNNY_PULLZONE_HOSTNAME']
+
 HOME_DIR = path.dirname(path.realpath(__file__))
 UPLOAD_DIR = path.join(HOME_DIR, "uploads")
 
@@ -229,6 +231,100 @@ def reports():
 @api.route("/browse/", methods=["GET"])
 def browse():
     return render_template("pages/Browse.html")
+
+
+
+@api.route("/library", methods=["GET"], endpoint='library')
+@authentication_required
+def library():
+    return render_template("pages/Library.html")
+
+@api.route("/library/collections", methods=["GET"], endpoint="library_Collections_GET")
+@authentication_required
+def library_Collections_GET():
+    collections = api_Library.library__RetrieveCollections(
+        google_id = session.get("google_id")
+    )
+    return jsonify(collections)
+
+@api.route("/library/collections/add", methods=["POST"], endpoint="library_Collections_Add")
+@authentication_required
+def library_Collections_Add():
+    collection_name = request.json.get("collection_name")
+    creation_response = api_Library.library__AddCollection(
+        google_id = session.get("google_id"),
+        collection_name = collection_name
+    )
+    return jsonify(creation_response)
+
+@api.route("/library/collections/delete", methods=['POST'], endpoint="library_Collections_Delete")
+@authentication_required
+def library_Collections_Delete():
+    collection_guid = request.json.get("guid")
+    creation_response = api_Library.library__DeleteCollection(
+        google_id = session.get("google_id"),
+        collection_guid = collection_guid
+    )
+    return jsonify(creation_response)
+
+@api.route("/library/collections/update", methods=['POST'], endpoint="library_Collections_Update")
+@authentication_required
+def library_Collections_Update():
+    collection_guid = request.json.get("guid")
+    collection_name = request.json.get("name")
+
+    creation_response = api_Library.library__UpdateCollection(
+        google_id = session.get("google_id"),
+        collection_guid = collection_guid,
+        collection_name = collection_name
+    )
+    return jsonify(creation_response)
+
+
+@api.route("/library/videos", methods=["GET"], endpoint="library_Videos_GET")
+@authentication_required
+def library_Videos_GET():
+    videos = api_Library.library__RetrieveVideos(
+        google_id = session.get("google_id")
+    )
+    for video in videos:
+        video['thumbnail'] = f"https://{PULLZONE_HOSTNAME}/{video['guid']}/thumbnail.jpg"
+    return jsonify(videos)
+
+@api.route("/library/videos/create", methods=['POST'], endpoint="library_Videos_Create")
+@authentication_required
+def library_Videos_Create():
+    filename = request.json.get("filename")
+    collection = request.json.get("collection")
+
+    creation_response = api_Library.video__Create(
+        google_id = session.get("google_id"),
+        data = {
+            "title": filename,
+            "collectionId": collection
+        }
+    )
+    video_guid = creation_response.get("guid")
+    signature = api_Library.upload__Create(
+        google_id = session.get("google_id"),
+        videoId = video_guid
+    )
+
+    return jsonify(signature)
+
+@api.route("/library/video", methods=['GET'])
+@authentication_required
+def library_Video():
+    video = request.headers.get("video")
+    if video is None or video == "":
+        return make_response("Invalid request", 400)
+    
+    video = api_Library.video__Retrieve(
+        google_id = session.get("google_id"),
+        videoId = video
+    )
+    return jsonify(video)
+
 
 if __name__ == "__main__":
     debug = True
