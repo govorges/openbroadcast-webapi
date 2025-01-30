@@ -80,6 +80,28 @@ function update_videopath_display() {
     }
 }
 
+function change_video_selection(videoName_El) {
+    let guid;
+    if (videoName_El != null) {
+        let videoGuid_El = videoName_El.parentNode.getElementsByTagName("guid")[0];
+        guid = videoGuid_El.id;
+    }
+    let selected_video_display = document.getElementById('selected_video_container');
+
+    window.SelectedVideo = null;
+    window.Videos.forEach( (video) => {
+        if (video.guid == guid) {
+            window.SelectedVideo = video;
+        }
+    });
+    if (window.SelectedVideo == null) {
+        selected_video_display.style.display = "none";
+        return;
+    }
+    selected_video_display.style.display = "flex";
+    selected_video_display.querySelector(".title").innerText = window.SelectedVideo.title;
+}
+
 function change_collection_selection(collectionName_El) {
     let guid;
     if (collectionName_El != null) {
@@ -97,10 +119,13 @@ function change_collection_selection(collectionName_El) {
         if (window.SelectedCollection.guid == guid) {
             window.SelectedCollection = null;
             update_videopath_display();
-            utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500});
+            utility_DisplayAlertBarMessage({messageContent: "Selection cleared 1", length_ms: 500});
             window.Videos.forEach((video) => {
                 if (video.collectionId == "") {
                     create_video_element(video);
+                }
+                else {
+                    console.log(video.collectionId);
                 }
             });
             return; // Toggling the selection.
@@ -130,7 +155,7 @@ function change_collection_selection(collectionName_El) {
     });
 
     if (window.SelectedCollection == null) {
-        utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500})
+        utility_DisplayAlertBarMessage({messageContent: "Selection cleared 2", length_ms: 500})
         window.Videos.forEach((video) => {
             if (video.collectionId == "") {
                 create_video_element(video);
@@ -238,6 +263,10 @@ async function populate_collections() {
 
 function create_video_element(video) {
     let template = document.getElementById("video_Template").innerHTML;
+
+    if (window.SelectedCollection == null && video.collectionId != "") {
+        return;
+    }
 
     if (video.status == 0) {
         return;
@@ -375,7 +404,10 @@ async function populate_videos() {
         }
     });
     document.getElementById("sorter").value = "date (newest)";
-    
+
+    let collection = window.SelectedCollection;
+    change_collection_selection(null);
+    change_collection_selection(collection);
 }
 
 function edit_collection(anchor_el) {

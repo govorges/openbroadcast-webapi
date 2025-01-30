@@ -81,6 +81,9 @@
                     <span>Loading...</span>
                 </div>
             </div>
+            <div id="selected_video_container">
+                <span class="title"></span>
+            </div>
         </div>
     </body>
     <elementStore>
@@ -114,7 +117,7 @@
             <div class="video">
                 <img src="%%Thumbnail%%">
                 <guid name="videoGuid" style="display: none;" id="%%Guid%%"></guid>
-                <span class="title" title="%%Name%%">%%Name%%</span>
+                <span class="title" title="%%Name%%" onclick="change_video_selection(this)">%%Name%%</span>
                 <div class="row">
                     <div class="rowItem">
                         <span class="size">
