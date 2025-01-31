@@ -43,7 +43,7 @@
                     <span>Loading...</span>
                 </div>
             </div>
-            <div class="details">
+            <div class="details" id="detailsBar">
                 <h3 class="videoPath"><a title="Return to Library" class="library" onclick="change_collection_selection(null)">Library</a> / <a></a></span></h3>
                 <p>Upload videos to your Library and deliver them however you need. You can move them into a collection after uploading, or you can upload directly to the selected collection.</p>
                 <div class="utilityBar">
@@ -81,7 +81,8 @@
                     <span>Loading...</span>
                 </div>
             </div>
-            <div id="selected_video_container">
+            <div id="selected_video_container" style="display:none;">
+                <span class="return" onclick="change_video_selection(null)">Return to Library</span>
                 <span class="title"></span>
             </div>
         </div>

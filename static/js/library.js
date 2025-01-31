@@ -85,21 +85,32 @@ function change_video_selection(videoName_El) {
     if (videoName_El != null) {
         let videoGuid_El = videoName_El.parentNode.getElementsByTagName("guid")[0];
         guid = videoGuid_El.id;
+
+        if (window.SelectedVideo != null) {
+            if (guid == window.SelectedVideo.guid) {
+                guid = null;
+            }
+        }
     }
     let selected_video_display = document.getElementById('selected_video_container');
 
     window.SelectedVideo = null;
     window.Videos.forEach( (video) => {
-        if (video.guid == guid) {
+        if (video.guid == guid && guid != null) {
             window.SelectedVideo = video;
         }
     });
     if (window.SelectedVideo == null) {
         selected_video_display.style.display = "none";
+        document.getElementById("video_container").style.display = "flex";
+        document.getElementById("detailsBar").style.display = "flex";
         return;
     }
     selected_video_display.style.display = "flex";
     selected_video_display.querySelector(".title").innerText = window.SelectedVideo.title;
+
+    document.getElementById("video_container").style.display = "none";
+    document.getElementById("detailsBar").style.display = "none";
 }
 
 function change_collection_selection(collectionName_El) {
