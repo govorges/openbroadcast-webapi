@@ -132,5 +132,22 @@ class LibraryAPI:
         object = request.json()
 
         return object
+    
+    def library__Update(self, google_id: str, payload: dict):
+        requestURL = f"{self.API_Endpoint_URL}/library/update"
+        payload = {
+            "Accessor": google_id,
+            "payload": payload 
+        }
+
+        request = requests.post(requestURL, json=payload)
+        try:
+            object = request.json()
+        except:
+            object = {
+                "code": request.status_code,
+                "message": request.text
+            }
+        return object
 
 

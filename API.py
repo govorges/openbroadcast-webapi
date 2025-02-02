@@ -288,7 +288,7 @@ def library_Videos_GET():
         google_id = session.get("google_id")
     )
     for video in videos:
-        video['thumbnail'] = f"https://{PULLZONE_HOSTNAME}/{video['guid']}/thumbnail.jpg"
+        video['thumbnail'] = f"https://{PULLZONE_HOSTNAME}/{video['guid']}/{video['thumbnailFileName']}"
     return jsonify(videos)
 
 @api.route("/library/videos/create", methods=['POST'], endpoint="library_Videos_Create")
@@ -324,6 +324,19 @@ def library_Video():
         videoId = video
     )
     return jsonify(video)
+
+@api.route("/library/advertising/update", methods=['POST'], endpoint="library_Advertising_Update")
+@authentication_required
+def library_Advertising_Update():
+    payload = request.json
+    allowed_update_keys = ["VastTagUrl"]
+    
+    update = api_Library.library__Update(
+        google_id = session.get("google_id"),
+        payload = payload
+    )
+    return jsonify(update)
+    
 
 
 if __name__ == "__main__":

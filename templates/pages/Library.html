@@ -28,7 +28,17 @@
         <p id="tabs_#manageLibrary_desc">Upload videos, setup collections, and build content feeds.</p>
         <p id="tabs_#advertising_desc" style="display:none;">Configure advertisements on videos in your Library.</p>
         <p id="tabs_#security_desc" style="display:none;">Fine-tune security settings to make sure your content isn't being taken advantage of.</p>
-        <div class="centerBox" id="centerBox">
+        <div class="security" id="tabs_#security_section" style="display:none;">
+        </div> 
+        <div class="advertising" id="tabs_#advertising_section" style="display:none;">
+            <div class="vast">
+                <h3>Vast Tag URL</h3>
+                <span>Automatically display VAST based ads in your videos.</span>
+                <input id="vast_url_input" type="text" placeholder="No URL set.">
+                <a href="#" onclick="update_advertising()">Save Changes</a>
+            </div>
+        </div>
+        <div class="centerBox" id="tabs_#manageLibrary_section">
             <div class="details">
                 <h3>Collections</h3>
                 <p>Organize videos into collections to deliver them in the same location of your service as different MRSS/Media RSS Feeds. Viewership statistics are also able to be filtered by collection.</p>

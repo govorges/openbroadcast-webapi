@@ -7,15 +7,59 @@ window.onload = (function() {
 function change_selected_tab(anchor) {
     anchor.className = "currentView";    
     let description_El = document.getElementById(anchor.id + "_desc");
+    let section_El = document.getElementById(anchor.id + "_section");
+
     description_El.style.display = "block";
+    section_El.style.display = "flex";
 
     TabNames.forEach(tab => {
         let tab_El = document.getElementById("tabs_" + tab);
         if (tab_El.id != anchor.id) {
             tab_El.className = null;
             document.getElementById(tab_El.id + "_desc").style.display = "none";
+            console.log(tab_El.id + "_section");
+            document.getElementById(tab_El.id + "_section").style.display = "none";
         }
     });
+}
+
+function update_advertising() {
+    let vast_tag_url = document.getElementById('vast_url_input');
+
+    let url;
+    if (vast_tag_url.value == null) {
+        url = "";
+    }
+    else {
+        url = vast_tag_url.value;
+    }
+
+    fetch("/library/advertising/update", {
+        method: "POST",
+        headers: {
+            "cookie": document.cookie,
+            "content-type": "application/json",
+            "accept": "application/json"
+        },
+        body: JSON.stringify({
+            "VastTagURL": url
+        })
+    }).then( (response) => {
+        if (response.status != 200) {
+            console.error(
+                "/library/advertising/update - Update unsuccessful."
+            );
+        }
+        else {
+            utility_DisplayAlertBarMessage({
+                messageContent: "Vast tag updated successfully!",
+                length_ms: 3000,
+                type: "info"
+            });
+            return response;
+        }
+    }).then( (response) => { return response.json(); });
+    
 }
 
 async function RetrieveVideos() {
@@ -734,7 +778,7 @@ async function create_video_upload(file) {
 function init() {
     global_init();
 
-    window.display_CenterBox = document.getElementById("centerBox");
+    window.display_CenterBox = document.getElementById("tabs_#manageLibrary_section");
     window.TabNames = ["#manageLibrary", "#advertising", "#security"]
     
     selectedTab = window.TabNames[0];
