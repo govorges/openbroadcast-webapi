@@ -150,4 +150,19 @@ class LibraryAPI:
             }
         return object
 
+    def library__Details(self, google_id: str):
+        requestURL = f"{self.API_Endpoint_URL}/library/details"
+        payload = {
+            "Accessor": google_id
+        }
+
+        request = requests.get(requestURL, json=payload)
+        try:
+            object = request.json()
+        except:
+            object = {
+                "code": request.status_code,
+                "message": request.text
+            }
+        return object
 

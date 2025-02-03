@@ -23,6 +23,26 @@ function change_selected_tab(anchor) {
     });
 }
 
+async function RetrieveLibrary() {
+    window.Library = await fetch("/library/details", {
+        method: "GET",
+        headers: {
+            "cookie": document.cookie,
+            "content-type": "application/json",
+            "accept": "application/json"
+        }
+    }).then( (response) => {
+        if (response.status != 200) {
+            console.error(
+                "/library/details - Retrieval unsuccessful."
+            );
+        }
+        else {
+            return response;
+        }
+    }).then( (response) => { return response.json(); })
+}
+
 function update_advertising() {
     let vast_tag_url = document.getElementById('vast_url_input');
 

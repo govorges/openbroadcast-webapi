@@ -337,6 +337,13 @@ def library_Advertising_Update():
     )
     return jsonify(update)
     
+@api.route("/library/details", methods=['GET'], endpoint="library_Details_GET")
+@authentication_required
+def library_Details_GET():
+    details = api_Library.library__Details(
+        google_id = session.get("google_id")
+    )
+    return jsonify(details)
 
 
 if __name__ == "__main__":
