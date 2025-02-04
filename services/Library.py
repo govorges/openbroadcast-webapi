@@ -19,8 +19,8 @@ class LibraryAPI:
 
         return object
     
-    def library__Details(self, google_id: str) -> dict | None:
-        requestURL = f"{self.API_Endpoint_URL}/library/details"
+    def library__Metadata(self, google_id: str) -> dict | None:
+        requestURL = f"{self.API_Endpoint_URL}/library/metadata"
         payload = { 
             "Accessor": google_id 
         }

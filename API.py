@@ -204,7 +204,7 @@ def authentication_logout():
 @api.route("/account", endpoint="account")
 @authentication_required
 def account():
-    userDetails = api_Library.library__Details(session.get("google_id"))
+    userDetails = api_Library.library__Metadata(session.get("google_id"))
     return render_template("pages/Account.html", userDetails=userDetails)
 
 @api.route("/", methods=["GET", "POST"])
