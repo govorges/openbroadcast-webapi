@@ -195,7 +195,9 @@ body {
 
     > #collection_container {
         width: 90%;
-        height: 15vh;
+        height: fit-content;
+
+        padding-block: 0.25%;
 
         justify-self: center;
 
@@ -488,6 +490,9 @@ body {
     > #selected_video_container {
         display: flex;
         flex-direction: column;
+
+        width: 100%;
+        padding: 1%;
 
         > .return {
             color: $accent-1;

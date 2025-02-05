@@ -324,7 +324,12 @@ async function populate_collections() {
                 }
             }
             else {
-                formattedStorage = ">1 MB";
+                if (collection.totalSize == 0) {
+                    formattedStorage = "0 MB"
+                }
+                else {
+                    formattedStorage = "<1 MB";
+                }
             }
 
             template = template.replace("%%Storage%%", formattedStorage);
