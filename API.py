@@ -23,6 +23,8 @@ import json
 
 import datetime
 
+from application import errors, filters, utility, context
+
 PULLZONE_HOSTNAME = environ['BUNNY_PULLZONE_HOSTNAME']
 
 HOME_DIR = path.dirname(path.realpath(__file__))
@@ -60,13 +62,8 @@ flow = Flow.from_client_secrets_file(
     redirect_uri = "https://openbroadcast.cz/authentication/callback"
 )
 
-def _force_https(app):
-    def wrapper(environ, start_response):
-        environ['wsgi.url_scheme'] = 'https'
-        return app(environ, start_response)
-    return wrapper
-
-_force_https(api)
+utility.force_application_https(api)
+utility.build_application_context(api)
 
 def authentication_required(function):
     def wrapper(*args, **kwargs):
@@ -75,21 +72,6 @@ def authentication_required(function):
         else:
             return function()
     return wrapper
-
-@api.context_processor
-def inject_user():
-    return dict(user = {
-        "email": session.get('email'),
-        "id": session.get('google_id')
-    })
-
-# If more filters are added, move to a Filters.py | api.add_template_filter() relevant
-@api.template_filter('toDate')
-def toDate(timestamp):
-    """Converts a POSIX timestamp to a formatted datetime string. """
-    date_format = "%Y-%m-%d"
-    time = datetime.datetime.fromtimestamp(timestamp)
-    return datetime.datetime.strftime(time, date_format)
 
 @api.before_request
 def before_request():
@@ -103,46 +85,6 @@ def before_request():
                     path.join(HOME_DIR, "static", "css")
                 )
             )
-
-@api.errorhandler(401)
-def error_401(e):
-    '''Invalid Authentication'''
-    error_data = {
-        "name": "This page requires you to be logged in!",
-        "message": 
-            f"Sorry! This page is only for users who are logged in. \
-            <a style='color:var(--accent-1)' href='/authentication/login'> \
-            Login with Google \
-            </a>"
-    }
-    response = make_response(render_template("pages/Error.html", error=error_data))
-    response.status_code = 401
-    
-    return response
-
-@api.errorhandler(404)
-def error_404(e):
-    '''Not Found'''
-    error_data = {
-        "name": "Page Not Found",
-        "message": f"Sorry! The page you were looking for, <span class='markdown_Code'>{request.url}</span> does not exist."
-    }
-    response = make_response(render_template("pages/Error.html", error=error_data))
-    response.status_code = 404
-    
-    return response
-
-@api.errorhandler(429)
-def error_429(e):
-    '''Rate Limit Exceeded'''
-    error_data = {
-        "name": "Rate Limit Exceeded",
-        "message": f"You've exceeded the rate limit for this page. Try again later."
-    }
-    response = make_response(render_template("pages/Error.html", error=error_data))
-    response.status_code = 429
-    
-    return response
 
 @api.route("/authentication/details", methods=['GET'], endpoint="authentication_details")
 def authentication_details():
