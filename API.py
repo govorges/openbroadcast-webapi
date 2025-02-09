@@ -1,7 +1,7 @@
 from flask import (
     Flask, render_template, request, 
     make_response, jsonify, redirect, 
-    abort, session, url_for
+    abort, session
 )
 
 from flask_limiter import Limiter
