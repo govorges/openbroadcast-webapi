@@ -1,6 +1,7 @@
 from flask import Flask, session
 
 def apply_application_contextprocessors(application: Flask):
+    """Applies all context processors defined in application/context.py"""
     for context_processor in context_processors:
         application.context_processor(context_processor)
 

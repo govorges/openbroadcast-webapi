@@ -44,6 +44,7 @@ errorhandlers = {
 }
 
 def apply_application_errorhandlers(application: Flask):
+    """Registers all error handlers defined in applications/errors.py for the given application."""
     if application is None:
         return
     for key in errorhandlers.keys():

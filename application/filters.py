@@ -2,6 +2,7 @@ from flask import Flask
 import datetime
 
 def apply_application_template_filters(application: Flask):
+    """Applies all template filters define in application/filters.py"""
     for _filter in filters:
         application.add_template_filter(_filter)
 
