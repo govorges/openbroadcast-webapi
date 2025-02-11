@@ -55,7 +55,7 @@ limiter = Limiter(
 flow = Flow.from_client_secrets_file(
     client_secrets_file = api_oauth_config_path,
     scopes = ["https://www.googleapis.com/auth/userinfo.email", "openid"],
-    redirect_uri = "https://openbroadcast.cz/authentication/callback"
+    redirect_uri = "https://127.0.0.1:8000/authentication/callback"
 )
 
 utility.force_application_https(api)

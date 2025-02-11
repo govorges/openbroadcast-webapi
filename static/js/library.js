@@ -194,7 +194,7 @@ function change_collection_selection(collectionName_El) {
         if (window.SelectedCollection.guid == guid) {
             window.SelectedCollection = null;
             update_videopath_display();
-            utility_DisplayAlertBarMessage({messageContent: "Selection cleared 1", length_ms: 500});
+            utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500});
             window.Videos.forEach((video) => {
                 if (video.collectionId == "") {
                     create_video_element(video);
@@ -230,7 +230,7 @@ function change_collection_selection(collectionName_El) {
     });
 
     if (window.SelectedCollection == null) {
-        utility_DisplayAlertBarMessage({messageContent: "Selection cleared 2", length_ms: 500})
+        utility_DisplayAlertBarMessage({messageContent: "Selection cleared", length_ms: 500})
         window.Videos.forEach((video) => {
             if (video.collectionId == "") {
                 create_video_element(video);
